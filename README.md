@@ -11,3 +11,6 @@ and visit http://localhost:8000.
 - `style.css` — all styles
 - `script.js` — small interactions
 - `assets/` — images and fonts
+
+15 February 2026 the domain was bought, and the project commited to
+Selected fonts Aref Ruqaa, Palladio URW, and Gyre Pagella
