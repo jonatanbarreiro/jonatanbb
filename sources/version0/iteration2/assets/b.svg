@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-106.336 -34.668 202.172 202.172">
+  <!-- firecoat 'b' primitive, redesigned per assets/logo/temp.txt (jonatanbb.xyz),
+       set in its enclosing annulus (thickness t = stroke width). -->
+  <defs>
+    <path id="b" d="M27.5 86.5 21 93 V58 L49.5 86.5 0 136 V1.445 L4.856 8.7"
+          fill="none" stroke-width="10.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="6"/>
+  </defs>
+  <circle cx="-5.25" cy="66.418" r="91.836" fill="none" stroke="#e8a317" stroke-width="10.5"/>
+  <use href="#b" stroke="#e8a317"/>
+</svg>
