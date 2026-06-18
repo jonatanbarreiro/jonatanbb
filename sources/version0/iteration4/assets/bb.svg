@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50.559 10.104 316.392 316.392">
+  <!-- firecoat 'bb' form (jonatanbb.xyz). Two b's + annulus: centre = midpoint of the flat min-gap between the bellies; inner radius = max b-tip radius / 0.95 (5% clearance); ring thickness = 2t (was t — doubled so the lighting band has twice the radial margin). -->
+  <defs>
+    <path id="b" d="M27.5 86.5 21 93 V58 L49.5 86.5 0 136 V1.445 L4.856 8.7"
+          fill="none" stroke-width="10.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="6"/>
+  </defs>
+  <circle cx="107.637" cy="168.3" r="143.696" fill="none" stroke="#e8a317" stroke-width="21"/>
+  <use href="#b" transform="translate(44.6 81.8)" stroke="#e8a317"/>
+  <use href="#b" transform="translate(119 57.75)" stroke="#e8a317"/>
+</svg>
