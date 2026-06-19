@@ -39,6 +39,5 @@ and the essentials of hosting and deploying a static site.
 ---
 
 The site itself is the profile; this README is the making-of. The `bb` mark is the
-site's signet —my two surname initials— initially drafted for a sibling website
-(with a project around it) that I've been working on for some time already:
-`firecoat.me`, to be served and opened as soon as I am able to.
+site's signet —my two surname initials— drafted in a related project, on whose
+design docs I've been working on for some time already.
