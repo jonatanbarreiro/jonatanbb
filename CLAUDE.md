@@ -50,6 +50,8 @@ to implement an attractive CV site that makes him visible on the job market.
   - `version0/gallery/` — one screenshot per iteration (`iterationNNN.png`, in
     chronological order), plus `unsourced/` (`iteration-N.png`) for captures that
     predate the kept source. A quick visual tour of the build for repo viewers.
+    Generated at wrap-up with the renderer at a fixed frame (see *Rendering &
+    gallery captures*).
   - `version0/README.md` — the website README.
 
 
@@ -75,9 +77,9 @@ appearance, behavior, or contents). In each, Jonatan states whether it is a **ne
 iteration** of the version or **builds on the current** one.
 
 **New iteration:**
-1. First, remind Jonatan to add the just-finished (current-highest) iteration's
-   screenshot to `version0/gallery/` (`iterationNNN.png`) if he hasn't — he
-   captures these by hand, one per iteration.
+1. First, make sure the just-finished (current-highest) iteration has its
+   `version0/gallery/iterationNNN.png` — if it's missing, generate it with the
+   renderer at the fixed frame (see *Rendering & gallery captures*).
 2. Copy the highest-numbered `version0/sources/iterationN/` to `iteration{N+1}/`.
 3. Remove every `interaction_*` file from the new copy (asset symlinks stay).
 4. Work the new iteration's source per the prompt.
@@ -103,6 +105,29 @@ Notes:
   pins down the step; reconstructing that gap is the upper layer's concern.
 - If Jonatan needs to hand you a file, he will say where to find it in the prompt.
 - Interaction filenames use underscores (`interaction_2026_06_19.md`).
+
+
+## Rendering & gallery captures
+
+A headless browser is available for rendering the site (verifying changes, and
+producing gallery shots). It was installed once and is reused across sessions, so
+don't reinstall blindly — check first:
+
+- **Browser:** Playwright's Chromium binary at
+  `~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome` (not on `PATH`).
+  Drive it with `--no-sandbox --disable-gpu`.
+- **Driver:** `playwright-core` is installed globally under `~/.local/node`
+  (Node at `~/.local/node/bin`); reach it with
+  `NODE_PATH=~/.local/node/lib/node_modules`. Launch with
+  `chromium.launch({ executablePath: <the binary above>, args:['--no-sandbox','--disable-gpu'] })`.
+- Headless renders use the page's **true colours** — Jonatan's OS night-mode/
+  warm-screen filter is a display-layer effect and never reaches a capture.
+
+**Gallery frame (fixed).** Every `gallery/iterationNNN.png` so far is **1024×1006**,
+the top of the page. So capture each at: viewport **1024×1006**, `deviceScaleFactor:
+1`, `scrollY: 0`, a full-viewport screenshot (yields exactly 1024×1006). At
+wrap-up, render the just-finished iteration this way and write its
+`gallery/iterationNNN.png`.
 
 
 ## Assets
