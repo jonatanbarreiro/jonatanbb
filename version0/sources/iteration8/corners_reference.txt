@@ -1,0 +1,20 @@
+b CORNER REFERENCE — corrected corner points (bb-primitive units, x right / y down).
+Sibling of corners_reference.png. From the earlier 14: old corner 2 removed (artifact);
+old corners 6 & 7 replaced by the true corner 6.5 = line(7-8) ∩ line(6-5).
+The remaining 12 corners are relabelled 1..12 in outline order.
+
+  label   was                                   coordinate
+  1       old 1  (P0 inner)                      (23.79, 82.79)
+  2       old 3  (P2 inner)                      (23.45, 63.92)
+  3       old 4  (P3 inner)                      (43.10, 86.50)
+  4       old 5  (P4 inner)                      (2.45, 130.08)
+  5       6.5  top-tip inner (line 7-8 ∩ line 6-5) (1.88, 10.69)
+  6       old 8  (P6 outer)                      (9.22, 5.78)
+  7       old 9  (P5 outer)                      (-5.25, -15.84)
+  8       old 10 (P4 outer)                      (-5.25, 148.67)
+  9       old 11 (P3 outer/belly tip)            (56.92, 86.50)
+  10      old 12 (P2 outer)                      (15.75, 45.33)
+  11      old 13 (P1 outer)                      (15.75, 105.67)
+  12      old 14 (P0 outer)                      (31.21, 90.21)
+
+The 12 sides are the consecutive pairs 1-2, 2-3, 3-4, ... , 11-12, 12-1.
