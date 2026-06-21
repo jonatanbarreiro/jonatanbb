@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8.5 -19 68.5 171">
+<!--
+  b-split.svg  —  the firecoat 'b' primitive, decomposed into its 9 natural
+  pieces (2 tips, 4 sides, 3 joints) = 10 triangles + 8 rectangles, with the
+  7-region illumination map drawn over it.
+
+  WHAT THIS IS. The site's 'b' mark is the miter-stroked outline (half-width
+  h = 5.25, butt caps, mitre-limit 6) of a 7-node centreline polyline. That
+  outline is an exact 12-corner polygon, tiled here into 18 faces (union = the
+  silhouette to floating point). Geometry is EXACT, read off the SVG, not the
+  approximate corners_reference png/txt that seeded it.
+
+  COORDINATES (bb-primitive units, x right / y down). Centreline:
+    M27.5 86.5  21 93  V58  L49.5 86.5  0 136  V1.445  L4.856 8.7   (stroke-width 10.5)
+
+  THE 12 CORNERS (outline order 1->...->12->1):
+     1 = (  26.2500,   85.2500)
+     2 = (  26.2500,   70.6746)
+     3 = (  42.0754,   86.5000)
+     4 = (   5.2500,  123.3254)
+     5 = (   5.2500,    8.4363)
+     6 = (   9.2189,    5.7798)
+     7 = (  -5.2500,  -15.8371)
+     8 = (  -5.2500,  148.6746)
+     9 = (  56.9246,   86.5000)
+    10 = (  15.7500,   45.3254)
+    11 = (  15.7500,  105.6746)
+    12 = (  31.2123,   90.2123)
+
+  SPLIT POINTS:
+    p1 = line(7-8) ∩ horiz-through-5  = (-5.2500, 8.4363)
+    p2 = line(7-8) ∩ horiz-through-4  = (-5.2500, 123.3254)
+    p3 = foot of perp from 4 onto line(8-9)  = (12.6746, 130.7500)
+    p4 = foot of perp from 3 onto line(8-9)  = (49.5000, 93.9246)
+    p5 = line(9-10) ∩ line(3-4)      = (49.5000, 79.0754)
+    p6 = foot of perp from 2 onto line(9-10) = (33.6746, 63.2500)
+    p7 = line(10-11) ∩ horiz-through-2 = (15.7500, 70.6746)
+    p8 = line(10-11) ∩ horiz-through-1 = (15.7500, 85.2500)
+  Each side is halved: side1 by x=0; side2 by the parallel midway to line(8-9);
+  side3 by the parallel midway to line(9-10); side4 by x=21.
+
+  THE 9 PIECES / 18 FACES (darker shade = first/left/upper/inner face):
+    tip-top   : tip-top-left  (7-5-p1)     | tip-top-right  (5-6-7)
+    side-1    : side1-left    (p1-p2 half) | side1-right    (4-5 half)
+    joint-1   : joint1-left   (4-8-p2)     | joint1-right   (4-8-p3)
+    side-2    : side2-end     (4-3 half)   | side2-down     (8-9 half)
+    joint-2   : joint2-upper  (p5-3-9)     | joint2-lower   (p4-3-9)
+    side-3    : side3-inner   (3-2 half)   | side3-outer    (9-10 half)
+    joint-3   : joint3-left   (2-10-p7)    | joint3-right   (2-p6-10)
+    side-4    : side4-left    (x<=21 half) | side4-right    (x>=21 half)
+    tip-belly : tipbelly-left (1-p8-11)    | tipbelly-right (1-11-12)
+
+  ===================  ILLUMINATION MAP (7 regions)  ===================
+  Where the illuminating point sits inside triangle 7-8-9 decides which faces
+  light. Region points:
+    p9  = line(11-10) ∩ line(6-9)  = (15.7500, 16.8307)
+    p10 = line(4-5)  ∩ line(9-10)  = (5.2500, 34.8254)
+    p11 = line(11-12) ∩ line(4-5)  = (5.2500, 116.1746)
+    p12 = line(3-4)  ∩ line(10-11) = (15.7500, 112.8254)   (shared R4/R5 vertex)
+    p13 = line(3-4)  ∩ line(1-12)  = (34.7877, 93.7877)
+    p14 = line(2-3)  ∩ line(11-12) = (38.5000, 82.9246)
+    R1 = triangle 9-10-p9        R5 = quad 11-p12-p13-12
+    R2 = pentagon 10-p9-6-5-p10  R6 = quad p13-3-p14-12
+    R3 = quad 10-p10-p11-11      R7 = quad 12-p14-2-1  (inner belly)
+    R4 = romboid 11-p11-4-p12
+  Drawn below as a translucent red overlay (solid red border). The 7 sibling
+  files b-split-R1..R7.svg each recolour one region solid red and paint its
+  lit faces white. Lit faces per region (right=outer face, left=inner):
+    R1: joint3-right, side3-outer, joint2-upper, tip-top-right, side1-right
+    R2: joint3-right, side3-outer, joint2-upper, tip-top-right, side1-right, joint3-left, side4-left, tipbelly-left, side2-end
+    R3: tip-top-right, side1-right, joint3-left, side4-left, tipbelly-left, side2-end
+    R4: side3-inner, tip-top-right, side1-right, joint3-left, side4-left, tipbelly-left, side2-end, tipbelly-right
+    R5: side1-right, side2-end, side3-inner, tipbelly-right
+    R6: side1-right, side2-end, side3-inner, tipbelly-right, side4-right
+    R7: side2-end, side3-inner, tipbelly-right, side4-right
+-->
+  <defs>
+    <polygon id="b-silhouette" points="26.2500,85.2500 26.2500,70.6746 42.0754,86.5000 5.2500,123.3254 5.2500,8.4363 9.2189,5.7798 -5.2500,-15.8371 -5.2500,148.6746 56.9246,86.5000 15.7500,45.3254 15.7500,105.6746 31.2123,90.2123"/>
+  </defs>
+
+  <!-- the 18 faces, grouped by piece -->
+  <g data-piece="tip-top (top tip)">
+    <polygon id="tip-top-left" fill="hsl(0,58%,38%)" points="-5.2500,-15.8371 5.2500,8.4363 -5.2500,8.4363"/>
+    <polygon id="tip-top-right" fill="hsl(0,58%,62%)" points="5.2500,8.4363 9.2189,5.7798 -5.2500,-15.8371"/>
+  </g>
+  <g data-piece="side-1 (first side / left stem)">
+    <polygon id="side1-left" fill="hsl(35,58%,38%)" points="-5.2500,8.4363 0.0000,8.4363 0.0000,123.3254 -5.2500,123.3254"/>
+    <polygon id="side1-right" fill="hsl(35,58%,62%)" points="0.0000,8.4363 5.2500,8.4363 5.2500,123.3254 0.0000,123.3254"/>
+  </g>
+  <g data-piece="joint-1">
+    <polygon id="joint1-left" fill="hsl(60,58%,38%)" points="5.2500,123.3254 -5.2500,148.6746 -5.2500,123.3254"/>
+    <polygon id="joint1-right" fill="hsl(60,58%,62%)" points="5.2500,123.3254 12.6746,130.7500 -5.2500,148.6746"/>
+  </g>
+  <g data-piece="side-2 (belly bottom)">
+    <polygon id="side2-end" fill="hsl(120,58%,38%)" points="5.2500,123.3254 42.0754,86.5000 45.7877,90.2123 8.9623,127.0377"/>
+    <polygon id="side2-down" fill="hsl(120,58%,62%)" points="8.9623,127.0377 45.7877,90.2123 49.5000,93.9246 12.6746,130.7500"/>
+  </g>
+  <g data-piece="joint-2 (middle joint)">
+    <polygon id="joint2-upper" fill="hsl(160,58%,38%)" points="49.5000,79.0754 42.0754,86.5000 56.9246,86.5000"/>
+    <polygon id="joint2-lower" fill="hsl(160,58%,62%)" points="49.5000,93.9246 56.9246,86.5000 42.0754,86.5000"/>
+  </g>
+  <g data-piece="side-3 (second-to-last side)">
+    <polygon id="side3-inner" fill="hsl(200,58%,38%)" points="42.0754,86.5000 45.7877,82.7877 29.9623,66.9623 26.2500,70.6746"/>
+    <polygon id="side3-outer" fill="hsl(200,58%,62%)" points="45.7877,82.7877 49.5000,79.0754 33.6746,63.2500 29.9623,66.9623"/>
+  </g>
+  <g data-piece="joint-3 (last joint)">
+    <polygon id="joint3-left" fill="hsl(255,58%,38%)" points="26.2500,70.6746 15.7500,45.3254 15.7500,70.6746"/>
+    <polygon id="joint3-right" fill="hsl(255,58%,62%)" points="26.2500,70.6746 33.6746,63.2500 15.7500,45.3254"/>
+  </g>
+  <g data-piece="side-4 (last side)">
+    <polygon id="side4-left" fill="hsl(290,58%,38%)" points="15.7500,70.6746 21.0000,70.6746 21.0000,85.2500 15.7500,85.2500"/>
+    <polygon id="side4-right" fill="hsl(290,58%,62%)" points="26.2500,85.2500 26.2500,70.6746 21.0000,70.6746 21.0000,85.2500"/>
+  </g>
+  <g data-piece="tip-belly (belly tip)">
+    <polygon id="tipbelly-left" fill="hsl(330,58%,38%)" points="26.2500,85.2500 15.7500,85.2500 15.7500,105.6746"/>
+    <polygon id="tipbelly-right" fill="hsl(330,58%,62%)" points="26.2500,85.2500 15.7500,105.6746 31.2123,90.2123"/>
+  </g>
+
+  <use href="#b-silhouette" fill="none" stroke="#1a1a1a" stroke-width="0.5" stroke-linejoin="miter" stroke-miterlimit="6"/>
+
+  <g data-layer="regions" stroke="red" stroke-width="0.6" stroke-linejoin="round">
+    <polygon id="R1" fill="red" fill-opacity="0.16" points="56.9246,86.5000 15.7500,45.3254 15.7500,16.8307"/>
+    <polygon id="R2" fill="red" fill-opacity="0.16" points="15.7500,45.3254 15.7500,16.8307 9.2189,5.7798 5.2500,8.4363 5.2500,34.8254"/>
+    <polygon id="R3" fill="red" fill-opacity="0.16" points="15.7500,45.3254 5.2500,34.8254 5.2500,116.1746 15.7500,105.6746"/>
+    <polygon id="R4" fill="red" fill-opacity="0.16" points="15.7500,105.6746 5.2500,116.1746 5.2500,123.3254 15.7500,112.8254"/>
+    <polygon id="R5" fill="red" fill-opacity="0.16" points="15.7500,105.6746 15.7500,112.8254 34.7877,93.7877 31.2123,90.2123"/>
+    <polygon id="R6" fill="red" fill-opacity="0.16" points="34.7877,93.7877 42.0754,86.5000 38.5000,82.9246 31.2123,90.2123"/>
+    <polygon id="R7" fill="red" fill-opacity="0.16" points="31.2123,90.2123 38.5000,82.9246 26.2500,70.6746 26.2500,85.2500"/>
+  </g>
+</svg>

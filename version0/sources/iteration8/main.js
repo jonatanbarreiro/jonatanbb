@@ -65,9 +65,15 @@ document.getElementById("year").textContent = new Date().getFullYear();
   const STR = "WILLING TO WORK";
   const chars = [...STR];
   let letterOff = [];     // each letter's signed angular offset from the string centre
-  const heat = new Array(chars.length).fill(0);   // each letter's current heat (0..1)
+  const heat = new Array(chars.length).fill(0);     // each letter's current heat (0..1)
+  const heatPeak = new Array(chars.length).fill(0); // the heat it last (re)lit to
+  const heatAge  = new Array(chars.length).fill(0); // seconds since that peak
   let heatT = 0;          // timestamp of the last heat update (ms)
-  const COOL_SEC = 4;     // a letter cools from full heat to zero in at most this long
+  // Cool-down is a STRETCHED exponential exp(-(age/τ)^β), shared by the letters and the
+  // b faces: a hot value stays readable ~1s, then falls off so it's gone ~5s after full
+  // illumination — the lingering-then-quick glow of cooling metal, not a linear ramp.
+  const COOL_TAU = 2.6, COOL_BETA = 2.2;
+  const coolDecay = age => Math.exp(-Math.pow(age / COOL_TAU, COOL_BETA));
   // The centre dot alone puts tone(GAIN_IN) ≈ 0.59 on the whole inner wall; the
   // letters must stay dark under that resting glow and only heat from EXTRA light.
   const TXT_T0 = 0.60, TXT_T1 = 1.0;
@@ -87,23 +93,22 @@ document.getElementById("year").textContent = new Date().getFullYear();
     [0.72, 200, 54, 46],   // bright crimson
     [1.00, 242, 130, 48]   // hot orange
   ];
-  function incandescent(t) {
+  function incRGB(t) {
     let a = HEAT[0], b = HEAT[HEAT.length - 1];
     for (let i = 0; i < HEAT.length - 1; i++)
       if (t >= HEAT[i][0] && t <= HEAT[i + 1][0]) { a = HEAT[i]; b = HEAT[i + 1]; break; }
     const f = (t - a[0]) / ((b[0] - a[0]) || 1);
-    const r = Math.round(a[1] + (b[1] - a[1]) * f);
-    const g = Math.round(a[2] + (b[2] - a[2]) * f);
-    const c = Math.round(a[3] + (b[3] - a[3]) * f);
-    return `rgb(${r},${g},${c})`;
+    return [Math.round(a[1] + (b[1]-a[1])*f), Math.round(a[2] + (b[2]-a[2])*f), Math.round(a[3] + (b[3]-a[3])*f)];
   }
+  function incandescent(t) { const c = incRGB(t); return `rgb(${c[0]},${c[1]},${c[2]})`; }
 
   // ---- the monogram's true outline, for a smooth boundary reflection -----
-  const refTop  = document.querySelector(".signet--top");
   const markEl  = document.querySelector(".signet__mark");   // rotating logo group (b's)
   const MARK_BASE = "translate(200 200) scale(0.835096) translate(-107.637 -168.3)";
   let rotRad = 0;                                            // current logo rotation (radians)
   let lettersWarm = false;                                   // any ring letter still cooling?
+  let bWarm = false;                                         // any b face still cooling?
+  let bSilVp = null;                                         // both b's viewport silhouettes (per frame)
   const reflectCanvas = document.getElementById("reflect-canvas");
   const ctx = reflectCanvas ? reflectCanvas.getContext("2d") : null;
   const castCanvas = document.getElementById("cast-canvas");
@@ -113,44 +118,215 @@ document.getElementById("year").textContent = new Date().getFullYear();
   const PRIM = [[27.5,86.5],[21,93],[21,58],[49.5,86.5],[0,136],[0,1.445],[4.856,8.7]];
   const USES = [[44.6,81.8],[119,57.75]];
   const KLOGO = 0.835096;
-  const HW = 10.5 * KLOGO / 2;
   const gX = x => 200 + KLOGO * (x - 107.637);
   const gY = y => 200 + KLOGO * (y - 168.3);
 
-  // Build the two rims of one b (each a list of straight edges with an outward
-  // normal); convex joins keep the miter, concave joins bevel.
-  const INSET = 1.4;
-  const O = HW - INSET;
-  function buildStrands(t) {
-    const C = PRIM.map(p => [gX(p[0] + t[0]), gY(p[1] + t[1])]);
-    const n = C.length, d = [], nL = [];
-    for (let i = 0; i < n - 1; i++) {
-      const dx = C[i+1][0]-C[i][0], dy = C[i+1][1]-C[i][1], len = Math.hypot(dx,dy) || 1;
-      d.push([dx/len, dy/len]); nL.push([-dy/len, dx/len]);
-    }
-    const vert = (i, sg) => {
-      if (i === 0)     return [C[0][0]+sg*O*nL[0][0], C[0][1]+sg*O*nL[0][1]];
-      if (i === n - 1) return [C[n-1][0]+sg*O*nL[n-2][0], C[n-1][1]+sg*O*nL[n-2][1]];
-      let mx = nL[i-1][0]+nL[i][0], my = nL[i-1][1]+nL[i][1], ml = Math.hypot(mx,my) || 1;
-      mx /= ml; my /= ml;
-      let den = mx*nL[i][0] + my*nL[i][1];
-      const turn = d[i-1][0]*d[i][1] - d[i-1][1]*d[i][0];
-      const convex = sg * turn < 0;
-      const floor = convex ? 0.17 : 0.82;
-      if (den < floor) den = floor;
-      const m = O / den;
-      return [C[i][0]+sg*m*mx, C[i][1]+sg*m*my];
-    };
-    const strand = sg => {
-      const v = []; for (let i = 0; i < n; i++) v.push(vert(i, sg));
-      const edges = [];
-      for (let i = 0; i < n - 1; i++)
-        edges.push({ ax: v[i][0], ay: v[i][1], bx: v[i+1][0], by: v[i+1][1], nx: sg*nL[i][0], ny: sg*nL[i][1] });
-      return edges;
-    };
-    return [strand(1), strand(-1)];
+  // ===== b interior illumination ====================================
+  // The b's faces light by region (see assets/b-split.svg): an interior light that
+  // falls inside a b's 7-8-9 triangle lands in one of 7 regions, and that region
+  // fixes which faces light. Geometry below is in canonical bb-primitive units for
+  // one b (the two b's share it under their USE translate). Each face carries its
+  // region-facing side f=[A,B], that side's outward normal n, and the inward reach
+  // profile p (depth at 11 samples along A->B: constant for a rectangle, tapering to
+  // the point for a triangle).
+  const B_TRI = [[-5.2500,-15.8371],[-5.2500,148.6746],[56.9246,86.5000]];
+  const B_REG = [
+    [[56.9246,86.5000],[15.7500,45.3254],[15.7500,16.8307]],
+    [[15.7500,45.3254],[15.7500,16.8307],[9.2189,5.7798],[5.2500,8.4363],[5.2500,34.8254]],
+    [[15.7500,45.3254],[5.2500,34.8254],[5.2500,116.1746],[15.7500,105.6746]],
+    [[15.7500,105.6746],[5.2500,116.1746],[5.2500,123.3254],[15.7500,112.8254]],
+    [[15.7500,105.6746],[15.7500,112.8254],[34.7877,93.7877],[31.2123,90.2123]],
+    [[34.7877,93.7877],[42.0754,86.5000],[38.5000,82.9246],[31.2123,90.2123]],
+    [[31.2123,90.2123],[38.5000,82.9246],[26.2500,70.6746],[26.2500,85.2500]]];
+  const B_EL = [
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 0 tip-top-left (never lit)
+    {f:[[5.2500,8.4363],[9.2189,5.7798]],n:[0.5562,0.8310],p:[0.026,2.601,5.202,7.804,10.405,13.006,15.607,18.209,20.810,23.411,25.986]}, // 1 tip-top-right
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 2 side1-left (never lit)
+    {f:[[5.2500,8.4363],[5.2500,123.3254]],n:[1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 3 side1-right
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 4 joint1-left (never lit)
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 5 joint1-right (never lit)
+    {f:[[5.2500,123.3254],[42.0754,86.5000]],n:[-0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 6 side2-end
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 7 side2-down (never lit)
+    {f:[[56.9246,86.5000],[49.5000,79.0754]],n:[0.7071,-0.7071],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 8 joint2-upper
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 9 joint2-lower (never lit)
+    {f:[[26.2500,70.6746],[42.0754,86.5000]],n:[-0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 10 side3-inner
+    {f:[[49.5000,79.0754],[33.6746,63.2500]],n:[0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 11 side3-outer
+    {f:[[15.7500,45.3254],[15.7500,70.6746]],n:[-1.0000,0.0000],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 12 joint3-left
+    {f:[[33.6746,63.2500],[15.7500,45.3254]],n:[0.7071,-0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 13 joint3-right
+    {f:[[15.7500,85.2500],[15.7500,70.6746]],n:[-1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 14 side4-left
+    {f:[[26.2500,85.2500],[26.2500,70.6746]],n:[1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 15 side4-right
+    {f:[[15.7500,85.2500],[15.7500,105.6746]],n:[-1.0000,0.0000],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 16 tipbelly-left
+    {f:[[15.7500,105.6746],[31.2123,90.2123]],n:[0.7071,0.7071],p:[0.007,0.702,1.403,2.105,2.807,3.509,4.211,4.912,5.614,6.316,7.011]}, // 17 tipbelly-right
+  ];
+  const B_LIT = [[13,11,8,1,3],[13,11,8,1,3,12,14,16,6],[1,3,12,14,16,6],[10,1,3,12,14,16,6,17],[3,6,10,17],[3,6,10,17,15],[6,10,17,15]];
+  const GAIN_B = 70;        // face illuminance gain (cosβ/dist), tuned toward the ring-band look
+  // each element's full polygon (point-on-element test); the 12-corner silhouette; and
+  // each element's OUTER (silhouette-facing) side + inward profile — the face an exterior
+  // light sees. Exterior groups: which faces light from beyond each edge of the 7-8-9
+  // triangle — edge 7-8 -> the left silhouette faces, 8-9 -> the bottom, 7-9 -> the belly
+  // faces seen through the open mouth (lit on their inner side).
+  const B_POLY = [
+    [[-5.2500,-15.8371],[5.2500,8.4363],[-5.2500,8.4363]],
+    [[5.2500,8.4363],[9.2189,5.7798],[-5.2500,-15.8371]],
+    [[-5.2500,8.4363],[0.0000,8.4363],[0.0000,123.3254],[-5.2500,123.3254]],
+    [[0.0000,8.4363],[5.2500,8.4363],[5.2500,123.3254],[0.0000,123.3254]],
+    [[5.2500,123.3254],[-5.2500,148.6746],[-5.2500,123.3254]],
+    [[5.2500,123.3254],[12.6746,130.7500],[-5.2500,148.6746]],
+    [[5.2500,123.3254],[42.0754,86.5000],[45.7877,90.2123],[8.9623,127.0377]],
+    [[8.9623,127.0377],[45.7877,90.2123],[49.5000,93.9246],[12.6746,130.7500]],
+    [[49.5000,79.0754],[42.0754,86.5000],[56.9246,86.5000]],
+    [[49.5000,93.9246],[56.9246,86.5000],[42.0754,86.5000]],
+    [[42.0754,86.5000],[45.7877,82.7877],[29.9623,66.9623],[26.2500,70.6746]],
+    [[45.7877,82.7877],[49.5000,79.0754],[33.6746,63.2500],[29.9623,66.9623]],
+    [[26.2500,70.6746],[15.7500,45.3254],[15.7500,70.6746]],
+    [[26.2500,70.6746],[33.6746,63.2500],[15.7500,45.3254]],
+    [[15.7500,70.6746],[21.0000,70.6746],[21.0000,85.2500],[15.7500,85.2500]],
+    [[26.2500,85.2500],[26.2500,70.6746],[21.0000,70.6746],[21.0000,85.2500]],
+    [[26.2500,85.2500],[15.7500,85.2500],[15.7500,105.6746]],
+    [[26.2500,85.2500],[15.7500,105.6746],[31.2123,90.2123]]];
+  const B_SIL = [[26.2500,85.2500],[26.2500,70.6746],[42.0754,86.5000],[5.2500,123.3254],[5.2500,8.4363],[9.2189,5.7798],[-5.2500,-15.8371],[-5.2500,148.6746],[56.9246,86.5000],[15.7500,45.3254],[15.7500,105.6746],[31.2123,90.2123]];
+  const B_OUT = [
+    {f:[[-5.2500,8.4363],[-5.2500,-15.8371]],n:[-1,0],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 0 tip-top-left
+    {f:[[5.2500,8.4363],[9.2189,5.7798]],n:[0.5562,0.8310],p:[0.026,2.601,5.202,7.804,10.405,13.006,15.607,18.209,20.810,23.411,25.986]}, // 1 tip-top-right
+    {f:[[-5.2500,123.3254],[-5.2500,8.4363]],n:[-1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 2 side1-left
+    {f:[[5.2500,8.4363],[5.2500,123.3254]],n:[1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 3 side1-right
+    {f:[[-5.2500,148.6746],[-5.2500,123.3254]],n:[-1,0],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 4 joint1-left
+    {f:[[12.6746,130.7500],[-5.2500,148.6746]],n:[0.7071,0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 5 joint1-right
+    {f:[[5.2500,123.3254],[42.0754,86.5000]],n:[-0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 6 side2-end
+    {f:[[49.5000,93.9246],[12.6746,130.7500]],n:[0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 7 side2-down
+    {f:[[56.9246,86.5000],[49.5000,79.0754]],n:[0.7071,-0.7071],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 8 joint2-upper
+    {f:[[49.5000,93.9246],[56.9246,86.5000]],n:[0.7071,0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 9 joint2-lower
+    {f:[[26.2500,70.6746],[42.0754,86.5000]],n:[-0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 10 side3-inner
+    {f:[[49.5000,79.0754],[33.6746,63.2500]],n:[0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 11 side3-outer
+    {f:[[15.7500,45.3254],[15.7500,70.6746]],n:[-1,0],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 12 joint3-left
+    {f:[[33.6746,63.2500],[15.7500,45.3254]],n:[0.7071,-0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 13 joint3-right
+    {f:[[15.7500,85.2500],[15.7500,70.6746]],n:[-1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 14 side4-left
+    {f:[[26.2500,85.2500],[26.2500,70.6746]],n:[1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 15 side4-right
+    {f:[[15.7500,85.2500],[15.7500,105.6746]],n:[-1,0],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 16 tipbelly-left
+    {f:[[15.7500,105.6746],[31.2123,90.2123]],n:[0.7071,0.7071],p:[0.007,0.702,1.403,2.105,2.807,3.509,4.211,4.912,5.614,6.316,7.011]}, // 17 tipbelly-right
+  ];
+  const B_G_LEFT = [0,2,4], B_G_BOT = [5,7,9], B_G_MOUTH = [1,13,11,8];
+
+  // one b's local frame <-> viewport (t = its USE translate; cR,sR = live rotation)
+  function vpToPrim(px, py, t, cx, cy, scale, cR, sR) {
+    const u = (px - cx) / scale, w = (py - cy) / scale;
+    return [(u * cR + w * sR) / KLOGO + 107.637 - t[0], (-u * sR + w * cR) / KLOGO + 168.3 - t[1]];
   }
-  const strands = refTop ? [].concat(...USES.map(buildStrands)) : [];
+  function primToVp(qx, qy, t, cx, cy, scale, cR, sR) {
+    const X = KLOGO * (qx + t[0] - 107.637), Y = KLOGO * (qy + t[1] - 168.3);
+    return [cx + (X * cR - Y * sR) * scale, cy + (X * sR + Y * cR) * scale];
+  }
+  function inPoly(x, y, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+      if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+    }
+    return inside;
+  }
+
+  // do open segments AB and CD properly cross?
+  function segInt(ax, ay, bx, by, cx2, cy2, dx, dy) {
+    const r1x = bx-ax, r1y = by-ay, r2x = dx-cx2, r2y = dy-cy2;
+    const den = r1x*r2y - r1y*r2x; if (Math.abs(den) < 1e-9) return false;
+    const t = ((cx2-ax)*r2y - (cy2-ay)*r2x) / den;
+    const s = ((cx2-ax)*r1y - (cy2-ay)*r1x) / den;
+    return t > 1e-4 && t < 1-1e-4 && s > 1e-4 && s < 1-1e-4;
+  }
+  function segCrossPoly(px, py, qx, qy, poly) {
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++)
+      if (segInt(px, py, qx, qy, poly[j][0], poly[j][1], poly[i][0], poly[i][1])) return true;
+    return false;
+  }
+  // is point p on the OUTER side of triangle edge tri[i]-tri[j] (opposite the 3rd vertex)?
+  function sideOut(p, tri, i, j) {
+    const k = 3 - i - j, ax = tri[i][0], ay = tri[i][1], ex = tri[j][0]-ax, ey = tri[j][1]-ay;
+    const sp = ex*(p[1]-ay) - ey*(p[0]-ax), sk = ex*(tri[k][1]-ay) - ey*(tri[k][0]-ax);
+    return sp * sk < 0;
+  }
+
+  // ---- b face heat: state per [b][side][element][sample]. side 0 = inner (region /
+  // mouth / on-element lights), side 1 = outer (silhouette, exterior lights). Faces glow
+  // incandescent (red->orange, like the ring letters) and cool by stretched-exponential.
+  const BHN = 2*2*18*11, bhBase = (b, side, el) => (((b*2+side)*18+el)*11);
+  const bPeak = new Float32Array(BHN), bAge = new Float32Array(BHN), bRaw = new Float32Array(BHN);
+  let bT = 0;
+  // accumulate one light's cosβ/dist onto a face's 11 samples, skipping samples whose
+  // ray to them is blocked by `occ` (the other b's viewport silhouette), if given.
+  function accFace(base, ax, ay, ex, ey, nx, ny, px, py, occ) {
+    for (let j = 0; j <= 10; j++) {
+      const X = ax + ex*j/10, Y = ay + ey*j/10;
+      if (occ && segCrossPoly(px, py, X, Y, occ)) continue;
+      const dx = px - X, dy = py - Y, dist = Math.hypot(dx, dy); if (dist < 0.001) continue;
+      const cb = (nx*dx + ny*dy) / dist; if (cb > 0) bRaw[base + j] += GAIN_B * cb / dist;
+    }
+  }
+
+  // Light and paint the b faces (on the reflect canvas, over the black b's). Interior
+  // lights inside a b light its region faces, or — if on no region — the single element
+  // they sit on (full glow). Interior-but-exterior lights light the outer faces they see
+  // by half-plane against the 7-8-9 edges, occluded by the nearer b. Each face's heat
+  // tracks its illumination and cools by the shared stretched exponential.
+  function lightAndPaintB(cx, cy, scale, cR, sR, inn) {
+    if (!ctx) return;
+    const now = performance.now(), dt = bT ? Math.min((now - bT)/1000, 0.1) : 0; bT = now;
+    bRaw.fill(0);
+    const scl = KLOGO * scale, FACES = [B_EL, B_OUT];
+    const FA = [[[],[]],[[],[]]], FB = [[[],[]],[[],[]]], FN = [[[],[]],[[],[]]], silVp = [];
+    for (let b = 0; b < 2; b++) {
+      const t = USES[b];
+      silVp[b] = B_SIL.map(q => primToVp(q[0], q[1], t, cx, cy, scale, cR, sR));
+      for (let side = 0; side < 2; side++)
+        for (let el = 0; el < 18; el++) {
+          const F = FACES[side][el];
+          if (!F.p.length) { FA[b][side][el] = null; continue; }
+          FA[b][side][el] = primToVp(F.f[0][0], F.f[0][1], t, cx, cy, scale, cR, sR);
+          FB[b][side][el] = primToVp(F.f[1][0], F.f[1][1], t, cx, cy, scale, cR, sR);
+          FN[b][side][el] = [F.n[0]*cR - F.n[1]*sR, F.n[0]*sR + F.n[1]*cR];
+        }
+    }
+    const add = (b, side, el, px, py, occ) => {
+      const A = FA[b][side][el]; if (!A) return;
+      const B = FB[b][side][el], N = FN[b][side][el];
+      accFace(bhBase(b, side, el), A[0], A[1], B[0]-A[0], B[1]-A[1], N[0], N[1], px, py, occ);
+    };
+    for (const p of inn) {
+      if (p.role === 'region' && p.ridx >= 0) {
+        for (const el of B_LIT[p.ridx]) add(p.bk, 0, el, p.px, p.py, null);
+      } else if (p.role === 'onEl' && p.eidx >= 0) {
+        const base = bhBase(p.bk, 0, p.eidx); for (let j = 0; j <= 10; j++) bRaw[base + j] += 6;  // full glow
+      } else if (p.role === 'ext') {
+        for (let b = 0; b < 2; b++) {
+          const occ = silVp[1-b], pr = vpToPrim(p.px, p.py, USES[b], cx, cy, scale, cR, sR);
+          if (sideOut(pr, B_TRI, 0, 1)) for (const el of B_G_LEFT)  add(b, 1, el, p.px, p.py, occ);  // beyond 7-8
+          if (sideOut(pr, B_TRI, 1, 2)) for (const el of B_G_BOT)   add(b, 1, el, p.px, p.py, occ);  // beyond 8-9
+          if (sideOut(pr, B_TRI, 2, 0)) for (const el of B_G_MOUTH) add(b, 0, el, p.px, p.py, occ);  // beyond 9-7
+        }
+      }
+    }
+    bWarm = false;
+    for (let b = 0; b < 2; b++) for (let side = 0; side < 2; side++) for (let el = 0; el < 18; el++) {
+      const A = FA[b][side][el]; if (!A) continue;
+      const base = bhBase(b, side, el), prof = FACES[side][el].p, hs = new Array(11);
+      let mx = 0;
+      for (let j = 0; j <= 10; j++) {
+        const target = tone(bRaw[base + j]), cooled = bPeak[base + j] * coolDecay(bAge[base + j]);
+        let h;
+        if (target >= cooled) { bPeak[base + j] = target; bAge[base + j] = 0; h = target; }
+        else { bAge[base + j] += dt; h = cooled; if (h > target + 0.003) bWarm = true; }
+        hs[j] = h; if (h > mx) mx = h;
+      }
+      if (mx < 0.02) continue;
+      const B = FB[b][side][el], N = FN[b][side][el];
+      const ax = A[0], ay = A[1], ex = B[0]-ax, ey = B[1]-ay, nx = N[0], ny = N[1];
+      const grad = ctx.createLinearGradient(ax, ay, B[0], B[1]);
+      for (let j = 0; j <= 10; j++) { const c = incRGB(hs[j]); grad.addColorStop(j/10, `rgba(${c[0]},${c[1]},${c[2]},${hs[j].toFixed(3)})`); }
+      ctx.beginPath();
+      for (let j = 0; j <= 10; j++) { const u = j/10; j ? ctx.lineTo(ax + ex*u, ay + ey*u) : ctx.moveTo(ax, ay); }
+      for (let j = 10; j >= 0; j--) { const u = j/10, r = hs[j]*prof[j]*scl; ctx.lineTo(ax + ex*u - nx*r, ay + ey*u - ny*r); }
+      ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+    }
+  }
 
   // ---- occlusion: a b is opaque, so an interior point may not light the inner
   // wall "through" it. Each b is approximated by the triangle of its 3 OUTER
@@ -224,7 +400,10 @@ document.getElementById("year").textContent = new Date().getFullYear();
     let v = 0;
     const wx = cx + rIn * Math.cos(a), wy = cy + rIn * Math.sin(a);   // the lit wall point
     for (const p of inn) {
-      if (p.g0) {                          // occluded by a b? (skip that direction)
+      if (p.role === 'onEl') continue;               // a light on a b face lights no wall
+      if (p.role === 'region') {                     // inside a b: sees the wall only through the mouth
+        if (segCrossPoly(p.px, p.py, wx, wy, bSilVp[0]) || segCrossPoly(p.px, p.py, wx, wy, bSilVp[1])) continue;
+      } else if (p.g0) {                             // exterior: the b's block their triangle's angular span
         const dir = Math.atan2(wy - p.py, wx - p.px);
         if (!inGap(dir, p.g0) || !inGap(dir, p.g1)) continue;
       }
@@ -260,68 +439,19 @@ document.getElementById("year").textContent = new Date().getFullYear();
     ctx.fillStyle = g; ctx.fill();
   }
 
-  function drawReflections(lights, bnd) {
+  // Clear the reflect canvas and paint the two ring bands. The lit b faces are
+  // added on top of this same canvas by lightAndPaintB (same diffusion).
+  function drawReflections(bnd) {
     if (!ctx) return;
     ctx.clearRect(0, 0, reflectCanvas._cw, reflectCanvas._ch);
-    const hasGlint = lights && lights.length;
     let bandMx = 0;
     for (let k = 0; k < bnd.alphaOut.length; k++) {
       if (bnd.alphaOut[k] > bandMx) bandMx = bnd.alphaOut[k];
       if (bnd.alphaInner[k] > bandMx) bandMx = bnd.alphaInner[k];
     }
-    const hasBands = bandMx > 0.004;
-    if (!hasGlint && !hasBands) return;
-    const rect = refTop.getBoundingClientRect(); const W = rect.width; if (!W) return;
-    const s = W / 400;
-    const L = (lights || []).map(p => ({ x: (p.x - rect.left) / s, y: (p.y - rect.top) / s, w: p.w }));
-    const Dr = 95, K = 2.4;
-    const lit = (x, y, nx, ny) => {
-      let v = 0;
-      for (const l of L) {
-        const dx = l.x - x, dy = l.y - y, dist = Math.hypot(dx, dy);
-        if (dist < 0.001) continue;
-        const f = (nx*dx + ny*dy) / dist;
-        if (f <= 0) continue;
-        v += l.w * f / (1 + (dist/Dr)*(dist/Dr));
-      }
-      return Math.tanh(v * K);
-    };
-    const FADE = 7, bw = 3 * s;
-    ctx.lineCap = "butt"; ctx.lineJoin = "round"; ctx.lineWidth = bw;
-    const cR = Math.cos(rotRad), sR = Math.sin(rotRad);
-    const rX = (x, y) => 200 + (x - 200) * cR - (y - 200) * sR;
-    const rY = (x, y) => 200 + (x - 200) * sR + (y - 200) * cR;
-    if (hasGlint) for (const edges of strands) {
-      const lastE = edges.length - 1;
-      for (let ei = 0; ei < edges.length; ei++) {
-        const e = edges[ei];
-        const eax = rX(e.ax, e.ay), eay = rY(e.ax, e.ay);
-        const ebx = rX(e.bx, e.by), eby = rY(e.bx, e.by);
-        const enx = e.nx * cR - e.ny * sR, eny = e.nx * sR + e.ny * cR;
-        const ax = rect.left + eax*s, ay = rect.top + eay*s;
-        const bx = rect.left + ebx*s, by = rect.top + eby*s;
-        const len = Math.hypot(ebx-eax, eby-eay);
-        const steps = Math.max(1, Math.round(len / 4));
-        const grad = ctx.createLinearGradient(ax, ay, bx, by);
-        let any = false;
-        for (let j = 0; j <= steps; j++) {
-          const u = j / steps;
-          let fade = 1;
-          if (ei === 0)     fade = Math.min(fade, (u * len) / FADE);
-          if (ei === lastE) fade = Math.min(fade, ((1 - u) * len) / FADE);
-          const a = lit(eax + (ebx-eax)*u, eay + (eby-eay)*u, enx, eny) * fade;
-          if (a > 0.012) any = true;
-          grad.addColorStop(u, `rgba(${GOLD[0]},${GOLD[1]},${GOLD[2]},${a.toFixed(3)})`);
-        }
-        if (!any) continue;
-        ctx.strokeStyle = grad;
-        ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
-      }
-    }
-    if (hasBands) {
-      band(bnd, bnd.rOut, -1, bnd.alphaOut);
-      band(bnd, bnd.rIn,  +1, bnd.alphaInner);
-    }
+    if (bandMx <= 0.004) return;
+    band(bnd, bnd.rOut, -1, bnd.alphaOut);
+    band(bnd, bnd.rIn,  +1, bnd.alphaInner);
   }
 
   // The focused cone an exterior point throws at the logo: a wedge bounded by the
@@ -354,15 +484,14 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // the BOTTOM half of the ring — at rest it sits on the left arc and rolls down
   // to the bottom as you scroll into the content (where you read it); it inverts
   // only once it rolls past, which we accept. Each letter heats INSTANTLY to the
-  // light on its arc, but is rate-limited on the way DOWN (a full cool-down takes
-  // COOL_SEC) so the temperature lingers. Sets `lettersWarm` while any letter is
-  // still cooling, so the loop keeps animating the cool-down after a scroll stops.
+  // light on its arc, then cools by the shared stretched exponential so the heat
+  // lingers ~1s and fades by ~5s. Sets `lettersWarm` while any letter is still
+  // cooling, so the loop keeps animating the cool-down after a scroll stops.
   function drawLetters(cx, cy, R, thk, toneOut, toneIn) {
     if (!lctx || letterOff.length !== chars.length) return;
     const now = performance.now();
     const dt = heatT ? Math.min((now - heatT) / 1000, 0.1) : 0;
     heatT = now;
-    const maxDrop = dt / COOL_SEC;
     lctx.clearRect(0, 0, lettersCanvas._cw, lettersCanvas._ch);
     lctx.font = `bold ${(FONT_FRAC * thk).toFixed(1)}px ${FAMILY}`;
     lctx.textAlign = "center"; lctx.textBaseline = "middle";
@@ -371,11 +500,12 @@ document.getElementById("year").textContent = new Date().getFullYear();
       const ang = CENTRE_ANG + letterOff[i] + rotRad;        // rides the spin
       const k = Math.round((((ang % TAU) + TAU) % TAU) / TAU * N) % N;
       const target = Math.max(0, Math.min(1, (Math.max(toneOut[k], toneIn[k]) - TXT_T0) / (TXT_T1 - TXT_T0)));
-      if (heat[i] > target) {                                // rate-limited cool-down
-        heat[i] = Math.max(target, heat[i] - maxDrop);
-        if (heat[i] > target + 0.0005) cooling = true;
-      } else {
-        heat[i] = target;                                    // instant heat-up
+      const cooled = heatPeak[i] * coolDecay(heatAge[i]);
+      if (target >= cooled) {                                // instant heat-up / re-light
+        heatPeak[i] = target; heatAge[i] = 0; heat[i] = target;
+      } else {                                               // stretched-exponential cool-down
+        heatAge[i] += dt; heat[i] = cooled;
+        if (heat[i] > target + 0.003) cooling = true;
       }
       if (chars[i] === " ") continue;
       const lvl = Math.round(heat[i] * LEVELS);
@@ -402,7 +532,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     if (!R) return;
     const halfStroke = 8.7685 * scale, rOut = R + halfStroke, rIn = R - halfStroke, thk = rOut - rIn;
     const sx = window.scrollX, sy = window.scrollY, vw = window.innerWidth, vh = window.innerHeight;
-    const ext = [], inn = [], interior = [];
+    const ext = [], inn = [];
     for (let i = 0; i < dotEls.length; i++) {
       const p = dotPos[i]; if (!p) continue;
       const px = p.x - sx, py = p.y - sy;
@@ -410,26 +540,39 @@ document.getElementById("year").textContent = new Date().getFullYear();
       const dx = px - cx, dy = py - cy, dist = Math.hypot(dx, dy), th = Math.atan2(dy, dx);
       if (dist >= rOut) ext.push({ th, d: dist, px, py });
       else if (dist < rIn) inn.push({ th, d: dist, px, py });
-      if (dist <= R) {
-        const t = Math.min(1, Math.max(0, (R - dist) / (0.22 * R)));
-        interior.push({ x: px, y: py, w: t * t * (3 - 2 * t) });
-      }
     }
     // turn the logo with scroll (no-slip roll down a wall on the right); the sign
     // is negated to spin the corrected direction
     rotRad = -sy / rOut;
+    const cR = Math.cos(rotRad), sR = Math.sin(rotRad);
     if (markEl) markEl.setAttribute("transform",
       `rotate(${(rotRad * 180 / Math.PI).toFixed(3)} 200 200) ${MARK_BASE}`);
 
-    // occlusion: give each interior point the clear angular gap for both b's (the
-    // b corners rotate with the logo, so map them through the live rotation)
+    // Classify each interior light against the two b's (the b geometry rotates with the
+    // logo). A light on a b's ribbon sits on one element; inside its belly notch it sits
+    // in a region; otherwise it is exterior to both b's. This decides both the b-face
+    // lighting and how the light may reach the inner wall.
     if (inn.length) {
-      const cR = Math.cos(rotRad), sR = Math.sin(rotRad);
       const bbToVp = (bx, by) => { const X = gX(bx) - 200, Y = gY(by) - 200;
         return [cx + (X*cR - Y*sR) * scale, cy + (X*sR + Y*cR) * scale]; };
       const occ0 = OCC_PRIM.map(c => bbToVp(c[0] + USES[0][0], c[1] + USES[0][1]));
       const occ1 = OCC_PRIM.map(c => bbToVp(c[0] + USES[1][0], c[1] + USES[1][1]));
-      for (const p of inn) { p.g0 = largestGap(p, occ0); p.g1 = largestGap(p, occ1); }
+      bSilVp = [0, 1].map(b => B_SIL.map(q => primToVp(q[0], q[1], USES[b], cx, cy, scale, cR, sR)));
+      for (const p of inn) {
+        p.role = 'ext'; p.bk = -1;
+        for (let b = 0; b < 2; b++) {
+          const pr = vpToPrim(p.px, p.py, USES[b], cx, cy, scale, cR, sR);
+          if (inPoly(pr[0], pr[1], B_SIL)) {                 // on the ribbon -> on an element
+            let e = -1; for (let i = 0; i < 18; i++) if (inPoly(pr[0], pr[1], B_POLY[i])) { e = i; break; }
+            p.role = 'onEl'; p.bk = b; p.eidx = e; break;
+          }
+          if (inPoly(pr[0], pr[1], B_TRI)) {                 // in the belly notch -> a region
+            let r = -1; for (let k = 0; k < 7; k++) if (inPoly(pr[0], pr[1], B_REG[k])) { r = k; break; }
+            p.role = 'region'; p.bk = b; p.ridx = r; break;
+          }
+        }
+        if (p.role === 'ext') { p.g0 = largestGap(p, occ0); p.g1 = largestGap(p, occ1); }
+      }
     }
 
     // the two boundary-illumination sequences over the uniform arc partition
@@ -441,9 +584,10 @@ document.getElementById("year").textContent = new Date().getFullYear();
     }
 
     drawCast(ext, cx, cy, rOut);
-    drawReflections(interior, { alphaOut: toneOut, alphaInner: toneIn, cx, cy, rOut, rIn,
+    drawReflections({ alphaOut: toneOut, alphaInner: toneIn, cx, cy, rOut, rIn,
       maxReach: 0.45 * thk,                          // reach trimmed 10% (flatter falloff)
       overshoot: 2.5 * scale });
+    lightAndPaintB(cx, cy, scale, cR, sR, inn);
     drawLetters(cx, cy, R, thk, toneOut, toneIn);
   }
 
@@ -491,7 +635,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
   let raf = 0;
   // keep animating while the letters are still cooling, even after a scroll stops
-  const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; draw(); if (lettersWarm) schedule(); }); };
+  const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; draw(); if (lettersWarm || bWarm) schedule(); }); };
   window.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", () => { sizeCanvas(); layoutDots(); schedule(); });
 
