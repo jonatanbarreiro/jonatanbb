@@ -74,26 +74,38 @@ to implement an attractive CV site that makes him visible on the job market.
 
 Source prompts are recognizable — they are about the actual website (its
 appearance, behavior, or contents). In each, Jonatan states whether it is a **new
-iteration** of the version or **builds on the current** one.
+iteration** of the version or **builds on the current** one. An iteration may run
+across several turns; it is finished only when Jonatan **explicitly says to wrap it
+up** (see *Wrapping up* below).
 
 **New iteration:**
-1. First, make sure the just-finished (current-highest) iteration has its
-   `version0/gallery/iterationNNN.png` — if it's missing, generate it with the
-   renderer at the fixed frame (see *Rendering & gallery captures*).
-2. Copy the highest-numbered `version0/sources/iterationN/` to `iteration{N+1}/`.
-3. Remove every `interaction_*` file from the new copy (asset symlinks stay).
-4. Work the new iteration's source per the prompt.
-5. When done, document the exchange in that iteration folder:
-   - save any files Jonatan attached as
-     `interaction_<yyyy>_<mm>_<dd>_<keyword>.<ext>`;
-   - write `interaction_<yyyy>_<mm>_<dd>.md` recording the turn (his prompt + your
-     final answer).
+1. Copy the highest-numbered `version0/sources/iterationN/` to `iteration{N+1}/`.
+2. Remove every `interaction_*` file from the new copy (asset symlinks stay).
+3. Work the new iteration's source per the prompt, turn after turn, until Jonatan
+   says to wrap up.
 
 **Builds on the current iteration:**
-1. Work the highest iteration's source per the prompt.
-2. Append the turn to that iteration's `interaction_<yyyy>_<mm>_<dd>.md` (his
-   prompt + your final answer; two blank lines between turns), and save any
-   attached files with the same naming.
+1. Work the highest iteration's source per the prompt, turn after turn, until
+   Jonatan says to wrap up.
+
+**Wrapping up.** When Jonatan explicitly says to wrap up the iteration, that
+instruction *is* the go-ahead: wrap up right then — do not pause to make him verify
+first. Wrapping up is exactly three things:
+1. **Save the files used.** Every file Jonatan attached during the iteration goes
+   into the iteration folder as `interaction_<yyyy>_<mm>_<dd>_<keyword>.<ext>`.
+2. **Write the whole exchange.** Create `interaction_<yyyy>_<mm>_<dd>.md` in the
+   iteration folder holding the iteration's *entire* exchange, in order: Jonatan's
+   first prompt verbatim, then your final answer, then two blank lines, then his
+   next prompt verbatim, then your final answer — and so on for every turn of the
+   iteration. Use the same labeled shape as the session log
+   (`Jonatan on YYYY-MM-DD at ~HH:MM:` / `Claude 4.8 on YYYY-MM-DD at ~HH:MM:`).
+3. **Snapshot the site.** Render `version0/gallery/iterationNNN.png` at the same
+   frame as the existing gallery shots (see *Rendering & gallery captures*). The
+   point scatter is RNG-driven by design — do not stage or chase a particular
+   arrangement; only the frame must match.
+
+If a past wrap-up's gallery shot is somehow missing, generate it before copying for
+a new iteration.
 
 Notes:
 - Most iterations are a single turn; later, polishing iterations may run several.
