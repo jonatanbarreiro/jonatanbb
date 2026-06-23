@@ -1,0 +1,313 @@
+/* ============================================================
+   jonatanbb.xyz — personal site
+   Companion to firecoat.me (the dark side). The page wears the
+   portrait's studio gray; warm-black serif text, sun-gold accents.
+   A field of sample points is anchored to the page and scrolls with
+   it; the reconstructed circle, with the monogram inscribed, is fixed
+   to the viewport and holds still. Custom-built.
+   ============================================================ */
+
+:root {
+  --sky:       #1c1a16;   /* satin black — illuminated, faintly warm; headings */
+  --sky-soft:  #38342c;   /* lifted warm charcoal, for eyebrow / secondary heads */
+  --escarlata:     #e83520;       /* the b's hot scarlet — the faint core of a dot */
+  --escarlata-rgb: 232, 53, 32;
+  --gold-rgb:  232, 163, 23;      /* the light's PEAK colour (annulus at max; a dot's solid disc) */
+  --gold-theme:     #e8c24a;      /* BUILD COLOUR — the lit-zone yellow for motifs/chips/dots (option F) */
+  --gold-theme-rgb: 232, 194, 74;
+  --gold:      var(--gold-theme); /* motifs read as the AVERAGE lit gold, not the rare peak */
+  --gold-deep: var(--gold-theme);
+  /* Illumination scale — "how lit" something is, from the same gold light.
+     Reused across the site (skills now; more lighting-driven UI to come). */
+  --lit-low:   rgba(var(--gold-theme-rgb), .20);   /* faintly lit  */
+  --lit-mid:   rgba(var(--gold-theme-rgb), .52);   /* half lit     */
+  --lit-high:  rgba(var(--gold-theme-rgb), 1);     /* fully lit — the lit-zone yellow, like the bars */
+  /* A warm light-gray: the midpoint between the old pearl and the portrait's
+     studio gray. Surfaces are translucent so the point field shows through. */
+  --photo:     #d8d7d3;   /* page gray, lighter tone */
+  --photo-lo:  #cdccc8;   /* vignette edge */
+  --photo-hi:  #e4e3df;   /* studio light, center-top */
+  --paper:     rgba(252,251,247,0.55);  /* frosted light panel (cards, chips) */
+  --haze:      rgba(28,26,22,0.05);     /* faint tint for alternating bands */
+  --haze-line: rgba(28,26,22,0.18);     /* hairline on gray */
+  --ink:       #1c1a16;   /* warm near-black, body text */
+  --ink-soft:  #393530;   /* warm gray, secondary text — darkened to read on gray */
+
+  --maxw: 1080px;
+  --pad: clamp(1.25rem, 4vw, 3rem);
+
+  /* Type: URW Palladio (Palatino lineage), a system font — headings + body */
+  --serif: "P052", "URW Palladio L", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans:  "Inter", system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; font-size: 112.5%; }  /* 18px root — bumps all rem type up */
+
+body {
+  margin: 0;
+  position: relative;   /* containing block for the page-anchored point field */
+  background-color: var(--photo);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  /* studio vignette: lighter toward the top-centre, darker at the edges,
+     echoing the portrait so it blends seamlessly into the page */
+  background-image:
+    radial-gradient(125% 90% at 50% 0%, var(--photo-hi) 0%, var(--photo) 42%, var(--photo-lo) 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ---------- cast light + sample field + signet ---------- */
+/* The focused cones each exterior point throws at the logo. They sit BEHIND the
+   content (like ambient light in the page); main.js paints + blurs the canvas. */
+.cast-canvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+/* The point field is anchored to the page: it holds a constant position and
+   scrolls with the content. It sits above the content but BELOW the logo, so
+   the solid logo passes OVER the dots as it scrolls. */
+.points { position: absolute; inset: 0; z-index: 12; pointer-events: none; overflow: visible; }
+.pt {
+  /* one sampled point: a solid yellow core fading to a diffused yellow boundary —
+     the page's lit-zone yellow throughout. main.js sizes it via --pt (perceived
+     diameter); its reach toward the logo is the cast cone, not an omni-glow. */
+  position: absolute; transform: translate(-50%, -50%);   /* centred on its left/top */
+  width: var(--pt, 24px); height: var(--pt, 24px);
+  background: radial-gradient(circle closest-side, var(--gold-theme) 0 40%, rgba(var(--gold-theme-rgb), 0) 100%);
+}
+
+/* Stacking — the decorative layers straddle the page content so the logo reads
+   as a solid mark floating over it (its opaque ring occludes the text, the gold
+   section rules, and the frosted cards behind it), while the cast light glows
+   behind the page. Bottom to top:
+   cast cones (1) < content (10) < points (12) < circle (13) < monogram (14)
+   < reflections / lit bands (15) < ring letters (16). */
+.skip, #main, .foot { position: relative; z-index: 10; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition: none !important; }
+}
+
+/* On gray, gold is too luminous to read as text — so links are dark ink
+   with a gold underline; the underline thickens on hover. */
+a {
+  color: var(--ink);
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 1.5px; text-underline-offset: 2px;
+}
+a:hover { color: #000; text-decoration-thickness: 3px; }
+
+.skip {
+  position: absolute; left: -999px; top: 0;
+  background: var(--sky); color: #fff; padding: .6rem 1rem; z-index: 100;
+}
+.skip:focus { left: .5rem; top: .5rem; }
+
+
+/* ---------- shared section frame ---------- */
+/* One uniform (light) background across the page — no alternating tint bands,
+   no dividing lines. */
+.section { max-width: var(--maxw); margin: 0 auto; padding: clamp(1.05rem, 2.1vw, 1.75rem) var(--pad); }
+
+/* section labels: lowercase, golden, with a trailing gold rule. Sized a notch
+   above the entry titles. Small-caps stays reserved for the name. */
+.kicker {
+  font-family: var(--serif); font-size: 1.62rem; font-weight: 600;
+  letter-spacing: .01em; text-transform: lowercase; color: var(--gold-deep);
+  margin: 0 0 1.1rem; line-height: 1.05;
+  display: flex; align-items: center; gap: .4em;
+}
+/* an indefinite em dash continuing the word: same gold, as thick as the
+   strokes, rounded ends, lowered to the text's mid-height */
+.kicker::after {
+  content: ""; flex: 1; height: .12em;
+  background: currentColor; border-radius: 999px;
+  transform: translateY(.16em);
+}
+
+
+/* ---------- hero ---------- */
+/* Single column, sitting near the top; the fixed signet pairs to its right. */
+.hero { padding-top: clamp(1rem, 2.5vw, 1.75rem); }
+.hero__inner {
+  width: 100%; max-width: var(--maxw); margin: 0 auto;
+  padding: 0 var(--pad) clamp(1rem, 2.5vw, 1.75rem);
+}
+.hero__text { max-width: 38rem; }
+.eyebrow {
+  font-size: .82rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--sky-soft); margin: 0 0 1.1rem;
+}
+.hero__name {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-variant: small-caps;
+  font-optical-sizing: auto;
+  font-size: clamp(2.4rem, 6vw, 4rem);   /* the whole block sized up so it carries the hero */
+  line-height: 1.05;
+  letter-spacing: 0.02em;   /* small caps breathe better with a touch of tracking */
+  color: var(--sky);
+  margin: 0 0 1rem;
+}
+.hero__name > span { display: block; }        /* given on line 1, surnames on line 2 (the 'i' span stays inline) */
+.hero__given { font-size: 1em; }
+.hero__sur   { font-size: 1em; padding-left: .4em; font-weight: 600; color: var(--sky); }  /* second line — same size and colour as the given name, slightly indented */
+.hero__i     { font-style: inherit; }         /* the 'i' of Barreiro — its tittle is the i-dot light (main.js) */
+.hero__lede {
+  font-size: 1.12rem; color: var(--ink-soft); max-width: 32ch; margin: 0 0 1.5rem;
+}
+.hero__actions { display: flex; flex-wrap: wrap; gap: .8rem; }
+
+.btn {
+  display: inline-block; font-weight: 600; font-size: .92rem;
+  padding: .7rem 1.3rem; border-radius: 2px; text-decoration: none;
+  transition: transform .12s ease, background .15s ease, color .15s ease;
+}
+.btn--ghost { color: var(--sky); border: 1.5px solid var(--sky); }
+.btn--ghost:hover { background: var(--sky); color: #fff; }
+
+/* the signet — fixed to the viewport, centred to the right of the name; it holds
+   still while the page scrolls over it */
+.signet {
+  position: fixed; z-index: 13; pointer-events: none;
+  top: 34%; left: 58%;
+  /* Down + left by half the annulus inner radius (the earlier placement fix),
+     then nudged a touch back to the RIGHT this round to open up space between
+     the surnames and the logo: x -22.80% -> -15.80%; y stays -63.10%. */
+  transform: translate(-15.80%, -63.10%);
+  width: min(57.6vw, 600px);
+}
+.signet__svg { width: 100%; height: auto; overflow: visible; display: block; }
+/* the monogram layer: above the dots and their illumination */
+.signet--top { z-index: 14; }
+/* the reflection glints + lit boundary bands, painted onto a canvas over the
+   monogram. main.js sets a scale-aware blur on it so the gold diffuses softly. */
+.reflect-canvas { position: fixed; inset: 0; z-index: 15; pointer-events: none; }
+/* the carved ring letters, painted crisp on their own canvas above the bands */
+.letters-canvas { position: fixed; inset: 0; z-index: 16; pointer-events: none; }
+
+/* one-shot fade-in for the whole signet apparatus */
+@media (prefers-reduced-motion: no-preference) {
+  .signet, .reflect-canvas, .letters-canvas { animation: fadein 1s ease backwards; }
+}
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+
+/* ---------- about ---------- */
+/* Image floats left; the first two paragraphs wrap to its right, the third
+   clears and extends full width beneath it. */
+.about__grid { display: block; }
+.about__photo {
+  float: left; width: clamp(180px, 24%, 230px);
+  margin: .3rem clamp(1.25rem, 3vw, 2rem) 1rem 0;
+  aspect-ratio: 1; border-radius: 3px; overflow: hidden;
+  border: 1px solid var(--haze-line);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.4);
+  display: grid; place-items: center;
+}
+.about__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.about__body p { margin: 0 0 1.1rem; }
+.about__body p:last-child { margin-bottom: 0; clear: left; }
+.about__body strong { color: var(--sky); font-weight: 600; }
+
+
+/* ---------- timeline (experience + education) ---------- */
+.timeline { list-style: none; margin: 0; padding: 0; }
+.entry {
+  display: grid; grid-template-columns: 150px 1fr; gap: clamp(1rem, 3vw, 2.2rem);
+  padding: 1.1rem 0; border-top: 1px solid var(--haze-line);
+}
+.entry:first-child { border-top: none; padding-top: 0; }
+.entry__when {
+  font-family: var(--serif); font-weight: 600; font-size: .9rem;
+  color: var(--ink); padding-top: .15rem;
+}
+.entry__what h3 {
+  font-family: var(--serif); font-weight: 600; font-size: 1.28rem;
+  color: var(--sky); margin: 0 0 .25rem; line-height: 1.2;
+}
+.entry__org { font-weight: 500; color: var(--ink); margin: 0 0 .5rem; font-size: .96rem; }
+.entry__detail { color: var(--ink-soft); margin: 0; font-size: .98rem; }
+
+
+/* ---------- publications ---------- */
+.pubs { display: flex; flex-direction: column; gap: 1.05rem; }
+.pub {
+  background: var(--paper); border: 1px solid var(--haze-line);
+  border-left: 3px solid var(--gold); border-radius: 2px;
+  padding: 1.3rem 1.5rem;
+}
+.pub__title { font-family: var(--serif); font-weight: 600; font-size: 1.18rem; color: var(--sky); margin: 0 0 .35rem; line-height: 1.25; }
+.pub__meta { font-size: .82rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--gold-deep); margin: 0 0 .6rem; }
+.pub__note { color: var(--ink-soft); margin: 0; font-size: .98rem; }
+.pub__links { margin: .7rem 0 0; font-size: .95rem; }
+.pub__links a { font-weight: 600; text-decoration: none; }
+.pub__links a:hover { text-decoration: underline; }
+.pub__orcid { margin: .4rem 0 0; font-size: .95rem; color: var(--ink-soft); }
+.todo {
+  background: rgba(232,163,23,0.14); color: var(--gold-deep);
+  padding: .05rem .4rem; border-radius: 2px; font-size: .85em; font-weight: 500;
+}
+
+
+/* ---------- skills ---------- */
+.skills { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
+.skills h3 { font-family: var(--serif); font-weight: 600; font-size: 1.15rem; color: var(--sky); margin: 0 0 1rem; }
+.skills__sub { margin-top: 1.4rem; }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  font-size: .88rem; font-weight: 500; padding: .35rem .8rem; border-radius: 2px;
+  border: 1.5px solid var(--haze-line); color: var(--ink-soft); background: var(--paper);
+}
+/* programming proficiency, shown purely as how lit the chip is */
+.chip--lit1 { background: var(--lit-low);  border-color: transparent; color: var(--ink); }
+.chip--lit2 { background: var(--lit-mid);  border-color: transparent; color: var(--ink); }
+.chip--lit3 { background: var(--lit-high); border-color: transparent; color: #2a1c00; }
+
+.langs { list-style: none; margin: 0; padding: 0; }
+.langs li {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: .5rem 0; border-bottom: 1px solid var(--haze-line);
+}
+.langs li:last-child { border-bottom: none; }
+.langs__lvl { font-size: .85rem; color: var(--ink); font-weight: 600; }
+
+
+/* ---------- contact ---------- */
+.section--contact { text-align: center; }
+/* same golden style as the section labels, just larger; lowercase */
+.contact__head { font-family: var(--serif); font-weight: 700; font-size: clamp(2rem, 5vw, 3rem); text-transform: lowercase; color: var(--gold-deep); margin: 0 0 1.4rem; }
+.contact__lede { color: var(--ink-soft); max-width: 40ch; margin: 1.5rem auto 0; }
+.contact__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem 2rem; }
+.contact__links a { font-weight: 600; font-size: 1.02rem; }
+
+
+/* ---------- footer ---------- */
+.foot {
+  max-width: var(--maxw); margin: 0 auto; padding: 1.75rem var(--pad);
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem;
+  font-size: .88rem; color: var(--ink-soft);
+}
+.foot p { margin: 0; }
+
+
+/* ---------- responsive ---------- */
+@media (max-width: 760px) {
+  /* the signet recentres and softens so the name reads cleanly over it; here it
+     drops BACK behind the content (it sits under the name on narrow screens, so
+     the "floating over the page" layering would otherwise bury the name) */
+  .signet { left: 50%; top: 34%; width: min(78vw, 340px); opacity: .5; z-index: 2; }
+  .reflect-canvas, .letters-canvas { z-index: 2; }
+  .hero__text { max-width: none; }
+  /* image stops floating and stacks above the paragraphs */
+  .about__photo { float: none; width: min(60%, 200px); margin: 0 0 1rem; }
+  .about__body p:last-child { clear: none; }
+  .entry { grid-template-columns: 1fr; gap: .4rem; }
+  .entry__when { padding-top: 0; }
+  .skills { grid-template-columns: 1fr; }
+}
