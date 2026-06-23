@@ -13,8 +13,8 @@
   --escarlata:     #e83520;       /* the b's hot scarlet — the faint core of a dot */
   --escarlata-rgb: 232, 53, 32;
   --gold-rgb:  232, 163, 23;      /* the light's PEAK colour (annulus at max; a dot's solid disc) */
-  --gold-theme:     #ddb838;      /* BUILD COLOUR — the lit-zone yellow for motifs/chips/dots (option F) */
-  --gold-theme-rgb: 221, 184, 56;
+  --gold-theme:     #e8c24a;      /* BUILD COLOUR — the lit-zone yellow for motifs/chips/dots (option F) */
+  --gold-theme-rgb: 232, 194, 74;
   --gold:      var(--gold-theme); /* motifs read as the AVERAGE lit gold, not the rare peak */
   --gold-deep: var(--gold-theme);
   /* Illumination scale — "how lit" something is, from the same gold light.

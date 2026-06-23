@@ -121,14 +121,17 @@ document.getElementById("year").textContent = new Date().getFullYear();
   const gX = x => 200 + KLOGO * (x - 107.637);
   const gY = y => 200 + KLOGO * (y - 168.3);
 
-  // ===== b interior illumination ====================================
-  // The b's faces light by region (see assets/b-split.svg): an interior light that
-  // falls inside a b's 7-8-9 triangle lands in one of 7 regions, and that region
-  // fixes which faces light. Geometry below is in canonical bb-primitive units for
-  // one b (the two b's share it under their USE translate). Each face carries its
-  // region-facing side f=[A,B], that side's outward normal n, and the inward reach
-  // profile p (depth at 11 samples along A->B: constant for a rectangle, tapering to
-  // the point for a triangle).
+  // ===== b illumination =============================================
+  // The 'b' is split into 9 pieces (2 tips, 4 sticks, 3 joints), each into 2 elements
+  // (left/right) — the unit objects of lighting. An interior light inside a b's 7-8-9
+  // triangle lands in one of 7 regions; the region fixes which elements light (on their
+  // inner face). The whole model — corners, pieces, elements, the 7 regions and the 3
+  // exterior half-planes, with every lit set — is documented in
+  //   version0/assets/illumination/   (illumination.txt + the b-split*/b-out* svgs).
+  // Geometry below is in canonical bb-primitive units for one b (the two b's share it
+  // under their USE translate). Each element carries the face it shows the light f=[A,B],
+  // that face's outward normal n, and the inward reach profile p (depth at 11 samples
+  // along A->B: constant for a rectangle, tapering to the point for a triangle).
   const B_TRI = [[-5.2500,-15.8371],[-5.2500,148.6746],[56.9246,86.5000]];
   const B_REG = [
     [[56.9246,86.5000],[15.7500,45.3254],[15.7500,16.8307]],
@@ -139,34 +142,34 @@ document.getElementById("year").textContent = new Date().getFullYear();
     [[34.7877,93.7877],[42.0754,86.5000],[38.5000,82.9246],[31.2123,90.2123]],
     [[31.2123,90.2123],[38.5000,82.9246],[26.2500,70.6746],[26.2500,85.2500]]];
   const B_EL = [
-    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 0 tip-top-left (never lit)
-    {f:[[5.2500,8.4363],[9.2189,5.7798]],n:[0.5562,0.8310],p:[0.026,2.601,5.202,7.804,10.405,13.006,15.607,18.209,20.810,23.411,25.986]}, // 1 tip-top-right
-    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 2 side1-left (never lit)
-    {f:[[5.2500,8.4363],[5.2500,123.3254]],n:[1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 3 side1-right
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 0 toptip-left (never lit)
+    {f:[[5.2500,8.4363],[9.2189,5.7798]],n:[0.5562,0.8310],p:[0.026,2.601,5.202,7.804,10.405,13.006,15.607,18.209,20.810,23.411,25.986]}, // 1 toptip-right
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 2 stick1-left (never lit)
+    {f:[[5.2500,8.4363],[5.2500,123.3254]],n:[1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 3 stick1-right
     {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 4 joint1-left (never lit)
     {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 5 joint1-right (never lit)
-    {f:[[5.2500,123.3254],[42.0754,86.5000]],n:[-0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 6 side2-end
-    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 7 side2-down (never lit)
-    {f:[[56.9246,86.5000],[49.5000,79.0754]],n:[0.7071,-0.7071],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 8 joint2-upper
-    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 9 joint2-lower (never lit)
-    {f:[[26.2500,70.6746],[42.0754,86.5000]],n:[-0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 10 side3-inner
-    {f:[[49.5000,79.0754],[33.6746,63.2500]],n:[0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 11 side3-outer
+    {f:[[5.2500,123.3254],[42.0754,86.5000]],n:[-0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 6 stick2-left
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 7 stick2-right (never lit)
+    {f:[[56.9246,86.5000],[49.5000,79.0754]],n:[0.7071,-0.7071],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 8 joint2-right
+    {f:[[0,0],[0,0]],n:[0,0],p:[]}, // 9 joint2-left (never lit)
+    {f:[[26.2500,70.6746],[42.0754,86.5000]],n:[-0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 10 stick3-left
+    {f:[[49.5000,79.0754],[33.6746,63.2500]],n:[0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 11 stick3-right
     {f:[[15.7500,45.3254],[15.7500,70.6746]],n:[-1.0000,0.0000],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 12 joint3-left
     {f:[[33.6746,63.2500],[15.7500,45.3254]],n:[0.7071,-0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 13 joint3-right
-    {f:[[15.7500,85.2500],[15.7500,70.6746]],n:[-1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 14 side4-left
-    {f:[[26.2500,85.2500],[26.2500,70.6746]],n:[1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 15 side4-right
-    {f:[[15.7500,85.2500],[15.7500,105.6746]],n:[-1.0000,0.0000],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 16 tipbelly-left
-    {f:[[15.7500,105.6746],[31.2123,90.2123]],n:[0.7071,0.7071],p:[0.007,0.702,1.403,2.105,2.807,3.509,4.211,4.912,5.614,6.316,7.011]}, // 17 tipbelly-right
+    {f:[[15.7500,85.2500],[15.7500,70.6746]],n:[-1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 14 stick4-left
+    {f:[[26.2500,85.2500],[26.2500,70.6746]],n:[1.0000,0.0000],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 15 stick4-right
+    {f:[[15.7500,85.2500],[15.7500,105.6746]],n:[-1.0000,0.0000],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 16 innertip-left
+    {f:[[15.7500,105.6746],[31.2123,90.2123]],n:[0.7071,0.7071],p:[0.007,0.702,1.403,2.105,2.807,3.509,4.211,4.912,5.614,6.316,7.011]}, // 17 innertip-right
   ];
   const B_LIT = [[13,11,8,1,3],[13,11,8,1,3,12,14,16,6],[1,3,12,14,16,6],[10,1,3,12,14,16,6,17],[3,6,10,17],[3,6,10,17,15],[6,10,17,15]];
   const GAIN_B = 70;        // interior (region) face illuminance gain (cosβ/dist), tuned to the ring-band look
   const GAIN_B_EXT = 360;   // exterior face gain: exterior lights graze from across the annulus, so they
                             // need a much larger gain to read as strongly as an interior light does
-  // each element's full polygon (point-on-element test); the 12-corner silhouette; and
-  // each element's OUTER (silhouette-facing) side + inward profile — the face an exterior
-  // light sees. Exterior groups: which faces light from beyond each edge of the 7-8-9
-  // triangle — edge 7-8 -> the left silhouette faces, 8-9 -> the bottom, 7-9 -> the belly
-  // faces seen through the open mouth (lit on their inner side).
+  // B_POLY: each element's full polygon (point-in-element test). B_SIL: the 12-corner
+  // silhouette. B_OUT: each element's OUTER face + inward profile. B_G_*: which elements
+  // an exterior light beyond each triangle edge lights — edge 7-8 -> the left elements,
+  // 8-9 -> the bottom, 7-9 -> the belly elements seen through the open mouth (lit on
+  // their inner face). See illumination.txt.
   const B_POLY = [
     [[-5.2500,-15.8371],[5.2500,8.4363],[-5.2500,8.4363]],
     [[5.2500,8.4363],[9.2189,5.7798],[-5.2500,-15.8371]],
@@ -188,26 +191,26 @@ document.getElementById("year").textContent = new Date().getFullYear();
     [[26.2500,85.2500],[15.7500,105.6746],[31.2123,90.2123]]];
   const B_SIL = [[26.2500,85.2500],[26.2500,70.6746],[42.0754,86.5000],[5.2500,123.3254],[5.2500,8.4363],[9.2189,5.7798],[-5.2500,-15.8371],[-5.2500,148.6746],[56.9246,86.5000],[15.7500,45.3254],[15.7500,105.6746],[31.2123,90.2123]];
   const B_OUT = [
-    {f:[[-5.2500,8.4363],[-5.2500,-15.8371]],n:[-1,0],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 0 tip-top-left
-    {f:[[5.2500,8.4363],[9.2189,5.7798]],n:[0.5562,0.8310],p:[0.026,2.601,5.202,7.804,10.405,13.006,15.607,18.209,20.810,23.411,25.986]}, // 1 tip-top-right
-    {f:[[-5.2500,123.3254],[-5.2500,8.4363]],n:[-1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 2 side1-left
-    {f:[[5.2500,8.4363],[5.2500,123.3254]],n:[1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 3 side1-right
+    {f:[[-5.2500,8.4363],[-5.2500,-15.8371]],n:[-1,0],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 0 toptip-left
+    {f:[[5.2500,8.4363],[9.2189,5.7798]],n:[0.5562,0.8310],p:[0.026,2.601,5.202,7.804,10.405,13.006,15.607,18.209,20.810,23.411,25.986]}, // 1 toptip-right
+    {f:[[-5.2500,123.3254],[-5.2500,8.4363]],n:[-1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 2 stick1-left
+    {f:[[5.2500,8.4363],[5.2500,123.3254]],n:[1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 3 stick1-right
     {f:[[-5.2500,148.6746],[-5.2500,123.3254]],n:[-1,0],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 4 joint1-left
     {f:[[12.6746,130.7500],[-5.2500,148.6746]],n:[0.7071,0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 5 joint1-right
-    {f:[[5.2500,123.3254],[42.0754,86.5000]],n:[-0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 6 side2-end
-    {f:[[49.5000,93.9246],[12.6746,130.7500]],n:[0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 7 side2-down
-    {f:[[56.9246,86.5000],[49.5000,79.0754]],n:[0.7071,-0.7071],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 8 joint2-upper
-    {f:[[49.5000,93.9246],[56.9246,86.5000]],n:[0.7071,0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 9 joint2-lower
-    {f:[[26.2500,70.6746],[42.0754,86.5000]],n:[-0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 10 side3-inner
-    {f:[[49.5000,79.0754],[33.6746,63.2500]],n:[0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 11 side3-outer
+    {f:[[5.2500,123.3254],[42.0754,86.5000]],n:[-0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 6 stick2-left
+    {f:[[49.5000,93.9246],[12.6746,130.7500]],n:[0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 7 stick2-right
+    {f:[[56.9246,86.5000],[49.5000,79.0754]],n:[0.7071,-0.7071],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 8 joint2-right
+    {f:[[49.5000,93.9246],[56.9246,86.5000]],n:[0.7071,0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 9 joint2-left
+    {f:[[26.2500,70.6746],[42.0754,86.5000]],n:[-0.7071,0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 10 stick3-left
+    {f:[[49.5000,79.0754],[33.6746,63.2500]],n:[0.7071,-0.7071],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 11 stick3-right
     {f:[[15.7500,45.3254],[15.7500,70.6746]],n:[-1,0],p:[0.010,1.050,2.100,3.150,4.200,5.250,6.300,7.350,8.400,9.450,10.489]}, // 12 joint3-left
     {f:[[33.6746,63.2500],[15.7500,45.3254]],n:[0.7071,-0.7071],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 13 joint3-right
-    {f:[[15.7500,85.2500],[15.7500,70.6746]],n:[-1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 14 side4-left
-    {f:[[26.2500,85.2500],[26.2500,70.6746]],n:[1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 15 side4-right
-    {f:[[15.7500,85.2500],[15.7500,105.6746]],n:[-1,0],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 16 tipbelly-left
-    {f:[[15.7500,105.6746],[31.2123,90.2123]],n:[0.7071,0.7071],p:[0.007,0.702,1.403,2.105,2.807,3.509,4.211,4.912,5.614,6.316,7.011]}, // 17 tipbelly-right
+    {f:[[15.7500,85.2500],[15.7500,70.6746]],n:[-1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 14 stick4-left
+    {f:[[26.2500,85.2500],[26.2500,70.6746]],n:[1,0],p:[5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250,5.250]}, // 15 stick4-right
+    {f:[[15.7500,85.2500],[15.7500,105.6746]],n:[-1,0],p:[10.489,9.450,8.400,7.350,6.300,5.250,4.200,3.150,2.100,1.050,0.010]}, // 16 innertip-left
+    {f:[[15.7500,105.6746],[31.2123,90.2123]],n:[0.7071,0.7071],p:[0.007,0.702,1.403,2.105,2.807,3.509,4.211,4.912,5.614,6.316,7.011]}, // 17 innertip-right
   ];
-  const B_G_LEFT = [0,2,4], B_G_BOT = [5,7,9], B_G_MOUTH = [1,13,11,8,3];   // mouth also lights side1-right (inner first side, seen through the mouth)
+  const B_G_LEFT = [0,2,4], B_G_BOT = [5,7,9], B_G_MOUTH = [1,13,11,8,3];   // mouth also lights stick1-right (the stem's inner element, seen through the mouth)
 
   // one b's local frame <-> viewport (t = its USE translate; cR,sR = live rotation)
   function vpToPrim(px, py, t, cx, cy, scale, cR, sR) {
@@ -247,10 +250,10 @@ document.getElementById("year").textContent = new Date().getFullYear();
     return sp * sk < 0;
   }
 
-  // ---- b face illuminance per [b][side][element][sample]. side 0 = inner (region / mouth
-  // lights), side 1 = outer (silhouette / exterior lights). Faces glow incandescent
-  // (scarlet->orange) at their CURRENT illumination — no heat memory, no cool-down.
-  const BHN = 2*2*18*11, bhBase = (b, side, el) => (((b*2+side)*18+el)*11);
+  // ---- b element illuminance per [b][face][element][sample]: face 0 = the element's
+  // inner face (interior / mouth lights), face 1 = its outer face (exterior lights).
+  // Elements glow incandescent at their CURRENT illumination — no heat memory, no cool-down.
+  const BHN = 2*2*18*11, bhBase = (b, face, el) => (((b*2+face)*18+el)*11);
   const bRaw = new Float32Array(BHN);
   // accumulate one light's cosβ/dist onto a face's 11 samples, skipping any sample whose
   // ray to it is blocked by a b silhouette in `occs` (a light never reaches a face
@@ -270,11 +273,11 @@ document.getElementById("year").textContent = new Date().getFullYear();
     }
   }
 
-  // Light and paint the b faces (on the reflect canvas, over the black b's). A region light
-  // inside a b lights its region faces; an exterior light lights the outer faces it sees by
-  // half-plane against the 7-8-9 edges; a light behind an element lights that element (its
-  // own pass, below). All occluded by both b's. Faces glow at their CURRENT illumination —
-  // no cool-down — so the nuanced lighting reads directly.
+  // Light and paint the b elements (on the reflect canvas, over the black b's). A region
+  // light inside a b lights the elements of its region; an exterior light lights the outer
+  // faces it sees by half-plane against the 7-8-9 edges; a light behind an element lights
+  // that element (its own pass, below). All occluded by both b's. Elements glow at their
+  // CURRENT illumination — no cool-down — so the nuanced lighting reads directly.
   function lightAndPaintB(cx, cy, scale, cR, sR, inn) {
     if (!ctx) return;
     bRaw.fill(0);
@@ -287,19 +290,19 @@ document.getElementById("year").textContent = new Date().getFullYear();
     for (let b = 0; b < 2; b++) {
       const t = USES[b];
       silVp[b] = B_SIL.map(q => primToVp(q[0], q[1], t, cx, cy, scale, cR, sR));
-      for (let side = 0; side < 2; side++)
+      for (let face = 0; face < 2; face++)
         for (let el = 0; el < 18; el++) {
-          const F = FACES[side][el];
-          if (!F.p.length) { FA[b][side][el] = null; continue; }
-          FA[b][side][el] = primToVp(F.f[0][0], F.f[0][1], t, cx, cy, scale, cR, sR);
-          FB[b][side][el] = primToVp(F.f[1][0], F.f[1][1], t, cx, cy, scale, cR, sR);
-          FN[b][side][el] = [F.n[0]*cR - F.n[1]*sR, F.n[0]*sR + F.n[1]*cR];
+          const F = FACES[face][el];
+          if (!F.p.length) { FA[b][face][el] = null; continue; }
+          FA[b][face][el] = primToVp(F.f[0][0], F.f[0][1], t, cx, cy, scale, cR, sR);
+          FB[b][face][el] = primToVp(F.f[1][0], F.f[1][1], t, cx, cy, scale, cR, sR);
+          FN[b][face][el] = [F.n[0]*cR - F.n[1]*sR, F.n[0]*sR + F.n[1]*cR];
         }
     }
-    const add = (b, side, el, px, py, occs, gain) => {
-      const A = FA[b][side][el]; if (!A) return;
-      const B = FB[b][side][el], N = FN[b][side][el];
-      accFace(bhBase(b, side, el), A[0], A[1], B[0]-A[0], B[1]-A[1], N[0], N[1], px, py, occs, gain);
+    const add = (b, face, el, px, py, occs, gain) => {
+      const A = FA[b][face][el]; if (!A) return;
+      const B = FB[b][face][el], N = FN[b][face][el];
+      accFace(bhBase(b, face, el), A[0], A[1], B[0]-A[0], B[1]-A[1], N[0], N[1], px, py, occs, gain);
     };
     for (const p of inn) {
       if (p.role === 'region' && p.ridx >= 0) {
@@ -316,13 +319,13 @@ document.getElementById("year").textContent = new Date().getFullYear();
       }
     }
     // paint region/exterior faces at their current illumination (no cool-down)
-    for (let b = 0; b < 2; b++) for (let side = 0; side < 2; side++) for (let el = 0; el < 18; el++) {
-      const A = FA[b][side][el]; if (!A) continue;
-      const base = bhBase(b, side, el), prof = FACES[side][el].p, hs = new Array(11);
+    for (let b = 0; b < 2; b++) for (let face = 0; face < 2; face++) for (let el = 0; el < 18; el++) {
+      const A = FA[b][face][el]; if (!A) continue;
+      const base = bhBase(b, face, el), prof = FACES[face][el].p, hs = new Array(11);
       let mx = 0;
       for (let j = 0; j <= 10; j++) { const h = tone(bRaw[base + j]); hs[j] = h; if (h > mx) mx = h; }
       if (mx < 0.02) continue;
-      paintFace(A, FB[b][side][el], FN[b][side][el], hs, prof, scl, 1);
+      paintFace(A, FB[b][face][el], FN[b][face][el], hs, prof, scl, 1);
     }
 
     // behind-element pass: each onEl light glows a localized hotspot on its element, reaching
@@ -425,7 +428,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     let v = 0;
     const wx = cx + rIn * Math.cos(a), wy = cy + rIn * Math.sin(a);   // the lit wall point
     for (const p of inn) {
-      if (p.role === 'onEl') continue;               // a light on a b face lights no wall
+      if (p.role === 'onEl') continue;               // a light on a b element lights no wall
       if (p.role === 'region') {                     // inside a b: sees the wall only through the mouth
         if (segCrossPoly(p.px, p.py, wx, wy, bSilVp[0]) || segCrossPoly(p.px, p.py, wx, wy, bSilVp[1])) continue;
       } else if (p.g0) {                             // exterior: the b's block their triangle's angular span
@@ -464,7 +467,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     ctx.fillStyle = g; ctx.fill();
   }
 
-  // Clear the reflect canvas and paint the two ring bands. The lit b faces are
+  // Clear the reflect canvas and paint the two ring bands. The lit b elements are
   // added on top of this same canvas by lightAndPaintB (same diffusion).
   function drawReflections(bnd) {
     if (!ctx) return;
@@ -487,7 +490,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // The whole cast is then erased inside the outer boundary (plus the blur margin) so the
   // light stops at the annulus and never crosses into it (either way).
   const CAST_WHITE = [250, 240, 205];
-  let   CAST_GLOW  = [221, 184, 56];     // the two wider cones' theme-yellow colour (set per build)
+  let   CAST_GLOW  = [232, 194, 74];     // the two wider cones' theme-yellow colour (set per build)
   // aim (mean direction) + half-aperture of the tangent cone from point q to the circle radius r
   function castTangent(q, cx, cy, r) {
     const ratio = r / q.d; if (ratio >= 1) return null;
