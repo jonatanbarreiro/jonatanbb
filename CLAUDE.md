@@ -1,120 +1,82 @@
 # CLAUDE.md — jonatanbb.xyz
 
-jonatanbb.xyz is built across an evolving series of **versions**, each its own
-paradigm. The repo is organized in three layers; keep them separate.
-
-
-## The three layers
-
-1. **Upper layer — the repo as a whole.** Tracks the advance of *versions* toward
-   an evolving ideal for the site (so far: a public profile website to interface
-   with the internet). Each version is a fresh paradigm — its own goals, intent,
-   possibly its own tech. This is the long view. Jonatan works it in `desktop/`,
-   and this `CLAUDE.md` is its voice.
-2. **Middle layer — a version (currently `version0/`).** Advances and records
-   *iterations* toward a finished source for that one version. Self-contained: it
-   holds the version's `sources/`, its `assets/`, and its website `README.md`.
-3. **Lower layer — iterations.** Each `version0/sources/iterationN/` is one
-   development step of the site's source.
-
-**Separation of concerns (important).** A version knows nothing of the layer above
-it. `version0/README.md` is the README *of the website*, not of the repo — it must
-read as if jonatanbb.xyz were simply a CV/profile site, with no hint that a
-cross-version logic governs its evolution. The repo root's `README.md` is a
-symlink to it, so the current version's website README is also the repo's public
-face; the upper layer stays deliberately faceless for now. Don't leak upper-layer
-concepts (versions, iterations, layers) down into any version's README, and don't
-pull version-internal detail up into this file.
-
-The current version, **version0**, is a personal static CV/profile site meant to
-stand in for a LinkedIn that was never really useful to Jonatan. Its main goal is
-to implement an attractive CV site that makes him visible on the job market.
+This repo builds **jonatanbb.xyz**, a small static website, in the open. The site
+grows through numbered **iterations** —each one a single development step of its
+source— and the repo keeps the whole chain plus a screenshot of every step, so the
+build can be read back like a living dex. Work is AI-assisted but hand-driven:
+Jonatan writes a deliberate prompt, you carry it out.
 
 
 ## Map
 
-- `CLAUDE.md` — this file; upper-layer workflow and conventions.
-- `README.md` (root) — **symlink → `version0/README.md`**; the current version's
-  website README. Belongs to the version; unaware of the upper layer.
-- `desktop/` — Jonatan's upper-layer workspace (cross-version thinking, research).
-  You are not allowed to read, modify delete or otherwise access to anything in
-  the desktop unless explicitly told to. This helps Jonatan separate raw ideas and
-  content currently being worked on from the actual repo, and it also helps
-  separating the repo layers.
-- `interactions/` — full session logs, `sessionNNNN.log`, every turn verbatim.
-- `version0/` — the current version:
-  - `version0/sources/iterationN/` — the site source at step N (`index.html`,
-    `styles.css`, `main.js`, `assets/`), plus that iteration's `interaction_*`
-    files.
-  - `version0/assets/` — the version's single asset store (see *Assets*).
-  - `version0/gallery/` — one screenshot per iteration (`iterationNNN.png`, in
-    chronological order), plus `unsourced/` (`iteration-N.png`) for captures that
-    predate the kept source. A quick visual tour of the build for repo viewers.
-    Generated at wrap-up with the renderer at a fixed frame (see *Rendering &
-    gallery captures*).
-  - `version0/README.md` — the website README.
+- `CLAUDE.md` — this file; the repo's workflow and conventions.
+- `README.md` — the website's README (its making-of); the repo's public face.
+- `prompts/` — full session logs, `sessionNNNN.log`, every turn verbatim.
+- `sources/iterationN/` — the site source at step N (`index.html`, `styles.css`,
+  `main.js`, `assets/`), plus that iteration's `interaction_*` files.
+- `assets/` — the single asset store for the whole site (see *Assets*).
+- `gallery/` — one screenshot per iteration (`iterationNNN.png`, chronological),
+  plus `unsourced/` (`iteration-N.png`) for captures that predate the kept source.
+  A quick visual tour of the build. Generated at wrap-up at a fixed frame (see
+  *Rendering & gallery captures*).
 
 
-## Sessions and `interactions/`
+## Sessions and `prompts/`
 
-- One session covers work within a **single layer**; Jonatan starts a new session
-  when he switches layers.
-- **First prompt of a session:** after reading this `CLAUDE.md`, read the current
-  version's README (root `README.md`). Then open a new
-  `interactions/sessionNNNN.log` with the next unused 4-digit counter.
+A new session begins whenever Jonatan starts a fresh conversation here.
+
+- **First prompt of a session:** after reading this `CLAUDE.md`, read the
+  `README.md`. Then open a new `prompts/sessionNNNN.log` with the next unused
+  4-digit counter.
 - **Logging a turn** (same shape as the iteration interaction docs):
   1. `Jonatan on YYYY-MM-DD at ~HH:MM:` + the **full prompt, verbatim**.
   2. One blank line.
   3. `Claude 4.8 on YYYY-MM-DD at ~HH:MM:` + the **full answer**.
-  Two blank lines between turns; append every later turn to the same file. Times
-  are approximate, the date reliable.
+  Two blank lines between turns; append every later turn of the session to the same
+  file. Times are approximate, the date reliable.
+- **The logs are append-only.** Do not read any file under `prompts/` unless Jonatan
+  explicitly tells you to; only ever append the current turn.
 
 
-## Iteration workflow (version source)
+## Iteration workflow (the site source)
 
-Source prompts are recognizable — they are about the actual website (its
-appearance, behavior, or contents). In each, Jonatan states whether it is a **new
-iteration** of the version or **builds on the current** one. An iteration may run
-across several turns; it is finished only when Jonatan **explicitly says to wrap it
-up** (see *Wrapping up* below).
+Source prompts are recognizable — they are about the actual website (its appearance,
+behavior, or contents). An iteration may run across several turns.
 
-**New iteration:**
-1. Copy the highest-numbered `version0/sources/iterationN/` to `iteration{N+1}/`.
-2. Remove every `interaction_*` file from the new copy (asset symlinks stay).
-3. Work the new iteration's source per the prompt, turn after turn, until Jonatan
-   says to wrap up.
-
-**Builds on the current iteration:**
-1. Work the highest iteration's source per the prompt, turn after turn, until
-   Jonatan says to wrap up.
-
-**Wrapping up.** When Jonatan explicitly says to wrap up the iteration, that
-instruction *is* the go-ahead: wrap up right then — do not pause to make him verify
-first. Wrapping up is exactly three things:
-1. **Save the files used.** Every file Jonatan attached during the iteration goes
-   into the iteration folder as `interaction_<yyyy>_<mm>_<dd>_<keyword>.<ext>`.
-2. **Write the whole exchange.** Create `interaction_<yyyy>_<mm>_<dd>.md` in the
-   iteration folder holding the iteration's *entire* exchange, in order: Jonatan's
-   first prompt verbatim, then your final answer, then two blank lines, then his
-   next prompt verbatim, then your final answer — and so on for every turn of the
-   iteration. Use the same labeled shape as the session log
-   (`Jonatan on YYYY-MM-DD at ~HH:MM:` / `Claude 4.8 on YYYY-MM-DD at ~HH:MM:`).
-3. **Snapshot the site.** Render `version0/gallery/iterationNNN.png` at the same
-   frame as the existing gallery shots (see *Rendering & gallery captures*). The
-   point scatter is RNG-driven by design — do not stage or chase a particular
-   arrangement; only the frame must match.
+- **Start a new iteration only when Jonatan explicitly says to.** Then:
+  1. Copy the highest-numbered `sources/iterationN/` to `iteration{N+1}/`.
+  2. Remove every `interaction_*` file from the new copy (asset symlinks stay).
+  3. Work the new iteration's source per the prompt, turn after turn.
+- **Otherwise, build on the current (highest) iteration** — work its source per the
+  prompt, turn after turn.
+- **Wrap up an iteration only when Jonatan explicitly says to.** That instruction
+  *is* the go-ahead: wrap up right then — do not pause to make him verify first.
+  Wrapping up is exactly three things, after the source work is done:
+  1. **Save the files used.** Every file Jonatan attached during the iteration is
+     *moved* into the iteration folder as
+     `interaction_<yyyy>_<mm>_<dd>_<keyword>.<ext>` — moved, not copied, so no
+     clutter is left behind wherever he handed it to you.
+  2. **Write the whole exchange.** Create `interaction_<yyyy>_<mm>_<dd>.md` in the
+     iteration folder holding the iteration's *entire* exchange, in order:
+     Jonatan's first prompt verbatim, then your final answer, then two blank lines,
+     then his next prompt and your answer — and so on for every turn. Use the same
+     labeled shape as the session log (`Jonatan on YYYY-MM-DD at ~HH:MM:` /
+     `Claude 4.8 on YYYY-MM-DD at ~HH:MM:`).
+  3. **Snapshot the site.** Render `gallery/iterationNNN.png` at the same frame as
+     the existing gallery shots (see *Rendering & gallery captures*). The point
+     scatter is RNG-driven by design — do not stage or chase a particular
+     arrangement; only the frame must match.
 
 If a past wrap-up's gallery shot is somehow missing, generate it before copying for
 a new iteration.
 
 Notes:
-- Most iterations are a single turn; later, polishing iterations may run several.
 - A source turn is recorded in **both** the session log and the iteration's
   interaction md.
 - **No intermediate bookkeeping.** Only the finished source and the interaction
   files live in an iteration — never copies of in-progress source. The previous
   iteration's source is the clean slate that, together with the interaction files,
-  pins down the step; reconstructing that gap is the upper layer's concern.
+  pins down the step.
 - If Jonatan needs to hand you a file, he will say where to find it in the prompt.
 - Interaction filenames use underscores (`interaction_2026_06_19.md`).
 
@@ -132,8 +94,6 @@ don't reinstall blindly — check first:
   (Node at `~/.local/node/bin`); reach it with
   `NODE_PATH=~/.local/node/lib/node_modules`. Launch with
   `chromium.launch({ executablePath: <the binary above>, args:['--no-sandbox','--disable-gpu'] })`.
-- Headless renders use the page's **true colours** — Jonatan's OS night-mode/
-  warm-screen filter is a display-layer effect and never reaches a capture.
 
 **Gallery frame (fixed).** Every `gallery/iterationNNN.png` so far is **1024×1006**,
 the top of the page. So capture each at: viewport **1024×1006**, `deviceScaleFactor:
@@ -144,7 +104,7 @@ wrap-up, render the just-finished iteration this way and write its
 
 ## Assets
 
-`version0/assets/` is the version's one true asset store; inside each iteration,
+`assets/` is the site's one true asset store; inside each iteration,
 `assets/<name>` is a **relative symlink** (`../../../assets/<target>`) to a real
 file there. This kills cross-iteration duplication.
 
