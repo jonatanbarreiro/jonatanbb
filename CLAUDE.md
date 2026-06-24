@@ -83,22 +83,12 @@ Notes:
 
 ## Rendering & gallery captures
 
-A headless browser is available for rendering the site (verifying changes, and
-producing gallery shots). It was installed once and is reused across sessions, so
-don't reinstall blindly — check first:
-
-- **Browser:** Playwright's Chromium binary at
-  `~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome` (not on `PATH`).
-  Drive it with `--no-sandbox --disable-gpu`.
-- **Driver:** `playwright-core` is installed globally under `~/.local/node`
-  (Node at `~/.local/node/bin`); reach it with
-  `NODE_PATH=~/.local/node/lib/node_modules`. Launch with
-  `chromium.launch({ executablePath: <the binary above>, args:['--no-sandbox','--disable-gpu'] })`.
-
-**Gallery frame (fixed).** Every `gallery/iterationNNN.png` so far is **1024×1006**,
-the top of the page. So capture each at: viewport **1024×1006**, `deviceScaleFactor:
-1`, `scrollY: 0`, a full-viewport screenshot (yields exactly 1024×1006). At
-wrap-up, render the just-finished iteration this way and write its
+Drive Playwright with system Chrome (channel: 'chrome') to render the site and
+capture gallery shots. Node, Chrome and the driver are all installed system-wide
+and on `PATH`; the driver is `playwright-core` under the global module dir, so
+reach it with `NODE_PATH=/usr/local/lib/node_modules`. Gallery frame: viewport
+1024×1006, deviceScaleFactor 1, scrollY 0, full-viewport screenshot → exactly
+1024×1006. At wrap-up, render the just-finished iteration this way and write its
 `gallery/iterationNNN.png`.
 
 
@@ -131,6 +121,12 @@ branch, revert, or otherwise alter history.
   purge.
 - Keep the repo, and particularly the live iteration, clean: edit in place, no
   backups or scratch files, no intermediate source copies.
+- **Installing software.** Iteration prompts run with CC in auto mode, so you may
+  install software when a prompt genuinely needs it — no need to ask first. But
+  install it **system-wide** (on `PATH`, under a standard prefix), never into a
+  private per-tool location only you would know to look in. If a system-wide install
+  needs sudo or otherwise can't be done from here, stop and tell Jonatan the exact
+  command to run it himself.
 
 
 ## Code style (site source)
