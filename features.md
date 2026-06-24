@@ -13,7 +13,7 @@ visible on the job market.
 - [x] "WILLING TO WORK" carved into the logo's annulus, each letter fading with the light that reaches its arc — [iteration 4](sources/iteration4)
 - [x] The logo's geometry dissected into regions and wired into the lighting, so the mark lights up region by region — [iteration 8](sources/iteration8)
 - [ ] A load animation: the dot over the "i" sends a wave of light that wakes the other points and the ring
-- [ ] Illuminating points and logo that can be moved around the page dynamically
+- [x] Illuminating points and logo that can be moved around the page dynamically — [iteration 11](sources/iteration11)
 - [ ] The interaction layer finished
 - [ ] The design settled
 - [ ] Deliberate, finished contents
