@@ -49,8 +49,11 @@ behavior, or contents). An iteration may run across several turns.
   3. Work the new iteration's source per the prompt, turn after turn.
 - **Otherwise, build on the current (highest) iteration** — work its source per the
   prompt, turn after turn.
-- **Wrap up an iteration only when Jonatan explicitly says to.** That instruction
-  *is* the go-ahead: wrap up right then — do not pause to make him verify first.
+- **Wrap up an iteration when Jonatan calls for it to end** — *close*, *finish*,
+  *wrap up*, or any plain equivalent, wherever it sits in the prompt and even when
+  paired with work to do first ("do X to close iteration N" means: do X, then wrap
+  up). Don't hold out for a more explicit phrasing or a closing imperative — that
+  call *is* the go-ahead: wrap up right then, do not pause to make him verify.
   Wrapping up is exactly three things, after the source work is done:
   1. **Save the files used.** Every file Jonatan attached during the iteration is
      *moved* into the iteration folder as
