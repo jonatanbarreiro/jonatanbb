@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jonatan Barreiro</title>
+  <meta name="description" content="Jonatan — mathematician and predoctoral researcher. Geometry, point clouds, and detection methods.">
+  <link rel="icon" type="image/svg+xml" href="assets/bb.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Skip link for keyboard users -->
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Cast light: the focused gold cones each exterior point throws toward the
+       logo (bounded by where it grazes the outer boundary). Behind the content,
+       like ambient light in the page; painted by main.js each frame. -->
+  <canvas class="cast-canvas" id="cast-canvas" aria-hidden="true"></canvas>
+
+  <!-- Sample field: 17 points anchored to the page, scattered freshly on each
+       load by main.js, plus two hardcoded ones (the centre dot and the i-dot). -->
+  <div class="points" aria-hidden="true"></div>
+
+  <!-- The signet: the reconstructed circle + inscribed monogram. Fixed to the
+       viewport, and layered ABOVE the page content so it reads as a solid mark
+       floating over the page (the opaque ring occludes whatever scrolls behind). -->
+  <div class="signet" aria-hidden="true">
+    <svg viewBox="0 0 400 400" class="signet__svg" id="signet-svg">
+      <!-- the reconstructed circle: thick black baseline. It IS the bb logo's
+           enclosing annulus (see assets/bb.svg) — same centre, radius and
+           thickness, mapped into this 0..400 viewBox. The points illuminate the
+           arcs they can see (lit gold bands painted on .reflect-canvas). -->
+      <circle class="signet__circle" cx="200" cy="200" r="120"
+              fill="none" stroke="#1c1a16" stroke-width="17.5370" opacity="1"/>
+    </svg>
+  </div>
+
+  <!-- The monogram, on its own layer above the dots and their illumination. The
+       two b's behave as solid forms slightly above the lights: only boundary
+       segments whose outward normal faces an interior light catch a reflection
+       (painted on .reflect-canvas by main.js). -->
+  <div class="signet signet--top" aria-hidden="true">
+    <svg viewBox="0 0 400 400" class="signet__svg">
+      <defs>
+        <path id="bb-b" d="M27.5 86.5 21 93 V58 L49.5 86.5 0 136 V1.445 L4.856 8.7"
+              fill="none" stroke-width="10.5" stroke-linecap="butt"
+              stroke-linejoin="miter" stroke-miterlimit="6"/>
+      </defs>
+      <!-- mapped so the bb annulus (centre 107.637,168.3; mid-radius 143.696,
+           ring thickness 21) lands on the circle above (centre 200,200; r 120):
+           K = 120/143.696 -->
+      <g class="signet__mark" stroke="#1c1a16"
+         transform="translate(200 200) scale(0.835096) translate(-107.637 -168.3)">
+        <use href="#bb-b" transform="translate(44.6 81.8)"/>
+        <use href="#bb-b" transform="translate(119 57.75)"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- reflection glints + lit boundary bands, painted by main.js (blurred) -->
+  <canvas class="reflect-canvas" id="reflect-canvas" aria-hidden="true"></canvas>
+
+  <!-- "WILLING TO WORK", carved into the ring on the arc facing the screen
+       centre. It is NOT a separate SVG layer any more: main.js draws it on this
+       canvas in the SAME pass as the bands, so its lighting can't fall behind
+       the ring. Each letter reads the boundary-illumination sequence at its own
+       angle and is rendered at a discrete heat level (0..13) in incandescent
+       carmesí — dark wine when barely lit, hot orange when fully lit. -->
+  <canvas class="letters-canvas" id="letters-canvas" aria-hidden="true"></canvas>
+
+  <!-- The ignition pulse: the expanding ring of light the i-dot throws on load to
+       wake the field. Drawn by main.js only during the load sequence, on the very
+       top layer so the pulse sweeps over the whole page (content and images). -->
+  <canvas class="pulse-canvas" id="pulse-canvas" aria-hidden="true"></canvas>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="hero__inner">
+        <div class="hero__text">
+          <p class="eyebrow">Mathematician · Predoctoral researcher</p>
+          <h1 class="hero__name"><span class="hero__given">Jonatan</span> <span class="hero__sur">Barre<span class="hero__i">i</span>ro Bastos</span></h1>
+          <p class="hero__lede">
+            I work where geometry meets data: detecting structure in point
+            clouds, and reasoning carefully about why a method works before
+            trusting that it does. Based in Galicia, Spain.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--ghost" href="assets/cv.pdf">Curriculum vitae (PDF)</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="band" id="about">
+      <div class="section">
+        <p class="kicker">About</p>
+        <div class="about__grid">
+          <div class="about__photo">
+            <img src="assets/portrait.webp" alt="Jonatan Barreiro Bastos" width="600" height="600">
+          </div>
+          <div class="about__body">
+            <p>
+              I'm a mathematician by training — a degree and research master's
+              from the Universidad Autónoma de Madrid, then a Master of Arts in
+              Mathematics from the University of Kansas, where I started out in
+              harmonic analysis.
+            </p>
+            <p>
+              Since 2021 I've been a predoctoral researcher in the
+              <strong>LiDAR research group at CiTIUS</strong> (Universidade de
+              Santiago de Compostela), under the supervision of Dr. Francisco F.
+              Rivera. My day-to-day has been modelling and implementing detection
+              and integration techniques for point clouds captured by LiDAR and
+              imaging sensors — mostly in C++.
+            </p>
+            <p>
+              I'm currently finishing my PhD. My second paper, a decoupled
+              random-sampling approach to detecting lines (and now circles) in
+              2D point clouds, is close to complete on the research side. I care
+              about methods that are not only correct but legible — where you can
+              see <em>why</em> the geometry forces the answer.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section class="band band--tint" id="experience">
+      <div class="section">
+        <p class="kicker">Experience</p>
+        <ol class="timeline">
+          <li class="entry">
+            <div class="entry__when">2021 — 2025</div>
+            <div class="entry__what">
+              <h3>Senior Research Technician</h3>
+              <p class="entry__org">CiTIUS — Centro de Investigación en Tecnoloxías Intelixentes, USC</p>
+              <p class="entry__detail">
+                Predoctoral researcher in the LiDAR group under Dr. Francisco F.
+                Rivera. Modelled and implemented detection and integration
+                techniques for LiDAR and image point clouds, primarily in C++.
+                Since August 2025, continuing the underlying doctoral research
+                independently.
+              </p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2019</div>
+            <div class="entry__what">
+              <h3>Graduate Teaching Assistant</h3>
+              <p class="entry__org">University of Kansas</p>
+              <p class="entry__detail">
+                Teaching assistant for Math 147 Calculus III (Honors), with
+                Prof. E. Gavosto. Taught classes, graded, ran the Help Room, and
+                handled 3D printing of student projects.
+              </p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2018</div>
+            <div class="entry__what">
+              <h3>Graduate Teaching Assistant</h3>
+              <p class="entry__org">University of Kansas</p>
+              <p class="entry__detail">
+                Instructor of record for a 33-student section of Math 115
+                Calculus I, coordinated by Dr. W. Huang and A. Kolasinski.
+                Lectured, designed and graded tests, ran the Help Room.
+              </p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2017 — 2018</div>
+            <div class="entry__what">
+              <h3>Graduate Research Assistant</h3>
+              <p class="entry__org">University of Kansas</p>
+              <p class="entry__detail">
+                Research assistant under Prof. Rodolfo Torres, beginning research
+                in harmonic analysis.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ EDUCATION ============ -->
+    <section class="band" id="education">
+      <div class="section">
+        <p class="kicker">Education</p>
+        <ol class="timeline">
+          <li class="entry">
+            <div class="entry__when">2017 — 2020</div>
+            <div class="entry__what">
+              <h3>Master of Arts in Mathematics</h3>
+              <p class="entry__org">University of Kansas, USA · GPA 10.0 / 10.0</p>
+              <p class="entry__detail">Recipient of the Dean's Doctoral Fellowship.</p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2015 — 2016</div>
+            <div class="entry__what">
+              <h3>Máster en Matemáticas y Aplicaciones</h3>
+              <p class="entry__org">Universidad Autónoma de Madrid · 8.0 / 10.0</p>
+              <p class="entry__detail">
+                Research initiation track. Thesis: <em>El Teorema de la Corona</em>
+                (The Corona Theorem), advised by J. L. Fernández.
+              </p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2011 — 2015</div>
+            <div class="entry__what">
+              <h3>Grado en Matemáticas</h3>
+              <p class="entry__org">Universidad Autónoma de Madrid · 7.6 / 10.0</p>
+              <p class="entry__detail">
+                Thesis: <em>La Transformada Rápida de Fourier y Aplicaciones</em>
+                (The Fast Fourier Transform and Applications), advised by E. Hernández.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ WRITING / PUBLICATIONS ============ -->
+    <section class="band band--tint" id="publications">
+      <div class="section">
+        <p class="kicker">Writing &amp; research</p>
+        <div class="pubs">
+          <article class="pub">
+            <h3 class="pub__title">A Decoupled Random-Sampling Hough Approach to Line Detection in 2D Point Clouds</h3>
+            <p class="pub__meta">In preparation · extends to circle detection</p>
+            <p class="pub__note">
+              A three-stage decoupled detector that separates sampling from
+              estimation, with an exact characterisation of the background noise
+              floor. Research-complete; targeting the IPOL journal.
+            </p>
+          </article>
+          <article class="pub">
+            <h3 class="pub__title">LitS: A novel Neighbourhood Descriptor for Point Clouds</h3>
+            <p class="pub__meta">arXiv:2602.04838 · Feb 2026</p>
+            <p class="pub__note">
+              A neighbourhood descriptor for 2D and 3D point clouds: piecewise
+              constant functions on the unit circle that let each point record
+              how its neighbours are distributed by direction. With F. F. Rivera,
+              O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís, and
+              T. F. Pena.
+            </p>
+            <p class="pub__links"><a href="https://arxiv.org/abs/2602.04838">Read on arXiv →</a></p>
+          </article>
+          <p class="pub__orcid">
+            Full record on
+            <a href="https://orcid.org/0000-0003-0922-8055" rel="me">ORCID 0000-0003-0922-8055</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section class="band" id="skills">
+      <div class="section">
+        <p class="kicker">Skills</p>
+        <div class="skills">
+          <div class="skills__col">
+            <h3>Programming</h3>
+            <ul class="chips">
+              <li class="chip chip--lit3">LaTeX</li>
+              <li class="chip chip--lit3">Sage</li>
+              <li class="chip chip--lit2">C++</li>
+              <li class="chip chip--lit2">Python</li>
+              <li class="chip chip--lit1">C</li>
+              <li class="chip chip--lit1">Java</li>
+              <li class="chip chip--lit1">MATLAB</li>
+              <li class="chip chip--lit1">R</li>
+            </ul>
+          </div>
+          <div class="skills__col">
+            <h3>Languages</h3>
+            <ul class="langs">
+              <li><span>Spanish</span><span class="langs__lvl">Native</span></li>
+              <li><span>Galician</span><span class="langs__lvl">Native</span></li>
+              <li><span>English</span><span class="langs__lvl">TOEFL · fluent</span></li>
+            </ul>
+            <h3 class="skills__sub">Focus areas</h3>
+            <ul class="chips">
+              <li class="chip">Point-cloud geometry</li>
+              <li class="chip">Detection methods</li>
+              <li class="chip">Harmonic analysis</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="band band--tint" id="contact">
+      <div class="section section--contact">
+        <h2 class="contact__head">Get in touch</h2>
+        <ul class="contact__links">
+          <li><a href="mailto:jonatanbb@tutanota.com">jonatanbb@tutanota.com</a></li>
+          <li><a href="https://t.me/jonatanbb" rel="me">Telegram</a></li>
+          <li><a href="https://orcid.org/0000-0003-0922-8055" rel="me">ORCID</a></li>
+          <li><a href="https://citius.gal/es/team/jonatan-barreiro-bastos/">CiTIUS profile</a></li>
+          <!-- GitHub: live once there's a public repo to show.
+               Uncomment when ready:
+          <li><a href="https://github.com/jonatanbarreiro" rel="me">GitHub</a></li>
+          -->
+        </ul>
+        <p class="contact__lede">
+          For research, collaboration, or work enquiries — email is best.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>© <span id="year"></span> Jonatan Barreiro Bastos</p>
+    <p class="foot__note">Custom-built.</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
