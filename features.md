@@ -14,7 +14,7 @@ visible on the job market.
 - [x] The logo's geometry dissected into regions and wired into the lighting, so the mark lights up region by region — [iteration 8](sources/iteration8)
 - [x] A load animation: the dot over the "i" sends a wave of light that wakes the other points and the ring — [iteration 12](sources/iteration12)
 - [x] Illuminating points and logo that can be moved around the page dynamically — [iteration 11](sources/iteration11)
-- [ ] The interaction layer finished
+- [x] The interaction layer finished — [iteration 13](sources/iteration13)
 - [ ] The design settled
 - [ ] Deliberate, finished contents
 - [ ] A sensible up-to-date photo of me
