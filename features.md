@@ -18,3 +18,5 @@ visible on the job market.
 - [ ] The design settled
 - [ ] Deliberate, finished contents
 - [ ] A sensible up-to-date photo of me
+- [ ] Spanish / English versions
+- [ ] Interaction disable toggle
