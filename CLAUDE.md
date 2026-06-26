@@ -89,9 +89,11 @@ Notes:
 Drive Playwright with system Chrome (channel: 'chrome') to render the site and
 capture gallery shots. Node, Chrome and the driver are all installed system-wide
 and on `PATH`; the driver is `playwright-core` under the global module dir, so
-reach it with `NODE_PATH=/usr/local/lib/node_modules`. Gallery frame: viewport
-1024×1006, deviceScaleFactor 1, scrollY 0, full-viewport screenshot → exactly
-1024×1006. At wrap-up, render the just-finished iteration this way and write its
+reach it with `NODE_PATH=/usr/local/lib/node_modules`. Gallery shots are **full-page
+long screenshots**: viewport width 1024, deviceScaleFactor 1, `fullPage` from scrollY 0
+(the fixed logo renders once at the top — no stitching, no duplication). Iterations that
+carry the ignition pulse are captured mid-pulse (~2.25s after load) so the wave shows.
+At wrap-up, render the just-finished iteration this way and write its
 `gallery/iterationNNN.png`.
 
 
@@ -124,6 +126,9 @@ branch, revert, or otherwise alter history.
   purge.
 - Keep the repo, and particularly the live iteration, clean: edit in place, no
   backups or scratch files, no intermediate source copies.
+- **Files made for Jonatan to see** (a render, a mockup, a contact sheet) go straight
+  into the live iteration folder, named like an interaction file — never a scratch or
+  temp dir he'd have to go hunting in.
 - **Installing software.** Iteration prompts run with CC in auto mode, so you may
   install software when a prompt genuinely needs it — no need to ask first. But
   install it **system-wide** (on `PATH`, under a standard prefix), never into a
