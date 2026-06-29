@@ -20,3 +20,4 @@ visible on the job market.
 - [ ] A sensible up-to-date photo of me
 - [x] Spanish / English versions — [iteration 14](sources/iteration14)
 - [x] Interaction disable toggle — [iteration 14](sources/iteration14)
+- [x] Remembers a visitor's language and interaction choices between visits, with no cookie banner — [iteration 15](sources/iteration15)
