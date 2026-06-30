@@ -11,6 +11,8 @@ Jonatan writes a deliberate prompt, you carry it out.
 
 - `CLAUDE.md` — this file; the repo's workflow and conventions.
 - `README.md` — the website's README (its making-of); the repo's public face.
+- `milestones.md` — the site's milestone checklist; Jonatan's to maintain. Leave it
+  untouched unless he tells you to change it.
 - `prompts/` — full session logs, `sessionNNNN.log`, every turn verbatim.
 - `sources/iterationN/` — the site source at step N (`index.html`, `styles.css`,
   `main.js`, `assets/`), plus that iteration's `interaction_*` files.
@@ -60,11 +62,9 @@ behavior, or contents). An iteration may run across several turns.
      `interaction_<yyyy>_<mm>_<dd>_<keyword>.<ext>` — moved, not copied, so no
      clutter is left behind wherever he handed it to you.
   2. **Write the whole exchange.** Create `interaction_<yyyy>_<mm>_<dd>.md` in the
-     iteration folder holding the iteration's *entire* exchange, in order:
-     Jonatan's first prompt verbatim, then your final answer, then two blank lines,
-     then his next prompt and your answer — and so on for every turn. Use the same
-     labeled shape as the session log (`Jonatan on YYYY-MM-DD at ~HH:MM:` /
-     `Claude 4.8 on YYYY-MM-DD at ~HH:MM:`).
+     iteration folder holding the iteration's *entire* exchange — every turn in
+     order, each prompt and final answer recorded **verbatim**, in the same labeled
+     shape as the session log.
   3. **Snapshot the site.** Render `gallery/iterationNNN.png` at the same frame as
      the existing gallery shots (see *Rendering & gallery captures*). The point
      scatter is RNG-driven by design — do not stage or chase a particular
@@ -81,7 +81,6 @@ Notes:
   iteration's source is the clean slate that, together with the interaction files,
   pins down the step.
 - If Jonatan needs to hand you a file, he will say where to find it in the prompt.
-- Interaction filenames use underscores (`interaction_2026_06_19.md`).
 
 
 ## The site's text is Jonatan's
@@ -105,8 +104,6 @@ reach it with `NODE_PATH=/usr/local/lib/node_modules`. Gallery shots are **full-
 long screenshots**: viewport width 1024, deviceScaleFactor 1, `fullPage` from scrollY 0
 (the fixed logo renders once at the top — no stitching, no duplication). Iterations that
 carry the ignition pulse are captured mid-pulse (~2.25s after load) so the wave shows.
-At wrap-up, render the just-finished iteration this way and write its
-`gallery/iterationNNN.png`.
 
 
 ## Assets
