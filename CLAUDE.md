@@ -84,6 +84,18 @@ Notes:
 - Interaction filenames use underscores (`interaction_2026_06_19.md`).
 
 
+## The site's text is Jonatan's
+
+The website's **text content** — every word a visitor reads: the page copy, the
+section headings, the hero lede, link and button text, the document `<title>` and
+meta description, and the language files in `assets/content.*.js` — is **deliberate
+and authored by Jonatan**. Do not write, reword, translate, condense, "polish", or
+otherwise alter it unless he **explicitly asked** you to. When a task only moves or
+restructures text (externalizing it, re-keying it, changing the markup around it),
+carry the existing words across **verbatim** — structure is yours to shape, wording
+is not.
+
+
 ## Rendering & gallery captures
 
 Drive Playwright with system Chrome (channel: 'chrome') to render the site and
