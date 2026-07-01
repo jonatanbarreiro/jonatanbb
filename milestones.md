@@ -3,6 +3,7 @@
 A running checklist of milestones, each paired with the iteration that first introduced it. Indirectly, also a global tracker of jonatanbb.xyz as it evolves into the professional profile site that gives me visibility on the web. 
 
 
+- [x] Points illuminate close page contents, in a layer separate from the atmospheric glow/cones — [iteration 18](sources/iteration18)
 - [x] Text content separated out for internationalization — [iteration 17](sources/iteration17)
 - [x] Theoretical illuminance decay based on Lambert's cosine law — [iteration 16](sources/iteration16)
 - [x] Use localStorage to persist language and interactivity preferences — [iteration 15](sources/iteration15)
@@ -18,9 +19,9 @@ A running checklist of milestones, each paired with the iteration that first int
 - [x] A clean static HTML CV/profile to build on — [iteration 0](sources/iteration0)
 - [ ] A sensible up-to-date photo of me
 - [ ] Scatter the illuminating points via blue noise (Poisson-disk sampling) instead of uniformly
-- [ ] Illuminating points light up the page contents directly
 - [ ] Construct a custom _geometric neighborhood graph_ from a pruned Delaunay triangulation
 - [ ] Construct a _shortest-path tree_ rooted at the 'I' point from the pruned Delaunay graph
 - [ ] Visually represent graph edges as cracks between illuminating points
 - [ ] Differentiate between edges from the GNG and the SPT
 - [ ] Integrate the cracks as lighting elements of the site
+- [ ] Lit (gold) words act as light sources, illuminating nearby page contents

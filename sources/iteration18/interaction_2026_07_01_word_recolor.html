@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jonatan Barreiro</title>
+  <meta name="description" content="Jonatan — mathematician and predoctoral researcher. Geometry, point clouds, and detection methods.">
+  <link rel="icon" type="image/svg+xml" href="assets/bb.svg">
+  <link rel="stylesheet" href="styles.css">
+<style id="litvar">
+/* (3) words warm in over a beat */
+.litw { transition: color .25s ease; }
+/* the native selection fill is replaced by a hollow, corner-rounded garnet outline (drawn in JS) */
+::selection { background: transparent; }
+::-moz-selection { background: transparent; }
+#lit-selbox { position: absolute; inset: 0; z-index: 13; pointer-events: none; }
+.lit-selrect { position: absolute; border: 1.5px solid #1c1a16; border-radius: 5px; }
+
+</style>
+</head>
+<body>
+  <!-- The page's WORDS live outside this file: assets/content.en.js and assets/content.es.js
+       hold every translatable string, one editable map per language. This file is the
+       STRUCTURE; each translatable node carries data-i18n="key" and is filled by main.js from
+       the active language's map. To change the site's text, edit the two content files — not
+       the markup here. (Proper names, dates and GPAs that read the same in both languages stay
+       inline below.) -->
+
+  <!-- Skip link for keyboard users -->
+  <a class="skip" href="#main" data-i18n="skip"></a>
+
+  <!-- top-right controls: the master light toggle (B2 bulb) on the LEFT, the EN/ES
+       language switch (L1 pill) on the RIGHT. Both are fixed to the viewport and ride
+       along as you scroll, so either can be reached from anywhere down the page. -->
+  <div class="controls" id="controls">
+    <button class="bulb-toggle" id="bulb-toggle" type="button" aria-pressed="true" aria-label="Turn the light off">
+      <svg viewBox="0 0 64 100" aria-hidden="true">
+        <defs>
+          <radialGradient id="bulbGlow" cx="50%" cy="36%" r="62%">
+            <stop offset="0" stop-color="#ffe666" stop-opacity=".55"/>
+            <stop offset="55%" stop-color="#ffe666" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="#ffe666" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle class="bulb-glow" cx="32" cy="36" r="46" fill="url(#bulbGlow)"/>
+        <path class="bulb-glass" d="M14 44a18 18 0 1 1 36 0c0 9-7 13-8 20H22c-1-7-8-11-8-20z" stroke="#1c1a16" stroke-width="3.2" stroke-linejoin="round"/>
+        <path d="M22 64h20M23 70h18M25 76h14" fill="none" stroke="#1c1a16" stroke-width="3" stroke-linecap="round"/>
+        <path class="bulb-fil" d="M26 40c2-6 4-6 6 0s4 6 6 0" fill="none" stroke="#1c1a16" stroke-width="2.2"/>
+      </svg>
+    </button>
+    <button class="lang-switch" id="lang-switch" type="button" aria-pressed="false" aria-label="Cambiar a español">
+      <svg viewBox="0 0 104 48" aria-hidden="true">
+        <path class="pill-left"  d="M52 2 H24 A22 22 0 0 0 24 46 H52 Z"/>
+        <path class="pill-right" d="M52 2 H80 A22 22 0 0 1 80 46 H52 Z"/>
+        <rect x="2" y="2" width="100" height="44" rx="22" fill="none" stroke="#1c1a16" stroke-width="3"/>
+        <line x1="52" y1="2" x2="52" y2="46" stroke="#1c1a16" stroke-width="2.4"/>
+        <text class="pill-en" x="27" y="31" text-anchor="middle">EN</text>
+        <text class="pill-es" x="77" y="31" text-anchor="middle">ES</text>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Cast light: the focused gold cones each exterior point throws toward the
+       logo (bounded by where it grazes the outer boundary). Behind the content,
+       like ambient light in the page; painted by main.js each frame. -->
+  <canvas class="cast-canvas" id="cast-canvas" aria-hidden="true"></canvas>
+
+  <!-- Sample field: 17 points anchored to the page, scattered freshly on each
+       load by main.js, plus two hardcoded ones (the centre dot and the i-dot). -->
+  <div class="points" aria-hidden="true"></div>
+
+  <!-- The signet: the reconstructed circle + inscribed monogram. Fixed to the
+       viewport, and layered ABOVE the page content so it reads as a solid mark
+       floating over the page (the opaque ring occludes whatever scrolls behind). -->
+  <div class="signet" aria-hidden="true">
+    <svg viewBox="0 0 400 400" class="signet__svg" id="signet-svg">
+      <!-- the reconstructed circle: thick black baseline. It IS the bb logo's
+           enclosing annulus (see assets/bb.svg) — same centre, radius and
+           thickness, mapped into this 0..400 viewBox. The points illuminate the
+           arcs they can see (lit gold bands painted on .reflect-canvas). -->
+      <circle class="signet__circle" cx="200" cy="200" r="120"
+              fill="none" stroke="#1c1a16" stroke-width="17.5370" opacity="1"/>
+    </svg>
+  </div>
+
+  <!-- The monogram, on its own layer above the dots and their illumination. The
+       two b's behave as solid forms slightly above the lights: only boundary
+       segments whose outward normal faces an interior light catch a reflection
+       (painted on .reflect-canvas by main.js). -->
+  <div class="signet signet--top" aria-hidden="true">
+    <svg viewBox="0 0 400 400" class="signet__svg">
+      <defs>
+        <path id="bb-b" d="M27.5 86.5 21 93 V58 L49.5 86.5 0 136 V1.445 L4.856 8.7"
+              fill="none" stroke-width="10.5" stroke-linecap="butt"
+              stroke-linejoin="miter" stroke-miterlimit="6"/>
+      </defs>
+      <!-- mapped so the bb annulus (centre 107.637,168.3; mid-radius 143.696,
+           ring thickness 21) lands on the circle above (centre 200,200; r 120):
+           K = 120/143.696 -->
+      <g class="signet__mark" stroke="#1c1a16"
+         transform="translate(200 200) scale(0.835096) translate(-107.637 -168.3)">
+        <use href="#bb-b" transform="translate(44.6 81.8)"/>
+        <use href="#bb-b" transform="translate(119 57.75)"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- reflection glints + lit boundary bands, painted by main.js (blurred) -->
+  <canvas class="reflect-canvas" id="reflect-canvas" aria-hidden="true"></canvas>
+
+  <!-- "WILLING TO WORK", carved into the ring on the arc facing the screen centre.
+       This is a layer of REAL DOM TEXT (one <span> per letter), NOT a canvas: each letter
+       is positioned + rotated onto the ring by main.js and recoloured by the light on its
+       own arc — incandescent, dark wine when barely lit to hot orange when fully lit. Kept
+       above the bands so its lighting never falls behind the ring. -->
+  <div class="ring-letters" id="ring-letters" aria-hidden="true"></div>
+
+  <!-- The ignition pulse: the expanding ring of light the i-dot throws on load to
+       wake the field. Drawn by main.js only during the load sequence, on the very
+       top layer so the pulse sweeps over the whole page (content and images). -->
+  <canvas class="pulse-canvas" id="pulse-canvas" aria-hidden="true"></canvas>
+
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top">
+      <div class="hero__inner">
+        <div class="hero__text">
+          <p class="eyebrow" data-i18n="eyebrow"></p>
+          <h1 class="hero__name"><span class="hero__given">Jonatan</span> <span class="hero__sur">Barre<span class="hero__i">i<i class="hero__i-base" aria-hidden="true"></i></span>ro Bastos</span></h1>
+          <p class="hero__lede" data-i18n="lede"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="band" id="about">
+      <div class="section">
+        <p class="kicker" data-i18n="k_about"></p>
+        <div class="about__grid">
+          <div class="about__photo">
+            <img src="assets/portrait.webp" alt="Jonatan Barreiro Bastos" width="600" height="600">
+          </div>
+          <div class="about__body">
+            <p data-i18n="ab1"></p>
+            <p data-i18n="ab2"></p>
+            <p data-i18n="ab3"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section class="band band--tint" id="experience">
+      <div class="section">
+        <p class="kicker" data-i18n="k_exp"></p>
+        <ol class="timeline">
+          <li class="entry">
+            <div class="entry__when">2021 — 2025</div>
+            <div class="entry__what">
+              <h3 data-i18n="e1t"></h3>
+              <p class="entry__org" data-i18n="e1o"></p>
+              <p class="entry__detail" data-i18n="e1d"></p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2019</div>
+            <div class="entry__what">
+              <h3 data-i18n="gta"></h3>
+              <p class="entry__org" data-i18n="uok"></p>
+              <p class="entry__detail" data-i18n="e2d"></p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2018</div>
+            <div class="entry__what">
+              <h3 data-i18n="gta"></h3>
+              <p class="entry__org" data-i18n="uok"></p>
+              <p class="entry__detail" data-i18n="e3d"></p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2017 — 2018</div>
+            <div class="entry__what">
+              <h3 data-i18n="e4t"></h3>
+              <p class="entry__org" data-i18n="uok"></p>
+              <p class="entry__detail" data-i18n="e4d"></p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ EDUCATION ============ -->
+    <section class="band" id="education">
+      <div class="section">
+        <p class="kicker" data-i18n="k_edu"></p>
+        <ol class="timeline">
+          <li class="entry">
+            <div class="entry__when">2017 — 2020</div>
+            <div class="entry__what">
+              <h3 data-i18n="ed1t"></h3>
+              <p class="entry__org" data-i18n="ed1o"></p>
+              <p class="entry__detail" data-i18n="ed1d"></p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2015 — 2016</div>
+            <div class="entry__what">
+              <h3 data-i18n="ed2t"></h3>
+              <p class="entry__org" data-i18n="ed2o"></p>
+              <p class="entry__detail" data-i18n="ed2d"></p>
+            </div>
+          </li>
+          <li class="entry">
+            <div class="entry__when">2011 — 2015</div>
+            <div class="entry__what">
+              <h3 data-i18n="ed3t"></h3>
+              <p class="entry__org" data-i18n="ed3o"></p>
+              <p class="entry__detail" data-i18n="ed3d"></p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ WRITING / PUBLICATIONS ============ -->
+    <section class="band band--tint" id="publications">
+      <div class="section">
+        <p class="kicker" data-i18n="k_pub"></p>
+        <div class="pubs">
+          <article class="pub">
+            <h3 class="pub__title" data-i18n="p1t"></h3>
+            <p class="pub__meta" data-i18n="p1m"></p>
+            <p class="pub__note" data-i18n="p1n"></p>
+          </article>
+          <article class="pub">
+            <h3 class="pub__title" data-i18n="p2t"></h3>
+            <p class="pub__meta" data-i18n="p2m"></p>
+            <p class="pub__note" data-i18n="p2n"></p>
+            <p class="pub__links" data-i18n="p2l"></p>
+          </article>
+          <p class="pub__orcid" data-i18n="orcid"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section class="band" id="skills">
+      <div class="section">
+        <p class="kicker" data-i18n="k_skills"></p>
+        <div class="skills">
+          <div class="skills__col">
+            <h3 data-i18n="sk_prog"></h3>
+            <ul class="chips">
+              <li class="chip chip--lit3">LaTeX</li>
+              <li class="chip chip--lit3">Sage</li>
+              <li class="chip chip--lit2">C++</li>
+              <li class="chip chip--lit2">Python</li>
+              <li class="chip chip--lit1">C</li>
+              <li class="chip chip--lit1">Java</li>
+              <li class="chip chip--lit1">MATLAB</li>
+              <li class="chip chip--lit1">R</li>
+            </ul>
+          </div>
+          <div class="skills__col">
+            <h3 data-i18n="sk_lang"></h3>
+            <!-- presentation A (grouped by level): the level leads, the languages follow.
+                 Unambiguous and two lines; no chip-glow coding. -->
+            <dl class="langs-grouped">
+              <div><dt data-i18n="lvl_native"></dt><dd><span data-i18n="lang_es"></span>, <span data-i18n="lang_gl"></span></dd></div>
+              <div><dt data-i18n="lvl_fluent"></dt><dd><span data-i18n="lang_en"></span></dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="band band--tint" id="contact">
+      <div class="section section--contact">
+        <h2 class="contact__head" data-i18n="chead"></h2>
+        <ul class="contact__links">
+          <li>
+            <a class="contact__icon" href="mailto:jonatanbb@tutanota.com" aria-label="Email (Tuta) — jonatanbb@tutanota.com">
+              <!-- the Tuta brand mark, traced as line-art to match the Telegram plane and the b's:
+                   the three parts of the logo drawn as their boundaries — the left triangle (3 corners),
+                   the roof bar (4 corners) and the forward-leaning "M" (13 corners). Corners read off the
+                   hand-dotted reference capture (Jonatan marked every vertex), then mapped uniformly into
+                   the box — so the four M sticks share one thickness, the central valley sits at its true
+                   depth, and the bar carries its real height. The three parts are then nudged apart along
+                   their shared edges (each rigidly, shapes untouched) so the bands between them — all equal
+                   — open into a clear separating gap. -->
+              <!-- miterlimit 6: keeps every M cusp sharply mitred while clipping the long spike the
+                   triangle's very acute bottom vertex would otherwise throw past its tip -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="6" aria-hidden="true">
+                <path d="M1.16 3.45 4.52 6.81 1.16 18.15Z"/>
+                <path d="M2.88 1.38 18.84 1.38 22.62 5.16 6.66 5.16Z"/>
+                <path d="M2.56 22.56 7.18 7.86 10.12 7.86 12.64 14.58 19.36 7.86 22.30 7.86 18.10 22.56 14.74 22.56 17.68 13.32 13.06 17.52 10.96 17.52 8.86 13.32 5.92 22.56Z"/>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="contact__icon" href="https://t.me/jonatanbb" rel="me" aria-label="Telegram — @jonatanbb">
+              <!-- the Telegram plane, line-art with its four salient tips made sharp:
+                   the rounding fillets are gone, each tip is now the true mitred vertex
+                   where its two edges meet (like the b's) -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" aria-hidden="true">
+                <path d="M22.73 3.79 1.29 12.04 7.3 14 9.36 20.41 12.6 17.3 17.94 21.25Z"/>
+                <path d="M7.3 14 18.5 7 9.4 15.4"/>
+              </svg>
+            </a>
+          </li>
+          <!-- GitHub: live once there's a public repo to show.
+               Uncomment when ready:
+          <li><a href="https://github.com/jonatanbarreiro" rel="me">GitHub</a></li>
+          -->
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>© <span id="year"></span> Jonatan Barreiro Bastos · <span data-i18n="foot"></span></p>
+  </footer>
+
+  <!-- the page's text, one editable file per language, loaded before main.js applies it -->
+  <script src="assets/content.en.js"></script>
+  <script src="assets/content.es.js"></script>
+  <script src="main.js"></script>
+<script>
+(function(){
+"use strict";
+const LIT_VARIANT="word_recolor (archived)";
+// ---- shared text-light scaffolding (injected before each variant's body) ----
+const API = window.LITAPI;
+let units = [];            // a variant's lit units (block elements or word spans), page-space rects
+let prepped = false;       // (re)built lazily on first call and after every 'litrelayout'
+window.addEventListener("litrelayout", () => { prepped = false; });
+
+// strongest light reaching a viewport point: max over lights of intensity·falloff
+function litAt(x, y, lights) {
+  let m = 0;
+  for (const L of lights) {
+    const d = Math.hypot(L.x - x, L.y - y);
+    if (d < L.r) { const v = L.i * API.glowFalloff(d / L.r); if (v > m) m = v; }
+  }
+  return m;
+}
+// page-space rects for the target blocks (origin in page coords, so scroll-invariant)
+function cacheBlocks() {
+  const sx = scrollX, sy = scrollY;
+  return API.targets().map(el => {
+    const r = el.getBoundingClientRect();
+    return { el, px: r.left + sx, py: r.top + sy, w: r.width, h: r.height };
+  });
+}
+// a small corner badge naming the build you're looking at
+(function () {
+  const b = document.createElement("div");
+  b.textContent = "text-light · " + LIT_VARIANT;
+  b.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:99;font:600 11px/1 ui-monospace,monospace;" +
+    "color:#1c1a16;background:rgba(255,255,255,.72);padding:5px 8px;border-radius:5px;pointer-events:none;letter-spacing:.02em";
+  document.body.appendChild(b);
+})();
+
+// (3) PER-WORD RECOLOUR — three gold shades by distance to the whole word, + illumination-based
+// text HIGHLIGHTING. Distance to a light is the distance to the word's baseline SEGMENT p0→p1
+// (capsule rule), so a light by the last letter lights the whole word. Three shades over disk thirds
+// [0,R/3]/[R/3,2R/3]/[2R/3,R]. Colours rechosen so the outer shade is clearly gold, not black.
+// Highlighting: click a word to light it gold (and its neighbours by the same scheme); click again to
+// clear. Selecting text lights every word in the selection gold + neighbours, and the native
+// selection box is replaced by a hollow, corner-rounded garnet outline.
+const SHADE = ["", "rgb(150,105,22)", "rgb(250,208,42)"];   // ink · darkened gold · gold  (two shades, cleaner)
+const CLICK_R = 220;                          // a click/selection illuminates neighbours out to here (R/3, 2R/3)
+const clicked = new Set();                    // toggled words (persistent)
+let selected = new Set();                     // words under the current selection (transient)
+let lastLights = [], lastF = { sx: 0, sy: 0 };
+let selOverlay = null;
+
+function wrapWords(el) {
+  if (el.dataset.litWrapped) return;
+  const texts = [], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+  for (let n; (n = walk.nextNode()); ) if (n.nodeValue.trim()) texts.push(n);
+  for (const t of texts) {
+    const frag = document.createDocumentFragment();
+    for (const part of t.nodeValue.split(/(\s+)/)) {
+      if (!part) continue;
+      if (/^\s+$/.test(part)) frag.appendChild(document.createTextNode(part));
+      else { const s = document.createElement("span"); s.className = "litw"; s.textContent = part; frag.appendChild(s); }
+    }
+    t.parentNode.replaceChild(frag, t);
+  }
+  el.dataset.litWrapped = "1";
+}
+function prep() {
+  for (const el of API.targets()) wrapWords(el);
+  if (!selOverlay) { selOverlay = document.createElement("div"); selOverlay.id = "lit-selbox"; document.body.appendChild(selOverlay); }
+  const sx = scrollX, sy = scrollY;
+  units = [...document.querySelectorAll(".litw")].map(s => {
+    const segs = [...s.getClientRects()].map(r => ({ x0: r.left + sx, x1: r.right + sx, y: (r.top + r.bottom) / 2 + sy }));
+    const first = segs[0] || { x0: 0, x1: 0, y: 0 }, last = segs[segs.length - 1] || first;
+    return { el: s, segs, cx: (first.x0 + last.x1) / 2, cy: first.y, lvl: -1 };
+  });
+  prepped = true;
+}
+function distSeg(px, py, s) { return px < s.x0 ? Math.hypot(px - s.x0, py - s.y) : px > s.x1 ? Math.hypot(px - s.x1, py - s.y) : Math.abs(py - s.y); }
+function distToWord(px, py, u) { let d = Infinity; for (const s of u.segs) { const dd = distSeg(px, py, s); if (dd < d) d = dd; } return d; }
+function recolor() {
+  const PL = lastLights.map(L => ({ x: L.x + lastF.sx, y: L.y + lastF.sy, r: L.r }));   // point lights -> page space
+  const actives = [];
+  for (const u of units) if (clicked.has(u.el) || selected.has(u.el)) actives.push(u);
+  for (const u of units) {
+    let best = (clicked.has(u.el) || selected.has(u.el)) ? 2 : 0;   // clicked/selected word -> gold
+    if (best < 2) {
+      for (const L of PL) { const d = distToWord(L.x, L.y, u); const reg = d < L.r / 2 ? 2 : d < L.r ? 1 : 0; if (reg > best) best = reg; }
+      for (const a of actives) { if (distToWord(a.cx, a.cy, u) < CLICK_R && best < 1) best = 1; }   // a neighbour of an active word -> darkened
+    }
+    if (best === u.lvl) continue; u.lvl = best;
+    u.el.style.color = SHADE[best];
+  }
+}
+window.TEXT_LIGHT = function (lights, f) { if (!prepped) prep(); lastLights = lights; lastF = f; recolor(); };
+
+// click a word to toggle its highlight (ignoring clicks that were really the end of a drag-select, and links)
+document.addEventListener("click", e => {
+  const w = e.target.closest && e.target.closest(".litw");
+  if (!w || (e.target.closest && e.target.closest("a")) || !getSelection().isCollapsed) return;
+  if (clicked.has(w)) clicked.delete(w); else clicked.add(w);
+  recolor();
+});
+// selection -> light the selected words + draw the garnet outline
+let selRAF = 0;
+document.addEventListener("selectionchange", () => { if (!selRAF) selRAF = requestAnimationFrame(() => { selRAF = 0; updateSelection(); }); });
+function updateSelection() {
+  const sel = getSelection();
+  selected = new Set();
+  if (selOverlay) selOverlay.textContent = "";
+  if (sel && sel.rangeCount && !sel.isCollapsed) {
+    const range = sel.getRangeAt(0);
+    for (const u of units) if (range.intersectsNode(u.el)) selected.add(u.el);
+    const sx = scrollX, sy = scrollY, lines = [];
+    for (const r of range.getClientRects()) {         // merge the per-word rects into one box per line
+      if (r.width < 1 || r.height < 1) continue;
+      const g = lines.find(L => Math.abs(L.top - r.top) < 4 && Math.abs(L.bottom - r.bottom) < 6);
+      if (g) { g.left = Math.min(g.left, r.left); g.right = Math.max(g.right, r.right); g.top = Math.min(g.top, r.top); g.bottom = Math.max(g.bottom, r.bottom); }
+      else lines.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom });
+    }
+    for (const L of lines) {
+      const d = document.createElement("div"); d.className = "lit-selrect";
+      d.style.cssText = "left:" + (L.left + sx - 3) + "px;top:" + (L.top + sy - 1) + "px;width:" + (L.right - L.left + 6) + "px;height:" + (L.bottom - L.top + 2) + "px;";
+      selOverlay.appendChild(d);
+    }
+  }
+  recolor();
+}
+
+})();
+</script>
+</body>
+</html>
