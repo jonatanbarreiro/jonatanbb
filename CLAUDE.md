@@ -81,6 +81,7 @@ Notes:
   iteration's source is the clean slate that, together with the interaction files,
   pins down the step.
 - If Jonatan needs to hand you a file, he will say where to find it in the prompt.
+  Screenshots he hands you default to `~/Imágenes/Capturas de pantalla`.
 
 
 ## The site's text is Jonatan's
