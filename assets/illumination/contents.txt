@@ -1,0 +1,70 @@
+==============================================================================
+ ILLUMINATION OF THE PAGE CONTENTS  (the text, not the logo)
+==============================================================================
+
+Companion to bb.txt. bb.txt is about the LOGO — how the two 'b's (and, by the
+same points, the annulus) are lit. This file is about the other thing the
+illuminating points light: the PAGE COPY — the running text, the headings and
+the section rules of the site itself.
+
+Introduced in iteration 18.
+
+
+------------------------------------------------------------------------------
+ 1. TWO MODES OF LIGHT
+------------------------------------------------------------------------------
+
+A single illuminating point emits light in two distinct ways. Keeping them
+separate is the mental model the code is built on:
+
+  GLOWING (atmospheric).  The soft radial glow around a point, and — when the
+      point is near the logo — the focused cones it throws at the annulus. This
+      is the "air" around the light: how bright the space near it looks. The
+      logo OCCLUDES this layer (a point behind the logo is blocked; near it the
+      glow tightens into cones). Painted by main.js on the cast/reflect canvases.
+      Kept at partial intensity, so it doesn't try to carry the whole effect.
+
+  REFLECTIVE.  The light actually landing on a surface and lighting it up — the
+      page text going gold where a point is near. This is the layer iteration 18
+      built. It is INDEPENDENT of the logo: the logo does not block it, and a
+      point in "cone mode" (close to the logo) still lights nearby copy. main.js
+      hands this layer the point field ungated (each point's full wake w) and
+      reflect.js renders it.
+
+
+------------------------------------------------------------------------------
+ 2. HOW THE REFLECTIVE LAYER WORKS  (reflect.js)
+------------------------------------------------------------------------------
+
+The page copy is real DOM text; it is never replaced or hidden. Over it sits a
+fixed, full-viewport WebGL canvas that ADDS gold where the text is lit:
+
+  - Each WORD (every heading and body word, wrapped in a <span class="litw">) and
+    each section RULE (the black .kicker::after bars) is rasterised into a
+    coverage mask at its own screen rect. Word rects and baselines come from real
+    font metrics and are recached on any reflow (load / font-load / resize /
+    browser zoom), so the gold stays registered with the glyphs at every size.
+
+  - A fragment shader reads edge normals from that coverage and shades each glyph
+    ink -> gold by how lit it is, from the point field (diffuse + a little
+    specular, falling off over the point's reach). It is composited OVER the real
+    text, so if the GPU ever drops the context the page just shows plain copy — it
+    can never go blank — and the section rules and links keep rendering.
+
+  - The section rules are lit "as if they were text": drawn black in CSS, they
+    pick up the same reflective gold.
+
+
+------------------------------------------------------------------------------
+ 3. SELECTION & CLICK
+------------------------------------------------------------------------------
+
+The reflective idea extends to how text is picked out:
+
+  - Selecting text turns the selected words gold and replaces the native
+    selection highlight with a hollow, corner-rounded BLACK outline (one box per
+    line).
+  - Clicking a word toggles it gold.
+
+A later milestone will let these lit (gold) words behave as light sources of
+their own, casting reflective light on their neighbours.
