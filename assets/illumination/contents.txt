@@ -51,8 +51,33 @@ fixed, full-viewport WebGL canvas that ADDS gold where the text is lit:
     text, so if the GPU ever drops the context the page just shows plain copy — it
     can never go blank — and the section rules and links keep rendering.
 
-  - The section rules are lit "as if they were text": drawn black in CSS, they
-    pick up the same reflective gold.
+  - The raster is PINNED to the DOM, both ends of every word: the canvas is told
+    the word's letter-spacing (canvas ignores CSS spacing by default — the cause
+    of a gold shade drifting open along a long word), and whatever advance-width
+    quirk remains, the raster is scaled onto the word's real DOM width. The gold
+    cannot drift along a word.
+
+  - The section rules are STRAIGHTENED b's (iteration 19): a bar as thick as the
+    b's ribbon, wearing the b's top tip on each end — hook up on the left, hook
+    down on the right (the 180° twin, like the monogram's two b's). Lit as three
+    superimposed gold pieces — tip / bar / tip — with a hairline seam between
+    them, so the joints read subtly, like the b's own middle joint. The straight
+    run is rasterised not flat (a flat interior reads as a dead plateau to the
+    normal-reading shader) but profiled: full coverage in the middle, soft
+    shoulders at the long edges — stroke-like normals along the whole bar.
+
+  - The about-photo FRAME is the same ink: as thick as the spine of the 'B' in
+    Bastos, sharp corners. Rasterised as four mitre-cut sides (cut along the
+    corner diagonals), each lit across its own thickness — four normals per
+    side — with hairline seams along the cuts, so the corners joint like the b's.
+
+  - The SELECTION OUTLINE (see §3) is ink too, and rasterised with everything
+    else: the black box around selected text catches the points' gold the same
+    way the words inside it do.
+
+  - A visual word split over several spans by inline markup ("Barreiro" is
+    Barre|i|ro around the i-dot anchor) is grouped: the pieces share one word
+    identity, so it lights, clicks and selects as a single unit.
 
 
 ------------------------------------------------------------------------------
@@ -64,7 +89,18 @@ The reflective idea extends to how text is picked out:
   - Selecting text turns the selected words gold and replaces the native
     selection highlight with a hollow, corner-rounded BLACK outline (one box per
     line).
-  - Clicking a word toggles it gold.
+  - Clicking a word toggles it gold. Either way the whole word turns — a grouped
+    word (see above) never lights in parts.
+
+The gold is the OFFICIAL site gold #fad02a (--gold, iteration 19): the shade of
+a clicked word, of the annulus at max, of a fully lit letter. Partial
+illumination everywhere mixes it with black along the warm ember ramp (incRGB),
+never by fading gold over the pale page — that path washes the warmth out. The
+ramp's low end is kept YELLOW (G tracking R closely): earlier stops leaned
+brown/bronze in dim light and read olive on the b's beside a clicked word. The
+GLOWING layer keeps its own colour (--glow #ffe666, deliberately cooler than
+the gold — decided iteration 19), so the ambient air contrasts with the
+reflective light.
 
 A later milestone will let these lit (gold) words behave as light sources of
 their own, casting reflective light on their neighbours.
