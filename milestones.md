@@ -3,6 +3,8 @@
 A running checklist of milestones, each paired with the iteration that first introduced it. Indirectly, also a global tracker of jonatanbb.xyz as it evolves into the professional profile site that it aims to be. 
 
 
+- [x] A cohesive set of deliberate colors and color-gradients for the page — [iteration 19](sources/iteration19)
+- [x] A sensible up-to-date photo of me — [iteration 19](sources/iteration19)
 - [x] Points illuminate close page contents, in a layer separate from the atmospheric glow/cones — [iteration 18](sources/iteration18)
 - [x] Text content separated out for internationalization — [iteration 17](sources/iteration17)
 - [x] Theoretical illuminance decay based on Lambert's cosine law — [iteration 16](sources/iteration16)
@@ -17,7 +19,6 @@ A running checklist of milestones, each paired with the iteration that first int
 - [x] Interactive lighting of the logo from a random scatter of illuminating points — [iteration 0](sources/iteration0)
 - [x] A design built around a gold/light palette and the 'bb' logo — [iteration 0](sources/iteration0)
 - [x] A clean static HTML CV/profile to build on — [iteration 0](sources/iteration0)
-- [ ] A sensible up-to-date photo of me
 - [ ] Scatter the illuminating points via blue noise (Poisson-disk sampling) instead of uniformly
 - [ ] Construct a custom _geometric neighborhood graph_ from a pruned Delaunay triangulation
 - [ ] Construct a _shortest-path tree_ rooted at the 'I' point from the pruned Delaunay graph
@@ -25,7 +26,5 @@ A running checklist of milestones, each paired with the iteration that first int
 - [ ] Differentiate between edges from the GNG and the SPT
 - [ ] Integrate the cracks as lighting elements of the site
 - [ ] Lit (gold) words act as light sources, illuminating nearby page contents
-- [ ] A 'b' lies on its long stick beside each section name and straightens out, joint by joint, into the section's separating bar as the section scrolls into view
-- [ ] Section bars become unrolled b's in motion, not just in shape: a recumbent 'b' whose joints open (interior angles growing to π) until it reads as the bar
 - [ ] Animate the straightening of laid-down 'b''s into section-separating bars
 - [ ] Unify illumination: the logo joins the reflective text-lighting technique, keeping its region-based nuances where they still beat the resulting look
