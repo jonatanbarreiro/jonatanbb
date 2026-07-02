@@ -1,6 +1,6 @@
 # Milestones
 
-A running checklist of milestones, each paired with the iteration that first introduced it. Indirectly, also a global tracker of jonatanbb.xyz as it evolves into the professional profile site that gives me visibility on the web. 
+A running checklist of milestones, each paired with the iteration that first introduced it. Indirectly, also a global tracker of jonatanbb.xyz as it evolves into the professional profile site that it aims to be. 
 
 
 - [x] Points illuminate close page contents, in a layer separate from the atmospheric glow/cones — [iteration 18](sources/iteration18)
@@ -25,3 +25,7 @@ A running checklist of milestones, each paired with the iteration that first int
 - [ ] Differentiate between edges from the GNG and the SPT
 - [ ] Integrate the cracks as lighting elements of the site
 - [ ] Lit (gold) words act as light sources, illuminating nearby page contents
+- [ ] A 'b' lies on its long stick beside each section name and straightens out, joint by joint, into the section's separating bar as the section scrolls into view
+- [ ] Section bars become unrolled b's in motion, not just in shape: a recumbent 'b' whose joints open (interior angles growing to π) until it reads as the bar
+- [ ] Animate the straightening of laid-down 'b''s into section-separating bars
+- [ ] Unify illumination: the logo joins the reflective text-lighting technique, keeping its region-based nuances where they still beat the resulting look

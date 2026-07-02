@@ -38,6 +38,6 @@ and the essentials of hosting and deploying a static site.
 ## Milestones
 
 The site is built toward one goal, broken into checkable milestones — what's already
-live and what's still ahead. The running list is in **[features.md](features.md)**;
+live and what's still ahead. The running list is in **[milestones.md](milestones.md)**;
 each item points to the iteration where it first appeared. When every box is checked,
 the site has reached what it was built for.
