@@ -1,0 +1,53 @@
+Jonatan on 2026-06-30 at ~18:19:
+I think you were thrinking in the last session. I asked you a very simple task: to reflect in the CLAUDE.md that you are not to modify milestones.md anymore, unless I explicitly asked you to. I asked CC to do this, and afterwards to re-read the resulting CLAUDE.md file and watch out for opportunities to de-bloat it. It came with a couple of spots that could be expressed in a less redundant way. They all made sense so I gave it the go ahead, and then CC proceeded to just remove stuff that's important, like the insistence that the turns (my prompt + your final answer) should be recorded VERBATIM. That is something I know is needed from experience. So will you please sensibly add the new guideline to the CLAUDE.md file and then come up with instances where it makes sense to rewrite in order to avoid bloat of the file?
+
+Claude 4.8 on 2026-06-30 at ~18:19:
+I have the full picture now. Let me look at what actually happened versus what you asked.
+
+The previous session made **three** removals while "de-bloating." Looking at each:
+
+1. **The verbatim requirement** in the interaction-`md` step — *harmful*. It collapsed "Jonatan's first prompt verbatim, then your final answer … and so on for every turn" down to "every turn in order, in the same labeled shape as the session log." The word **verbatim** vanished, and "same labeled shape" reads as just-the-headers, not record-the-actual-text. This is the loss you felt.
+2. The "filenames use underscores" line — *fine to drop*; the filename template `interaction_<yyyy>_<mm>_<dd>.md` already shows the underscores.
+3. The "At wrap-up, render … and write its `gallery/iterationNNN.png`" line in *Rendering* — *fine to drop*; wrap-up step 3 already says exactly that.
+
+The new milestones guideline is already correctly in the Map. So the only real damage is #1. Let me restore that.
+
+Restored. The verbatim requirement now reads, in step 2 of wrap-up:
+
+> holding the iteration's *entire* exchange — every turn in order, each prompt and final answer recorded **verbatim**, in the same labeled shape as the session log.
+
+Now, the de-bloat. Rather than apply silently (which is where it went wrong last time), here are the genuine redundancies I'd offer for your go-ahead. The file is already lean, so this is a short menu:
+
+**Candidate 1 — overlapping "no intermediate copies" rules.** The *Iteration workflow* Note says:
+> **No intermediate bookkeeping.** Only the finished source and the interaction files live in an iteration — never copies of in-progress source.
+
+and *Housekeeping* repeats the same idea:
+> Keep the repo, and particularly the live iteration, clean: edit in place, no backups or scratch files, no intermediate source copies.
+
+These say nearly the same thing in two places. Could fold the "no intermediate source copies" clause out of one of them.
+
+**Candidate 2 — gallery flavor line.** The Map entry for `gallery/` carries "A quick visual tour of the build." — pure flavor between two functional sentences; droppable with no loss of instruction.
+
+**What I'd deliberately leave alone:** the emphatic wrap-up trigger passage (*"Don't hold out for a more explicit phrasing … wrap up right then, do not pause to make him verify"*). It reads repetitive, but that repetition is doing the same job the **verbatim** insistence does — it's experiential emphasis, exactly the kind of thing that looks like bloat and isn't. I won't touch it unless you tell me to.
+
+Want me to apply Candidates 1 and 2 (and confirm phrasing first), or leave the file at just the verbatim restore?
+
+
+Jonatan on 2026-06-30 at ~18:24:
+I've re-reviewed the milestones.md file. Please rephrase better (if you can) the parts I modified.
+
+Claude 4.8 on 2026-06-30 at ~18:24:
+Good — milestones.md is yours to maintain and you're explicitly asking, so I'll polish it. To be clear on scope: I'm only fixing wording that's genuinely awkward or non-idiomatic, and leaving your meaning, ordering, iteration tags, and voice intact. Here's what I'm changing and why:
+
+Intro paragraph
+- "along with the first iteration that introduced them" -> "each paired with the iteration that first introduced it" (cleaner, agreement fixed)
+- "evolves toward becoming" -> "evolves into" (less clunky)
+- "visibility in the web" -> "visibility on the web" (idiom)
+
+Line 8 — "Use localStorage as persistence memory to save..." reads awkwardly -> "Use localStorage to persist..."
+
+Line 20 — "instead of uniform" -> "instead of uniformly" (grammar)
+
+Lines 22-23 — missing articles: "Construct a custom geometric neighborhood graph from a pruned Delaunay triangulation" and "Construct a shortest-path tree ... from the pruned Delaunay graph"
+
+All six edits applied. Left as-is (your call): the casing of the two graph terms (lowercased shortest-path tree to match GNG line; capitalize both if you meant defined terms), and lines 15-16 ("lit up by illuminating points" / "lighting from a random scatter ... onto the logo") which are mildly redundant but in your voice. Everything else untouched; revert any of the six freely.

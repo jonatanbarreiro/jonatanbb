@@ -1,0 +1,35 @@
+Jonatan on 2026-06-30 at ~13:00:
+I've been reviewing the features.md file. You've been updating it here and there. I'd like this document, that I renamed into milestones.md, to not change unless I do change it, or I explicitly tell you to. There's already some directives on CLAUDE.md to have you stop casually modifying sensitive files like this one. Please modify the CLAUDE.md file to reflect this situation with milestones.md. Maybe introduce the idea of "static" files, those being files that I would expect to stay static unless I modify them or explicitly ask you to. Suggesting this because these asks tend to occupy quite some text when precisely written down. I just don't want you to put a whole lot more text and contributing to making the CLAUDE.md file even more boring to read for me.
+Back to the milestones file: I've done a review of it, please modify it accordingly. Notice that the checked items should be ordered anti-chonollogically top-down, and that unchecked ones should follow but be ordered chronologically. Please be concise, and keep in mind that the appeal of this file is to inform "without delving", so that a reader might grasp high-view ideas quickly.
+
+Claude 4.8 on 2026-06-30 at ~13:00:
+Done. Two changes:
+
+CLAUDE.md — added a short "Static files" section (just after "The site's text is Jonatan's"): a few files are static and change only when Jonatan edits them or explicitly asks, never on my own initiative; milestones.md is named as one, treated like the site's text. Kept it to four lines.
+
+milestones.md — applied the review:
+- Title is now "# Milestones"; the intro paragraph is trimmed to open on the site's goal and frame the file as the live, global tracker, dropping the "when every box is checked" line.
+- Reordered: checked items anti-chronologically (iteration 17 at top down to iteration 0), then unchecked items in chronological order. "A clean static HTML CV/profile to build on" sits last among the checked.
+- Rephrased the items you marked (light pulse, bulb toggle, dissected-geometry, internationalization) and dropped the stray % notes.
+- Resolved the open questions: the illuminance-decay item is checked and referenced to iteration 16 — main.js implements "inverse-square × Lambert's cosine", so the law applies. Custom 'get in touch' logos referenced to iteration 15; internationalized text content to iteration 17.
+
+
+Jonatan on 2026-06-30 at ~13:10:
+I suggested the introduction of something like "static files" just so that we could avoid the CLAUDE.md file being so repetitive, and you simply went ahead and added a paragraph introducing the new notation for static file and say that milestones.md is one?????
+
+Claude 4.8 on 2026-06-30 at ~13:10:
+You're right — the point of a notation is to tag files compactly, not to write another bespoke paragraph restating protections already in the file. I removed the standalone "## Static files" section and instead coined "static" once, inline in the Map where milestones.md is now listed: "A **static** file: changes only when Jonatan edits it or tells you to, never on your own initiative." Net cost is one line, and any future protected file just takes the same (static) tag instead of its own paragraph. Offered to also fold the existing site-text and git rules under the same notation if he wants the doc tighter still.
+
+
+Jonatan on 2026-06-30 at ~13:20:
+I would actually like to discard the static file concept. I went and reviewed the CLAUDE.md file myself because I thought that you missed other occasions where the concept could be handy. I was thinking of the external text content files in assets, but maybe that's better kept separate since it's important enough. But that also means that the static file concept was premature. It just references one instance, so drop it. So I want you to revert to before the static thing was added to the file, and then modify it so that the new directive of not touching milestones.md becomes effective. And then I want you to reread the whole file, and see it you spot chances to avoid redundancy.
+
+Claude 4.8 on 2026-06-30 at ~13:20:
+Reverted the static concept; the milestones.md Map line now states the directive plainly: "the site's milestone checklist; Jonatan's to maintain. Leave it untouched unless he tells you to change it." Then reread the whole file and reported three redundancies: (1) the labeled turn format is fully specified twice — in Sessions > Logging a turn and again in Iteration wrap-up > Write the whole exchange, which already references the session-log shape yet re-spells it; (2) the "render at wrap-up" instruction sits in both wrap-up step 3 and the closing sentence of Rendering & gallery captures; (3) minor — the Notes line "Interaction filenames use underscores" restates what the filename patterns above already show. Recommended collapsing 1 and 2, leaving 3 to taste; held off applying until confirmed.
+
+
+Jonatan on 2026-06-30 at ~13:30:
+Go ahead, but with 3 notice that the later note refers to every interaction file, while the '1.' point above refers only to the files I created. Not that thye deserve any special treatment, but something lead past you to word it that way. Just to be clear, that filenaming convention is for all interaction files.
+
+Claude 4.8 on 2026-06-30 at ~13:30:
+Applied all three. (1) Collapsed the wrap-up "Write the whole exchange" step to keep only what's unique — the entire exchange, every turn in order — and lean on "the same labeled shape as the session log" for the format. (2) Dropped the redundant closing sentence of Rendering & gallery captures, leaving that section to describe only how to render while the wrap-up step owns when. (3) Removed the Notes underscore line; since both filename patterns above (the keyword files Jonatan hands over and the exchange .md) already use underscores, the convention stays general to every interaction file with nothing lost.

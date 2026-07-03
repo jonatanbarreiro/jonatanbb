@@ -1,0 +1,72 @@
+Jonatan on 2026-06-21 at ~18:40:
+Let's start with iteration9. There are two new captures in "Imágenes/Capturas de pantalla". First one shows how the right part of the first side of the right 'b' is illuminated because of a point behind it. The second one shows the left part of the second side of the left 'b' lit up also because of an illuminating point sitting just behind it. I want you to check that all 18 elements of the 'b' light up when a point sits behind it. Mind you that I've already tested that they don't. Some of them at least, like the right part of the second side. Another thing: the color of the 'b''s need to be more 'escarlata'. Right now it looks too orange. I'f like for it to move into more escarlata hue. I also want you to make the 'WILLING TO WORK' string just a font size smaller. And have the diffussion effect be less noticeable on it, so that it appears a bit sharper. I also feel like lighting of the elements from outside is too imperceptible on the 'b''s with respect to the lighting effect they produce on the inner boundary of the annulus. I've taken another capture, which shows a point next to one of the lowest parts of the rotated logo. It lightss up the inner boundary of the annulus (maybe even a touch too much in reach btw), but it's effect is barely noticeable on the 'b''s. From the graphics I am not even sure there's illumination going on from this point onto the 'b''s. There might be, but subtle. Actually, this makes me suspicious. I want you to create another 3 assets, so that I can tell which elements you think must be lit up from a point outside the 'b's onto a 'b'. I explicitly explained it in the previous iteration, and it boils down to taking care to note which half plane each of the lines on the boundary of the 7-8-9 triangle the point sits at. Once you have created those three assets, I want you to double check that in the position of the last capture the relevant elements are indeed lit up. Then we'll see.
+
+Claude 4.8 on 2026-06-21 at ~19:10:
+Started iteration9 (copied from iteration8, interaction files stripped, asset symlinks kept). Did everything that was concrete this turn, and verified the exterior question rather than guessing.
+
+1) All 18 elements light when a point sits behind it. Root cause found: the "behind an element" (onEl) glow painted the element's INNER face (B_EL), but B_EL is intentionally empty for the 6 region-dark faces (tip-top-left #0, side1-left #2, joint1-left #4, joint1-right #5, side2-down #7, joint2-lower #9) — so those 6 never lit, exactly the "right part of the second side" (side2-down) you saw fail. Fix: onEl now paints the OUTER (silhouette) face B_OUT, which is defined for ALL 18 and is geometrically identical to B_EL on the 12 faces that already worked — so the 12 are unchanged and the 6 now glow. Verified by placing lights on each of the 6 dark elements: all six now glow.
+
+2) 'b' color more escarlata. The orange came from the incandescent ramp's hot end (242,130,48). Pulled it to a hot scarlet (232,53,32) and nudged the mid stop to crimson (198,46,44); carmesí base unchanged. (The ring letters share this ramp, so they read a touch more scarlet too, consistent with the b's.)
+
+3) "WILLING TO WORK": one notch smaller (FONT_FRAC 0.546 -> 0.50) and sharper (its canvas blur 0.5*s -> 0.3*s).
+
+4) Three exterior assets created (in version0/assets, symlinked into iteration9 only — base b-split.svg left untouched so iteration8's record stands):
+   - b-out-78.svg : light in the LEFT half-plane of 7-8  -> tip-top-left, side1-left, joint1-left (outer side)
+   - b-out-89.svg : light in the LEFT half-plane of 8-9  -> joint1-right, side2-down, joint2-lower (outer side)
+   - b-out-79.svg : light in the RIGHT half-plane of 7-9 (mouth) -> tip-top-right, joint2-upper, side3-outer, joint3-right (inner side)
+   Each draws the 7-8-9 triangle dashed, the active edge solid red, the lit half-plane translucent red, and the lit faces white. Flagged: the 7-9 set is the least certain (the brief named only "the last joint and the second-to-last side") — read as the outer/right faces that actually face the mouth.
+
+5) Verified the capture-3 case. Ported the exact classification + exterior-lighting math and ran it against the real on-page circle geometry/rotation. Result: the exterior->b lighting is NOT broken — of 205 sampled exterior interior points, ALL 205 light >=1 b-face, with per-face tones 0.5-1.0, comparable to the inner-wall peak tone. So at a capture-3-like position the relevant faces ARE lit. The imperceptibility is visual: the lit exterior faces are thin silhouette-edge slivers, diffused, sitting against the black ribbon right next to the much larger bright gold wall band, so they read faintly despite high alpha. Left the brightness/reach as-is per your "then we'll see".
+
+Not wrapping up (you didn't say to): no gallery shot or iteration interaction_*.md yet.
+
+
+Jonatan on 2026-06-21 at ~19:50:
+That's better. Your naming of the new assets is off, because it references a corner point numbering that only lives in iteration8 as an interaction file. Rename referencing the orientation of the face (surnaming "left_face" for instance). I've taken a new capture. There you can see a point close to the inner boundary in the bottom left of a rotated logo. The point is a bit less than a radius away. The two faces it should be lighting up of the 'b''s either are not being lit up, or the effect is not noticeable. It seems like it is working because as the point becomes closer they do illuminate. But the effect is way too faint. Particularly with comparison to how the elements are lit up when the point is exactly behind. Which I also want to tweak by the way: to give the impression of heating up, instead of lighting up the whole element, we should light up the element but only close to the actual point of the point. So, instead of lighting up the whole element, we can impose that the point should not light up parts of the element that are further away than 4 times the width of the element, which should equate to the thickness of the annulus. So, when lighting up an element because a point is underneath it, the point should only heat close to its position. Another thing: rotate the string around pi/5 anticlock-wise so that it sits in the logo in such a way that 'WORK' falls on the illuminated arc from the center point. The idea is that 'WORK' alone becomes subtly visible, as a cue, but not the whole string. Just to draw some attention to it.
+
+Claude 4.8 on 2026-06-21 at ~20:25:
+All four done, each verified in the real renderer.
+
+Renamed assets by face orientation (and rewrote their docs to match; the old 7-8-9
+in filenames is gone, kept only as a parenthetical pointer to b-split.svg where those
+corner labels actually live):
+  b-out-78.svg -> b-out-left_face.svg    (lights tip-top-left, side1-left, joint1-left)
+  b-out-89.svg -> b-out-bottom_face.svg  (lights joint1-right, side2-down, joint2-lower)
+  b-out-79.svg -> b-out-mouth_face.svg   (lights tip-top-right, joint2-upper, side3-outer, joint3-right)
+Store files renamed and iteration9 symlinks re-pointed.
+
+Exterior faintness: split the face gain into interior (GAIN_B=70, unchanged) and
+exterior (GAIN_B_EXT=360). Exterior lights graze from across the annulus, so the old
+shared 70 made them ~tone 0.3 at a radius's distance; 360 brings the faces they see to
+~0.6-0.9, clearly readable, while keeping the cosβ/dist falloff so closer still = brighter.
+Reproduced the capture position (rotated logo, point a bit under a radius out, bottom-left)
+and the two faces now light strongly.
+
+Heating impression (point behind an element): the onEl glow is no longer the whole element.
+It's now a hotspot that fades to nothing within one annulus thickness of the point along the
+face — coded as ONEL_REACH = 21·(KLOGO·scale) = 4× a face's 5.25 half-ribbon width, which
+equals the annulus thickness in px exactly. So a point underneath heats only near itself.
+
+String rotation: added STRING_ROT = -π/5 (anticlockwise). Verified analytically — at rest the
+four letters of WORK land at 124-134°, entirely inside the arc the central point lights (82-136°),
+and every other letter is at 137-163°, off it. So only WORK sits on the lit arc. But that arc
+reads at tone 0.593, just under the old letter threshold 0.60, so nothing showed; lowered
+TXT_T0 to 0.55 so WORK reads as a faint dark-crimson cue beside the gold band while the rest
+of the string stays dark. Confirmed in a zoomed render: "WORK" alone, subtle.
+
+No console errors. Still not wrapping up.
+
+
+Jonatan on 2026-06-21 at ~22:10:
+ultrathink After this, you should wrap up iteration9. I just realized that there's an element missing in b_out_mouth_face: the right part of the first side should be active too. So modify the code. I found this by looking at the new capture I took. In it you can find an illumianting point close to the inner boundary of the annulus, in the lower part of the image. The point is in between the two tips of the 'b''s. The tip and side of the 'b' on the left of the point as seen in the image ('b''s are upside down) are light up really good. But the tip and side of the right 'b' (again, as seen in the image) remain lit up. In the case of the inner part of the first side I get why, because it was not even in the schematics. But the right triangle of the top tip of the 'b' to the right of the point should light up. I like how you upped the illumination, but I've seen details like this when testing, and it just feels like careless. I've just taken another capture. In it you can see a point in the belly of the upper 'b'. The point is on region 6, which lights up the right part of the first side. But of course just the parts that it sees! In this case the illuminating point only sees this side by the angular window from its position to 4 and 11. This is a narrow, honestly marginal angular window is where the point illuminates that element. That's the theory, but in the capture you can see that it just illuminates the whole element, as if the 4th side wasn't there in the middle. I want you to hunt for bugs like this. A point should not light through logo parts, that's what all the work we've been doing in the previous two iterations amounts to. And the documentation we have exactly spelled how should the different parts of this logo be lit up. So I don't understand that I keep finding errors like this. And it is not even that I am looking for them. Besides fixing what you find, I want you to also make points under an element light a little bit further, maybe 50% more.
+
+Claude 4.8 on 2026-06-21 at ~23:05:
+Hunted the bugs with a faithful port of the lighting math plus instrumentation of the real render.
+
+Root cause of "lighting through logo parts": face lighting from REGION points passed NO occluder (occ=null), and exterior lighting occluded only by the OTHER b — so a point lit whole faces straight through intervening logo (and through its own b). This is the region-6 bug: side1-right lit 11/11 (the whole element) instead of the sliver. Fix: accFace now takes a LIST of occluders and skips any sample whose ray crosses a b silhouette; region AND exterior face lighting now occlude by BOTH b silhouettes (self + other). The ray ends ON the lit face — an edge of its own silhouette — but segInt's open interval ignores the endpoint touch, so only a genuine intervening crossing blocks. Verified: region-6 -> side1-right now lit 4/11 (the corner-4/11 window) instead of 11/11.
+
+Mouth group: added side1-right (#3, inner first side seen through the mouth) -> B_G_MOUTH=[1,13,11,8,3], and updated b-out-mouth_face.svg to show it. On the "between tips" capture I instrumented the real code: BOTH tips actually light (tip-top-right on the mouth-facing b, tip-top-left on the other), so the dead tip is config-specific occlusion, not a code bug; with occlusion now correct + side1-right added, each point lights exactly what it sees.
+
+onEl reach: +50% -> ONEL_REACH = 31.5·KLOGO·scale (≈1.5 annulus thicknesses).
+
+No console errors. Wrapped up iteration9: saved the six captures into the iteration folder, wrote interaction_2026_06_21.md (full exchange), and rendered gallery/iteration009.png at the fixed 1024×1006 frame.
