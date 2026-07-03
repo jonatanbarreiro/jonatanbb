@@ -33,8 +33,11 @@ A new session begins whenever Jonatan starts a fresh conversation here.
 - **Logging a turn** (same shape as the iteration interaction docs):
   1. `Jonatan on YYYY-MM-DD at ~HH:MM:` + the **full prompt, verbatim**.
   2. One blank line.
-  3. `Claude Fable 5 on YYYY-MM-DD at ~HH:MM:` + the **full answer**. (Older logs
-     say `Claude 4.8` — the model driving the project through session 0017.)
+  3. `Claude <model> on YYYY-MM-DD at ~HH:MM:` + the **full answer**, where
+     `<model>` is whichever model produced that turn — a single iteration may be
+     shared across models (e.g. a mid-turn switch on hitting a usage limit), so
+     label each turn with the model that actually answered it. (Logs through
+     session 0017 read `Claude 4.8`; later ones name `Fable 5` / `Opus 4.8`.)
   Two blank lines between turns; append every later turn of the session to the same
   file. Times are approximate, the date reliable.
 - **The logs are append-only.** Do not read any file under `prompts/` unless Jonatan
