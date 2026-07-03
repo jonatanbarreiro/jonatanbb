@@ -3,6 +3,8 @@
 A running checklist of milestones, each paired with the iteration that first introduced it. Indirectly, also a global tracker of jonatanbb.xyz as it evolves into the professional profile site that it aims to be. 
 
 
+- [x] Connect points via a Shortest-Path Tree rooted at the 'I', and based on a pruned Delaunay triangulation — [iteration 21](sources/iteration21)
+- [x] Scatter the illuminating points via blue noise (Poisson-disk sampling) instead of uniformly — [iteration 21](sources/iteration21)
 - [x] A cohesive set of deliberate colors and color-gradients for the page — [iteration 19](sources/iteration19)
 - [x] A sensible up-to-date photo of me — [iteration 19](sources/iteration19)
 - [x] Points illuminate close page contents, in a layer separate from the atmospheric glow/cones — [iteration 18](sources/iteration18)
@@ -19,12 +21,7 @@ A running checklist of milestones, each paired with the iteration that first int
 - [x] Interactive lighting of the logo from a random scatter of illuminating points — [iteration 0](sources/iteration0)
 - [x] A design built around a gold/light palette and the 'bb' logo — [iteration 0](sources/iteration0)
 - [x] A clean static HTML CV/profile to build on — [iteration 0](sources/iteration0)
-- [ ] Scatter the illuminating points via blue noise (Poisson-disk sampling) instead of uniformly
-- [ ] Construct a custom _geometric neighborhood graph_ from a pruned Delaunay triangulation
-- [ ] Construct a _shortest-path tree_ rooted at the 'I' point from the pruned Delaunay graph
-- [ ] Visually represent graph edges as cracks between illuminating points
-- [ ] Differentiate between edges from the GNG and the SPT
-- [ ] Integrate the cracks as lighting elements of the site
+- [ ] Visually represent graph edges as cracks between illuminating points, integrated as lighting elements of the site
 - [ ] Lit (gold) words act as light sources, illuminating nearby page contents
-- [ ] Animate the straightening of laid-down 'b''s into section-separating bars
-- [ ] Unify illumination: the logo joins the reflective text-lighting technique, keeping its region-based nuances where they still beat the resulting look
+- [ ] ~~Animate the straightening of laid-down 'b''s into section-separating bars~~ — [iteration 20](sources/iteration20)
+- [ ] ~~Unify illumination: the logo joins the reflective text-lighting technique, keeping its region-based nuances where they still beat the resulting look~~ — [iteration 21](sources/iteration21)
