@@ -1,0 +1,455 @@
+/* ============================================================
+   jonatanbb.xyz — personal site
+   Companion to firecoat.me (the dark side). The page wears the
+   portrait's studio gray; warm-black serif text, sun-gold accents.
+   A field of sample points is anchored to the page and scrolls with
+   it; the reconstructed circle, with the monogram inscribed, is fixed
+   to the viewport and holds still. Custom-built.
+   ============================================================ */
+
+:root {
+  --sky:       #1c1a16;   /* satin black — illuminated, faintly warm; headings */
+  --sky-soft:  #38342c;   /* lifted warm charcoal, for eyebrow / secondary heads */
+  --escarlata:     #e83520;       /* the b's hot scarlet — the faint core of a dot */
+  --escarlata-rgb: 232, 53, 32;
+  /* THE site gold — official this round: the shade of a clicked word, of the annulus
+     at max, of a fully lit letter. Every gold motif reads this one colour; partial
+     illumination mixes it with black along the warm ember ramp (incRGB in main.js),
+     never by fading it over the pale page (that washes the warmth out). */
+  --gold:      #fad02a;
+  --gold-rgb:  250, 208, 42;
+  /* The GLOWING (atmospheric) family — the dots, their halos, the cast glow/cones,
+     the bulb and the language pill. Deliberately kept apart from --gold, and kept
+     COOLER than it (decided this round over a warmed variant): the ambient air
+     contrasts with the reflective gold. main.js reads --glow-rgb for the cast canvas. */
+  --glow:      #ffe666;
+  --glow-rgb:  255, 230, 102;
+  /* Illumination scale — "how lit" something is, from the same gold light.
+     Reused across the site (skills now; more lighting-driven UI to come). */
+  --lit-low:   rgba(var(--gold-rgb), .20);   /* faintly lit  */
+  --lit-mid:   rgba(var(--gold-rgb), .52);   /* half lit     */
+  --lit-high:  rgba(var(--gold-rgb), 1);     /* fully lit — the site gold, like a clicked word */
+  /* The page wears the portraits' own studio white (chosen this round over the old
+     alabaster), with a smooth, subtle drift — the vignette — anchored to the PAGE so
+     the hero/about area, the photo included, sits inside a pure-white plateau: at the
+     photo's boundary the page colour equals the photo's background exactly, and the
+     fluctuation is continuous everywhere else. */
+  --photo:     #ffffff;   /* the portraits' studio white */
+  --photo-lo:  #f3f2ee;   /* the vignette's farthest drift (bottom edges) */
+  --photo-hi:  #ffffff;   /* the plateau — equals --photo */
+  --paper:     rgba(252,251,247,0.55);  /* frosted light panel (cards, chips) */
+  --haze:      rgba(28,26,22,0.05);     /* faint tint for alternating bands */
+  --haze-line: rgba(28,26,22,0.18);     /* hairline on gray */
+  --ink:       #1c1a16;   /* warm near-black, body text */
+  --ink-soft:  #393530;   /* warm gray, secondary text — darkened to read on gray */
+
+  --maxw: 1080px;
+  --pad: clamp(1.25rem, 4vw, 3rem);
+
+  /* Type: URW Palladio (Palatino lineage), a system font — headings + body */
+  --serif: "P052", "URW Palladio L", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans:  "Inter", system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; font-size: 112.5%; }  /* 18px root — bumps all rem type up */
+
+body {
+  margin: 0;
+  position: relative;   /* containing block for the page-anchored point field */
+  background-color: var(--photo);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  /* studio vignette, anchored to the PAGE (not the viewport): a pure-white plateau
+     over the hero/about area — the photo sits fully inside it, so its boundary is
+     seamless — then a smooth, subtle darkening toward the bottom edges */
+  background-image:
+    radial-gradient(140% 110% at 35% 10%, var(--photo-hi) 0 45%, var(--photo-lo) 100%);
+  background-repeat: no-repeat;
+}
+
+/* ---------- cast light + sample field + signet ---------- */
+/* The light each exterior point throws at the logo (focused cones when near, a
+   full radial glow when far). It now sits ABOVE the page content, so the light
+   plays over the text and images too — like the dots, which already float above
+   the page. main.js paints + blurs the canvas. */
+.cast-canvas { position: fixed; inset: 0; z-index: 11; pointer-events: none; }
+
+/* The point field is anchored to the page: it holds a constant position and
+   scrolls with the content. It sits above the content but BELOW the logo, so
+   the solid logo passes OVER the dots as it scrolls. */
+.points { position: absolute; inset: 0; z-index: 12; pointer-events: none; overflow: visible; }
+.pt {
+  /* one sampled point. --lit (0..1, set by main.js) is how awake the point is: at
+     0 it is a bare black dot the size of the lit core (the load resting state); at
+     1 it is the full lit point — a solid gold core fading to a diffused gold halo.
+     The halo (this element's gradient) fades in with --lit; the core (::after)
+     warms from black to gold with it. main.js sizes the point via --pt. */
+  --lit: 0;
+  position: absolute; transform: translate(-50%, -50%);   /* centred on its left/top */
+  width: var(--pt, 24px); height: var(--pt, 24px);
+  background: radial-gradient(circle closest-side,
+    rgba(var(--glow-rgb), var(--lit)) 0 40%, rgba(var(--glow-rgb), 0) 100%);
+}
+/* the solid core: crisp at every --lit, warming black -> gold as the point wakes.
+   --core-col lets main.js override the colour outright (the i-dot follows the
+   annulus' ember->gold path while it gathers and frees the ignition pulse). */
+.pt::after {
+  content: ""; position: absolute; inset: 30%; border-radius: 50%;
+  background: var(--core-col, color-mix(in srgb, var(--glow) calc(var(--lit) * 100%), #060606));
+}
+
+/* Stacking — the decorative layers straddle the page content so the logo reads
+   as a solid mark floating over it (its opaque ring occludes the text, the gold
+   section rules, and the frosted cards behind it). The cast light now rides ABOVE
+   the content so it plays over text and images. Bottom to top:
+   content (10) < cast light (11) < points (12) < circle (13) < monogram (14)
+   < reflections / lit bands (15) < ring letters (16) < ignition pulse (17). */
+.skip, #main, .foot { position: relative; z-index: 10; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition: none !important; }
+}
+
+/* On gray, gold is too luminous to read as text — so links are dark ink
+   with a gold underline; the underline thickens on hover. */
+a {
+  color: var(--ink);
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 1.5px; text-underline-offset: 2px;
+}
+a:hover { color: #000; text-decoration-thickness: 3px; }
+
+.skip {
+  position: absolute; left: -999px; top: 0;
+  background: var(--sky); color: #fff; padding: .6rem 1rem; z-index: 100;
+}
+.skip:focus { left: .5rem; top: .5rem; }
+
+
+/* ---------- shared section frame ---------- */
+/* One uniform (light) background across the page — no alternating tint bands,
+   no dividing lines. */
+.section { max-width: var(--maxw); margin: 0 auto; padding: clamp(1.05rem, 2.1vw, 1.75rem) var(--pad); }
+
+/* section labels: lowercase, golden, with a trailing gold rule. Sized a notch
+   above the entry titles. Small-caps stays reserved for the name. */
+.kicker {
+  font-family: var(--serif); font-size: 2rem; font-weight: 600;
+  letter-spacing: .01em; text-transform: lowercase; color: var(--gold);
+  margin: 0 0 1.1rem; line-height: 1.05;
+  padding-left: 2ch;                          /* the names sit indented off the margin */
+  display: flex; align-items: center; gap: .85em;   /* the bar starts clear of the name */
+}
+/* The section rule is a STRAIGHTENED 'b': the logo's b unrolled about its joints
+   into a straight segment — as thick as the b's ribbon (10.5 units of the b
+   primitive; .2875em here ≈ the logo's stroke at desktop), with the b's top tip
+   on each end: hook up on the left, hook down on the right (the 180° twin, like
+   the two b's of the monogram). Drawn by clip-path from the tip's true corners
+   (all coords in units of u = thickness/10.5); lit reflectively as three gold
+   pieces — tip / bar / tip — by reflect.js. Solid black ink, sharp joints. */
+.kicker::after {
+  content: ""; flex: 1; height: .5048em;      /* full hook-to-hook extent (18.44u) */
+  background: var(--ink);
+  clip-path: polygon(0 .3962em, .5919em 0em, .6646em .1087em, 100% .1087em,
+                     calc(100% - .5919em) .5048em, calc(100% - .6646em) .3962em);
+  transform: translateY(.16em);
+  margin-right: .85em;                        /* and ends short of the page's right edge */
+}
+
+
+/* ---------- hero ---------- */
+/* Single column, sitting near the top; the fixed signet pairs to its right. */
+.hero { padding-top: clamp(1rem, 2.5vw, 1.75rem); }
+/* bottom padding equals a .section's, so hero -> first section reads like
+   section -> section (the lede carries no bottom margin for the same reason) */
+.hero__inner {
+  width: 100%; max-width: var(--maxw); margin: 0 auto;
+  padding: 0 var(--pad) clamp(1.05rem, 2.1vw, 1.75rem);
+}
+.eyebrow {
+  font-size: .82rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--sky-soft); margin: 0 0 1.1rem;
+}
+.hero__name {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-variant: small-caps;
+  font-optical-sizing: auto;
+  font-size: clamp(2.4rem, 6vw, 4rem);   /* the whole block sized up so it carries the hero */
+  line-height: 1.05;
+  letter-spacing: 0.02em;   /* small caps breathe better with a touch of tracking */
+  color: var(--sky);
+  margin: 0 0 1rem;
+}
+.hero__name > span { display: block; }        /* given on line 1, surnames on line 2 (the 'i' span stays inline) */
+.hero__given { font-size: 1em; }
+.hero__sur   { font-size: 1em; padding-left: .4em; font-weight: 600; color: var(--sky); }  /* second line — same size and colour as the given name, slightly indented */
+.hero__i     { font-style: inherit; }         /* the 'i' of Barreiro — its tittle is the i-dot light (main.js) */
+/* A zero-size marker pinned to the text baseline: its rect gives main.js a
+   browser-independent anchor for the i-dot (the glyph sits ON the baseline, which
+   both engines agree on — unlike the inline box top/height, which differ). */
+.hero__i-base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+/* the abstract — the page's most important paragraph, so it is given room to breathe: set
+   down from the surnames and inset off the left margin. It now runs WIDE — only the band the
+   logo actually occupies is kept clear, by the float spacer below, so the lines under the
+   logo's bottom reach across the page instead of hugging a narrow left strip. */
+.hero__lede {
+  font-size: 1.12rem; color: var(--ink-soft);
+  max-width: 44rem;
+  /* 1rem below + the hero/section paddings = the same ~gap every section's last
+     line keeps to the next kicker, so hero -> about no longer reads larger */
+  margin: 2.1rem 0 1rem 1.5rem;
+}
+/* an invisible float holding the logo's corner open for the lede: main.js sizes it
+   to the annulus ink (height to its bottom edge, width from the lede's right edge
+   to its left edge), so the lede wraps the logo and widens past it */
+.hero__lede-clear {
+  float: right;
+  width: var(--lede-clear-w, 0px);
+  height: var(--lede-clear-h, 0px);
+}
+
+/* the signet — fixed to the viewport, centred to the right of the name; it holds
+   still while the page scrolls over it */
+.signet {
+  position: fixed; z-index: 13; pointer-events: none;
+  top: 34%; left: 58%;
+  /* Down + left by half the annulus inner radius (the earlier placement fix), then
+     nudged up by r_/3 and right by r_/7 last round, and up by another r_/3 this round
+     (r_ = annulus inner radius = 27.808% of the box): x -15.80% + 27.808/7 -> -11.83%;
+     y -63.10% - 2·27.808/3 -> -81.64%.
+     --sig-dx/dy is the live drag offset (px), prepended so the logo can be moved.
+     --sig-fix is the top-margin guarantee (px, set by main.js): on wide-and-short
+     windows the width-capped logo would otherwise graze the viewport's top edge. */
+  transform: translate(var(--sig-dx, 0px), var(--sig-dy, 0px))
+             translate(0, var(--sig-fix, 0px)) translate(-11.83%, -81.64%);
+  /* the logo is the page's main mark but also a decoration — taken down 20% this round
+     (600 -> 480px cap) so it reads a touch lighter over the name */
+  width: min(46.08vw, 480px);
+}
+.signet__svg { width: 100%; height: auto; overflow: visible; display: block; }
+/* the monogram layer: above the dots and their illumination */
+.signet--top { z-index: 14; }
+/* the reflection glints + lit boundary bands, painted onto a canvas over the
+   monogram. main.js sets a scale-aware blur on it so the gold diffuses softly. */
+.reflect-canvas { position: fixed; inset: 0; z-index: 15; pointer-events: none; }
+/* the carved ring letters: real DOM glyphs (one <span> per letter) positioned and
+   rotated onto the ring, above the bands. Real text — not a supersampled canvas — so
+   they stay crisp and cost almost nothing per frame (main.js only nudges each span's
+   transform + colour). font-size is set by main.js to the ring thickness. */
+.ring-letters { position: fixed; inset: 0; z-index: 16; pointer-events: none;
+  font-family: var(--sans); font-weight: 700; line-height: 1; }
+.ring-letters span { position: absolute; left: 0; top: 0; transform-origin: 0 0; white-space: pre; }
+/* the ignition pulse, on the very top so it sweeps over the whole page on load */
+.pulse-canvas { position: fixed; inset: 0; z-index: 17; pointer-events: none; }
+
+/* one-shot fade-in for the whole signet apparatus */
+@media (prefers-reduced-motion: no-preference) {
+  .signet, .reflect-canvas, .ring-letters { animation: fadein 1s ease backwards; }
+}
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+
+/* ---------- about ---------- */
+/* The first paragraph runs full width on top; the framed photo floats left
+   below it, with the second and third paragraphs to its right. */
+.about__body { display: flow-root; }   /* contains the float if the text runs short */
+.about__photo {
+  float: left; width: clamp(180px, 24%, 230px);
+  margin: .3rem clamp(1.25rem, 3vw, 2rem) 1rem 0;
+  /* portrait frame in the photos' own 3:4; the taller 2:3 shots crop a little
+     off the bottom (object-position keeps the head clear of the crop) */
+  aspect-ratio: 3 / 4;
+  /* the frame band: as thick as a section bar (.2875em at kicker size = .575rem).
+     The padding reserves its strip; the ink itself is an SVG built by main.js —
+     four hooked bars in the bars' own material (b-tips out on the exterior edge,
+     mirrored in on the interior), jointed at each corner by two 7-gon primitives
+     meeting along the corner's 45° diagonal (Jonatan's red-dot dissection).
+     reflect.js lights the twelve pieces. */
+  padding: .575rem;
+  position: relative;
+}
+.about__photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+/* the frame ink, drawn beyond the box where the hooks poke out */
+.about__photo .frame-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.about__body p { margin: 0 0 1.1rem; }
+.about__body p:last-child { margin-bottom: 0; }
+.about__body strong { color: var(--sky); font-weight: 600; }
+
+
+/* ---------- timeline (experience + education) ---------- */
+.timeline { list-style: none; margin: 0; padding: 0; }
+.entry {
+  display: grid; grid-template-columns: 150px 1fr; gap: clamp(1rem, 3vw, 2.2rem);
+  padding: 1.1rem 0; border-top: 1px solid var(--haze-line);
+}
+.entry:first-child { border-top: none; padding-top: 0; }
+.entry__when {
+  font-family: var(--serif); font-weight: 600; font-size: .9rem;
+  color: var(--ink); padding-top: .15rem;
+}
+.entry__what h3 {
+  font-family: var(--serif); font-weight: 600; font-size: 1.28rem;
+  color: var(--sky); margin: 0 0 .25rem; line-height: 1.2;
+}
+.entry__org { font-weight: 500; color: var(--ink); margin: 0 0 .5rem; font-size: .96rem; }
+.entry__detail { color: var(--ink-soft); margin: 0; font-size: .98rem; }
+
+
+/* ---------- publications ---------- */
+.pubs { display: flex; flex-direction: column; gap: 1.05rem; }
+.pub {
+  background: var(--paper); border: 1px solid var(--haze-line);
+  border-left: 3px solid var(--gold); border-radius: 2px;
+  padding: 1.3rem 1.5rem;
+}
+.pub__title { font-family: var(--serif); font-weight: 600; font-size: 1.18rem; color: var(--sky); margin: 0 0 .35rem; line-height: 1.25; }
+.pub__meta { font-size: .82rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--gold); margin: 0 0 .6rem; }
+.pub__note { color: var(--ink-soft); margin: 0; font-size: .98rem; }
+.pub__links { margin: .7rem 0 0; font-size: .95rem; }
+.pub__links a { font-weight: 600; text-decoration: none; }
+.pub__links a:hover { text-decoration: underline; }
+.pub__orcid { margin: .4rem 0 0; font-size: .95rem; color: var(--ink-soft); }
+
+
+/* ---------- skills ---------- */
+.skills { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
+.skills h3 { font-family: var(--serif); font-weight: 600; font-size: 1.15rem; color: var(--sky); margin: 0 0 1rem; }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  font-size: .88rem; font-weight: 500; padding: .35rem .8rem; border-radius: 2px;
+  border: 1.5px solid var(--haze-line); color: var(--ink-soft); background: var(--paper);
+}
+/* programming proficiency, shown purely as how lit the chip is */
+.chip--lit1 { background: var(--lit-low);  border-color: transparent; color: var(--ink); }
+.chip--lit2 { background: var(--lit-mid);  border-color: transparent; color: var(--ink); }
+.chip--lit3 { background: var(--lit-high); border-color: transparent; color: #2a1c00; }
+
+/* languages — grouped presentation (the level leads, the languages follow), the
+   one kept of the four candidates tried. No chip-glow coding here (that reads as
+   proficiency on the Programming side and was ambiguous); the level is spelled out. */
+.langs-grouped { margin: .2rem 0 0; }
+.langs-grouped > div { display: flex; gap: .7rem; align-items: baseline; padding: .32rem 0; }
+.langs-grouped dt { flex: 0 0 4.4em; margin: 0; font-size: .82rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); }
+.langs-grouped dd { margin: 0; color: var(--ink); }
+
+
+/* ---------- contact ---------- */
+.section--contact { text-align: center; }
+/* same golden style as the section labels, just larger; lowercase */
+.contact__head { font-family: var(--serif); font-weight: 700; font-size: clamp(2.2rem, 5.5vw, 3.3rem); text-transform: lowercase; color: var(--gold); margin: 0 0 1.4rem; }
+.contact__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem 2.4rem; }
+/* the two ways to reach me are line-art icons (envelope, Telegram plane): ink at rest,
+   warming to lit gold and lifting a hair on hover, like the rest of the lit motifs.
+   The gold is illumination, so it belongs to the interaction layer: with the master
+   light off the icons stay plain ink under the pointer. */
+.contact__icon { display: inline-flex; color: var(--ink); text-decoration: none; }
+.contact__icon svg { width: 2.75rem; height: 2.75rem; display: block; transition: color .15s ease, transform .12s ease; }
+body:not(.lights-off) .contact__icon:hover { color: var(--gold); }
+.contact__icon:hover svg { transform: translateY(-1px); }
+.contact__icon:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 3px; }
+
+
+/* ---------- footer ---------- */
+.foot {
+  max-width: var(--maxw); margin: 0 auto; padding: 1.75rem var(--pad);
+  display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem;
+  font-size: .88rem; color: var(--ink-soft); text-align: center;
+}
+.foot p { margin: 0; }
+
+
+/* ---------- top-right controls: master light (left) + language switch (right) ---------- */
+/* Both controls are fixed to the viewport, so they ride along and stay reachable the whole
+   way down the page — the light can be flipped from anywhere, not just at the top. Above every
+   decorative layer so they stay clickable. */
+.controls {
+  position: fixed; top: clamp(.8rem, 2vw, 1.4rem); right: clamp(.8rem, 2vw, 1.4rem);
+  z-index: 30; display: flex; align-items: center; gap: .7rem;
+}
+.controls button {
+  background: none; border: 0; padding: 0; cursor: pointer; display: block;
+  line-height: 0; -webkit-tap-highlight-color: transparent;
+}
+.lang-switch:focus-visible, .bulb-toggle:focus-visible {
+  outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 5px;
+}
+
+/* the L1 pill: a lit/unlit pair — the on language is gold ground + black letters,
+   the other black ground + gold letters; the two swap when .es is set */
+.lang-switch svg { height: 30px; width: auto; display: block; }
+.lang-switch text { font-family: var(--sans); font-weight: 700; font-size: 17px; }
+.lang-switch .pill-left  { fill: var(--glow); }
+.lang-switch .pill-right { fill: #1c1a16; }
+.lang-switch .pill-en    { fill: #1c1a16; }
+.lang-switch .pill-es    { fill: var(--glow); }
+.lang-switch.es .pill-left  { fill: #1c1a16; }
+.lang-switch.es .pill-right { fill: var(--glow); }
+.lang-switch.es .pill-en    { fill: var(--glow); }
+.lang-switch.es .pill-es    { fill: #1c1a16; }
+
+/* the B2 bulb: on = black contour filled gold with a soft point-like glow;
+   off (.off) = bare black contour over the page, glow and fill gone */
+.bulb-toggle svg { height: 38px; width: auto; display: block; overflow: visible; }
+.bulb-toggle .bulb-glass { fill: var(--glow); transition: fill .25s ease; }
+.bulb-toggle .bulb-glow  { opacity: 1; transition: opacity .25s ease; }
+.bulb-toggle .bulb-fil   { opacity: .5; }
+.bulb-toggle.off .bulb-glass { fill: none; }
+.bulb-toggle.off .bulb-glow  { opacity: 0; }
+
+/* lights off: the points and every lighting layer go dark; the bare logo stays */
+body.lights-off .points,
+body.lights-off .cast-canvas,
+body.lights-off .reflect-canvas,
+body.lights-off .ring-letters,
+body.lights-off .pulse-canvas { display: none; }
+
+/* lights off also un-pins the logo: it stops riding the viewport (position:fixed) and
+   becomes a static image anchored to the page, so it scrolls away with the content like
+   any other image. main.js sets --sig-abs-top to its load position (34% of the viewport). */
+body.lights-off .signet { position: absolute; top: var(--sig-abs-top, 34%); }
+
+
+/* ---------- responsive ---------- */
+@media (max-width: 760px) {
+  /* the signet recentres and softens so the name reads cleanly over it; here it
+     drops BACK behind the content (it sits under the name on narrow screens, so
+     the "floating over the page" layering would otherwise bury the name) */
+  .signet { left: 50%; top: 34%; width: min(62.4vw, 272px); opacity: .5; z-index: 2; }
+  .reflect-canvas, .ring-letters { z-index: 2; }
+  /* on a phone the logo is faint and behind the text, so the lede takes the full column
+     (the float that keeps it clear of the logo on desktop isn't needed here) */
+  .hero__lede { max-width: none; margin-left: 0; }
+  .hero__lede-clear { display: none; }
+  /* image stops floating and stacks between the paragraphs */
+  .about__photo { float: none; width: min(60%, 200px); margin: 0 0 1rem; }
+  .entry { grid-template-columns: 1fr; gap: .4rem; }
+  .entry__when { padding-top: 0; }
+  .skills { grid-template-columns: 1fr; }
+}
+
+
+/* ---------- reflective lighting layer (reflect.js) ---------- */
+/* The gold that reflect.js paints onto the page copy per pixel; over the content, below the logo. */
+#reflect-gl { position: fixed; inset: 0; z-index: 12; pointer-events: none; }
+/* Text selection: the native fill is replaced by a hollow, SHARP-cornered BLACK outline (drawn
+   in JS from the selection rects) — roundedness stays reserved for the logo's annulus and the
+   points; the selected words themselves turn gold (in interactive mode). */
+::selection { background: transparent; }
+::-moz-selection { background: transparent; }
+/* BELOW #reflect-gl (z 12): the gold the shader paints on the outline must land on top of the
+   black stroke to be seen — sitting above the canvas was what kept the box's lighting invisible */
+#reflect-selbox { position: absolute; inset: 0; z-index: 11; pointer-events: none; }
+/* the outline is ink like everything else; reflect.js rasterises it as mitre-cut sides (the
+   photo-frame schematic, corner seams included). On a line where the stroke continues to the
+   next one, that end is left OPEN (no side border, the box run a little past the text). */
+.reflect-selrect { position: absolute; border: 3px solid var(--ink); }
+/* a word turned gold by click or selection — illumination, so the lights-off page mutes it */
+.litw.goldw { color: var(--gold); }
+body.lights-off .litw.goldw { color: inherit; }
