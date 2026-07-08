@@ -4,7 +4,6 @@ A running checklist of milestones, each paired with the iteration that first int
 
 
 - [x] Visually represent SPT edges as cracks connecting illuminating points — [iteration 22](sources/iteration22)
-- [x] Gold/lit words as light sources, glowing and illuminating nearby page contents — [iteration 22](sources/iteration22)
 - [x] Got rid of cones: simplified illumination so that glowing no longer attempts to point at illuminated page contents — [iteration 22](sources/iteration22)
 - [x] Connect points via a Shortest-Path Tree rooted at the 'I', and based on a pruned Delaunay triangulation — [iteration 21](sources/iteration21)
 - [x] Illuminating points scattered via blue noise (Poisson-disk sampling) instead of uniformly — [iteration 21](sources/iteration21)
@@ -26,5 +25,6 @@ A running checklist of milestones, each paired with the iteration that first int
 - [x] A clean static HTML CV/profile to build on — [iteration 0](sources/iteration0)
 - [ ] Lightning connections cast their own light onto nearby page contents (as the points and gold words now do)
 - [ ] ~~Animate the straightening of laid-down 'b''s into section-separating bars~~ — [iteration 20](sources/iteration20)
-- [ ] ~~Unify illumination: the logo joins the reflective text-lighting technique, keeping its region-based nuances where they still beat the resulting look~~ — [iteration 21](sources/iteration21)
+- [x] ~~Unify illumination: the logo joins the reflective text-lighting technique, keeping its region-based nuances where they still beat the resulting look~~ — [iteration 21](sources/iteration21)
 - [ ] Add basic SEO metadata (robots.txt, sitemap.xml, JSON-LD Person block, Open Graph/Twitter tags, and canonical URL)
+- [x] ~~Gold/lit words as light sources, glowing and illuminating nearby page contents~~ — [iteration 22](sources/iteration22) & [iteration 23](sources/iteration23)
