@@ -16,24 +16,44 @@ own: a clean, fast page to point people to, and a way to stay findable for work.
 
 Take it from a bare `hello world` HTML file to something I am happy to ship — in a
 couple of focused weeks, AI-assisted but hand-driven. A real part of the exercise
-was the AI side itself: improving on precise prompt creation, and to keep an
+was the AI side itself: improving on precise prompt creation, and keeping an
 AI-assisted workflow organized and accountable rather than letting it sprawl.
 
 ## How it is built
 
-- A plain static site — HTML, CSS, and JavaScript, no framework. Fast,
-  legible, and cheaply hosted on Cloudflare.
+- A plain static site — HTML, CSS, and JavaScript, no framework. Fast, legible,
+  and cheaply hosted on Cloudflare.
 - Built in steps, in the open. Each step is an **iteration** — one self-contained
-  unit of development idea — and the whole chain is kept under `sources/`, while
-  `gallery/` holds a screenshot of the site at every iteration. Together they read
-  as a living dex: you can watch the site come together at a glance, then drop into
-  any step to see exactly what changed and why.
+  unit of development idea — and the whole chain is kept under `sources/`, each
+  step holding its full source **plus the verbatim record of the prompts and
+  answers that produced it**. `gallery/` keeps a screenshot of the site at every
+  step, and `prompts/` the full session logs, turn by turn. Together they read as
+  a living dex: watch the site come together at a glance, then drop into any step
+  to see exactly what changed, what was asked, and how it was carried out.
+- What actually ships is `sources/current/` — the newest source, kept as the
+  plain deployable folder while the numbered iterations stay set in stone.
+
+## The lights
+
+The page carries an interactive layer built from scratch, piece by geometric
+piece: illuminating points scattered over the page as blue noise, a logo that
+reads the light around it, and an ignition pulse that sweeps the page on load —
+for a moment revealing the connections between the points. That last wink is
+deliberate: my research years were spent understanding the underlying connections
+inside point clouds.
+
+## The CV
+
+The site also serves a print CV, in English and Spanish, and this repo builds it:
+`assets/cv-en/` and `assets/cv-es/` hold the LaTeX sources and a one-command build
+script each. Same palette as the site — ink, gold, light — none of the lighting.
 
 ## What it took
 
 End to end, a project like this meant getting hands-on at once with front-end and
 web-design basics, prompt-writing and AI-workflow management, everyday git and vim,
-and the essentials of hosting and deploying a static site.
+a little print design in LaTeX, and the essentials of hosting and deploying a
+static site.
 
 ## Milestones
 

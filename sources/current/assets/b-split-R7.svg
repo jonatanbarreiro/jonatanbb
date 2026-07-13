@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8.5 -19 68.5 171">
+<!--
+  b-split-R7.svg — interior lighting, region 7. The illuminating point sits in
+  region 7 (filled solid); the elements it lights (their inner faces) are painted
+  white. Pieces / elements / regions: illumination.txt (same folder).
+-->
+  <defs>
+    <polygon id="b-silhouette" points="26.2500,85.2500 26.2500,70.6746 42.0754,86.5000 5.2500,123.3254 5.2500,8.4363 9.2189,5.7798 -5.2500,-15.8371 -5.2500,148.6746 56.9246,86.5000 15.7500,45.3254 15.7500,105.6746 31.2123,90.2123"/>
+  </defs>
+
+  <!-- the 18 elements, grouped by piece -->
+  <g data-piece="top tip">
+    <polygon id="toptip-left" fill="hsl(354,61%,36.5%)" points="-5.2500,-15.8371 5.2500,8.4363 -5.2500,8.4363"/>
+    <polygon id="toptip-right" fill="hsl(354,61%,45%)" points="5.2500,8.4363 9.2189,5.7798 -5.2500,-15.8371"/>
+  </g>
+  <g data-piece="stick 1 (the stem)">
+    <polygon id="stick1-left" fill="hsl(354,61%,36.5%)" points="-5.2500,8.4363 0.0000,8.4363 0.0000,123.3254 -5.2500,123.3254"/>
+    <polygon id="stick1-right" fill="hsl(354,61%,45%)" points="0.0000,8.4363 5.2500,8.4363 5.2500,123.3254 0.0000,123.3254"/>
+  </g>
+  <g data-piece="joint 1">
+    <polygon id="joint1-left" fill="hsl(354,61%,36.5%)" points="5.2500,123.3254 -5.2500,148.6746 -5.2500,123.3254"/>
+    <polygon id="joint1-right" fill="hsl(354,61%,45%)" points="5.2500,123.3254 12.6746,130.7500 -5.2500,148.6746"/>
+  </g>
+  <g data-piece="stick 2">
+    <polygon id="stick2-left" fill="hsl(354,61%,36.5%)" points="5.2500,123.3254 42.0754,86.5000 45.7877,90.2123 8.9623,127.0377"/>
+    <polygon id="stick2-right" fill="hsl(354,61%,45%)" points="8.9623,127.0377 45.7877,90.2123 49.5000,93.9246 12.6746,130.7500"/>
+  </g>
+  <g data-piece="joint 2 (middle joint)">
+    <polygon id="joint2-right" fill="hsl(354,61%,45%)" points="49.5000,79.0754 42.0754,86.5000 56.9246,86.5000"/>
+    <polygon id="joint2-left" fill="hsl(354,61%,36.5%)" points="49.5000,93.9246 56.9246,86.5000 42.0754,86.5000"/>
+  </g>
+  <g data-piece="stick 3">
+    <polygon id="stick3-left" fill="hsl(354,61%,36.5%)" points="42.0754,86.5000 45.7877,82.7877 29.9623,66.9623 26.2500,70.6746"/>
+    <polygon id="stick3-right" fill="hsl(354,61%,45%)" points="45.7877,82.7877 49.5000,79.0754 33.6746,63.2500 29.9623,66.9623"/>
+  </g>
+  <g data-piece="joint 3 (last joint)">
+    <polygon id="joint3-left" fill="hsl(354,61%,36.5%)" points="26.2500,70.6746 15.7500,45.3254 15.7500,70.6746"/>
+    <polygon id="joint3-right" fill="hsl(354,61%,45%)" points="26.2500,70.6746 33.6746,63.2500 15.7500,45.3254"/>
+  </g>
+  <g data-piece="stick 4 (last, shorter)">
+    <polygon id="stick4-left" fill="hsl(354,61%,36.5%)" points="15.7500,70.6746 21.0000,70.6746 21.0000,85.2500 15.7500,85.2500"/>
+    <polygon id="stick4-right" fill="hsl(354,61%,45%)" points="26.2500,85.2500 26.2500,70.6746 21.0000,70.6746 21.0000,85.2500"/>
+  </g>
+  <g data-piece="inner tip">
+    <polygon id="innertip-left" fill="hsl(354,61%,36.5%)" points="26.2500,85.2500 15.7500,85.2500 15.7500,105.6746"/>
+    <polygon id="innertip-right" fill="hsl(354,61%,45%)" points="26.2500,85.2500 15.7500,105.6746 31.2123,90.2123"/>
+  </g>
+
+  <use href="#b-silhouette" fill="none" stroke="#1a1a1a" stroke-width="0.5" stroke-linejoin="miter" stroke-miterlimit="6"/>
+
+  <g data-layer="regions" stroke="#e8c24a" stroke-width="0.3" stroke-linejoin="round">
+    <polygon id="R1" fill="none" points="56.9246,86.5000 15.7500,45.3254 15.7500,16.8307"/>
+    <polygon id="R2" fill="none" points="15.7500,45.3254 15.7500,16.8307 9.2189,5.7798 5.2500,8.4363 5.2500,34.8254"/>
+    <polygon id="R3" fill="none" points="15.7500,45.3254 5.2500,34.8254 5.2500,116.1746 15.7500,105.6746"/>
+    <polygon id="R4" fill="none" points="15.7500,105.6746 5.2500,116.1746 5.2500,123.3254 15.7500,112.8254"/>
+    <polygon id="R5" fill="none" points="15.7500,105.6746 15.7500,112.8254 34.7877,93.7877 31.2123,90.2123"/>
+    <polygon id="R6" fill="none" points="34.7877,93.7877 42.0754,86.5000 38.5000,82.9246 31.2123,90.2123"/>
+    <polygon id="R7" fill="#e8c24a" fill-opacity="1" points="31.2123,90.2123 38.5000,82.9246 26.2500,70.6746 26.2500,85.2500"/>
+  </g>
+
+  <!-- elements lit from this region, painted white on top -->
+  <g data-layer="lit" fill="#ffffff" stroke="#333333" stroke-width="0.3" stroke-linejoin="round">
+    <polygon id="lit-stick2-left" points="5.2500,123.3254 42.0754,86.5000 45.7877,90.2123 8.9623,127.0377"/>
+    <polygon id="lit-stick3-left" points="42.0754,86.5000 45.7877,82.7877 29.9623,66.9623 26.2500,70.6746"/>
+    <polygon id="lit-innertip-right" points="26.2500,85.2500 15.7500,105.6746 31.2123,90.2123"/>
+    <polygon id="lit-stick4-right" points="26.2500,85.2500 26.2500,70.6746 21.0000,70.6746 21.0000,85.2500"/>
+  </g>
+</svg>

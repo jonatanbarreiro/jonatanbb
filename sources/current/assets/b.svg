@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-116.836 -45.168 223.172 223.172">
+  <!-- firecoat 'b' primitive (jonatanbb.xyz), redesigned per assets/logo/temp.txt, in its enclosing annulus. Ring thickness = 2t (doubled radial margin for lighting). -->
+  <defs>
+    <path id="b" d="M27.5 86.5 21 93 V58 L49.5 86.5 0 136 V1.445 L4.856 8.7"
+          fill="none" stroke-width="10.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="6"/>
+  </defs>
+  <circle cx="-5.25" cy="66.418" r="97.086" fill="none" stroke="#e8a317" stroke-width="21"/>
+  <use href="#b" stroke="#e8a317"/>
+</svg>

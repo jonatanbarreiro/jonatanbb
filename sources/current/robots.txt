@@ -1,0 +1,25 @@
+# jonatanbb.xyz — search crawlers welcome; AI-training bots that honor
+# robots.txt are opted out (Cloudflare-side blocking is a separate concern)
+
+User-agent: *
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+Sitemap: https://jonatanbb.xyz/sitemap.xml

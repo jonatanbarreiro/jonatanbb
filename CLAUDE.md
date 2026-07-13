@@ -16,7 +16,10 @@ Jonatan writes a deliberate prompt, you carry it out.
 - `prompts/` — full session logs, `sessionNNNN.log`, every turn verbatim.
 - `sources/iterationN/` — the site source at step N (`index.html`, `styles.css`,
   `main.js`, `assets/`), plus that iteration's `interaction_*` files.
-- `assets/` — the single asset store for the whole site (see *Assets*).
+- `sources/current/` — the deployable copy of the newest source (see *The live
+  copy*). No interaction files, no symlinks: real files, ready to ship.
+- `assets/` — the single asset store for the whole site (see *Assets*). It also
+  hosts the CV build folders, `cv-en/` and `cv-es/` (see *The CV*).
 - `gallery/` — one screenshot per iteration (`iterationNNN.png`, chronological),
   plus `unsourced/` (`iteration-N.png`) for captures that predate the kept source.
   A quick visual tour of the build. Generated at wrap-up at a fixed frame (see
@@ -88,12 +91,36 @@ Notes:
   Screenshots he hands you default to `~/Imágenes/Capturas de pantalla`.
 
 
+## The live copy (`sources/current/`)
+
+Iterations are set-in-stone blocks; the folder Jonatan actually copies to the server
+is `sources/current/` — the newest source, dereferenced (real files where iterations
+carry asset symlinks) and without interaction files. Refresh it whenever the live
+source changes: at every iteration wrap-up, and on between-iteration touch-ups that
+don't open a new iteration (a rebuilt CV pdf, say). Refreshing `current` never counts
+as an iteration.
+
+
+## The CV
+
+The repo also builds the CV the site serves — one folder per language,
+`assets/cv-en/` and `assets/cv-es/`, each self-contained: `main.tex` (the source),
+`portrait.jpg` (a symlink into the photo set) and a runnable `./build.sh` that
+compiles with pdflatex and installs the pdf as `assets/cv-en.pdf` / `cv-es.pdf` —
+the files the page links. The design deliberately mirrors the site (ink, gold,
+light; Pagella is the site's Palatino), and its wording is the site's, terser.
+
+When Jonatan updates his CV he will edit the `main.tex` sources himself, or hand
+annotations over to be integrated. Either way: rebuild with the scripts, refresh
+`sources/current/`, and do **not** open a new iteration for it.
+
+
 ## The site's text is Jonatan's
 
 The website's **text content** — every word a visitor reads: the page copy, the
 section headings, the hero lede, link and button text, the document `<title>` and
-meta description, and the language files in `assets/content.*.js` — is **deliberate
-and authored by Jonatan**. Do not write, reword, translate, condense, "polish", or
+meta description, the language files in `assets/content.*.js`, and the CV sources
+in `assets/cv-*/main.tex` — is **deliberate and authored by Jonatan**. Do not write, reword, translate, condense, "polish", or
 otherwise alter it unless he **explicitly asked** you to. When a task only moves or
 restructures text (externalizing it, re-keying it, changing the markup around it),
 carry the existing words across **verbatim** — structure is yours to shape, wording

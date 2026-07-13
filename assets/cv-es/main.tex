@@ -1,0 +1,144 @@
+% jonatanbb.xyz — el CV, español. Copia impresa y escueta del sitio: las mismas palabras
+% donde importan, la misma paleta (tinta, oro, luz), sin la iluminación. Autocontenido:
+% LaTeX plano + TeX Gyre Pagella (la Palatino que pide primero el --serif del sitio).
+% Compilar con ./build.sh — instala el pdf como ../cv-es.pdf, el asset que sirve la página.
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tgpagella}   % sin babel: texlive-lang-spanish no está instalado y un CV a una página apenas guioniza
+\usepackage[a4paper,margin=1.45cm,bottom=1.1cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage[hidelinks]{hyperref}
+
+% la paleta del sitio (styles.css): tinta casi-negra cálida, el oro del sitio y un
+% oro profundizado para letra pequeña — el oro puro se lava sobre papel
+\definecolor{ink}{HTML}{1C1A16}
+\definecolor{gold}{HTML}{FAD02A}
+\definecolor{goldink}{HTML}{A8890F}
+\definecolor{soft}{HTML}{55514A}
+\color{ink}
+\hypersetup{colorlinks=true, urlcolor=goldink, linkcolor=goldink}
+
+\pagestyle{empty}
+\setlength{\parskip}{0pt}
+
+% cabecera de sección, eco del kicker + barra del sitio: el nombre en oro serif
+% minúscula, y la barra negra gruesa corriendo hasta el margen
+\newcommand{\cvsection}[1]{%
+  \par\vspace{8pt}%
+  \noindent{\large\color{goldink}#1}\hspace{12pt}%
+  \raisebox{3pt}{\color{ink}\leaders\hrule height 2.2pt\hfill\kern0pt}%
+  \par\vspace{5pt}}
+
+% entrada de línea temporal, como en el sitio: fechas a la izquierda, el qué a la derecha
+\newcommand{\entry}[4]{%
+  \noindent
+  \begin{minipage}[t]{2.6cm}\raggedright\small\textbf{#1}\end{minipage}%
+  \hspace{.45cm}%
+  \begin{minipage}[t]{\dimexpr\textwidth-3.05cm\relax}
+    \textbf{#2}\\[1pt]
+    {\small\color{soft}#3}#4
+  \end{minipage}\par\vspace{6.5pt}}
+\newcommand{\entrybody}[1]{\\[2.5pt]{\small #1}}
+
+\begin{document}
+
+% ---- cabecera: nombre + antetítulo + contacto a la izquierda, el retrato enmarcado a la derecha ----
+\noindent
+\begin{minipage}[b]{\dimexpr\textwidth-3.6cm\relax}
+  {\Huge Jonatan Barreiro Bastos}\\[7pt]
+  {\small\scshape matemático \textperiodcentered\ investigador predoctoral}\\[9pt]
+  {\small O Porriño, Pontevedra \,\textperiodcentered\, +34 678 25 50 96 \,\textperiodcentered\, \href{mailto:jonatanbb@tutanota.com}{jonatanbb@tutanota.com}}\\[2pt]
+  {\small\href{https://jonatanbb.xyz}{jonatanbb.xyz} \,\textperiodcentered\, Telegram \href{https://t.me/jonatanbb}{@jonatanbb} \,\textperiodcentered\, ORCID \href{https://orcid.org/0000-0003-0922-8055}{0000-0003-0922-8055}}
+\end{minipage}\hfill
+\begin{minipage}[b]{3.1cm}
+  \raggedleft{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{1.1pt}\fcolorbox{ink}{white}{\includegraphics[width=2.9cm]{portrait.jpg}}}
+\end{minipage}
+\par\vspace{8pt}
+{\color{gold}\hrule height 2.2pt}
+\vspace{9pt}
+
+% ---- perfil: el lede del sitio, escueto ----
+\noindent Matemático de formación, de perfil sobre todo teórico —análisis complejo,
+funcional y armónico—, con una maña de siempre para modelar problemas, matemáticos o no.
+Cuatro años de investigación aplicada sobre nubes de puntos LiDAR añadieron la capa
+práctica: C++, Python y el oficio diario de construir software. Ahora termino el
+doctorado y busco pasar de la academia a la industria.
+
+\cvsection{experiencia}
+
+\entry{Abr 2021 --\\Jul 2025}
+  {Técnico Superior de Investigación}
+  {CiTIUS — Centro de Investigación en Tecnoloxías Intelixentes, USC}
+  {\entrybody{Investigador predoctoral en el grupo LiDAR bajo la dirección del
+   Dr.~Francisco F. Rivera. Modelé e implementé técnicas de detección e integración para
+   nubes de puntos LiDAR y de imagen, principalmente en C++. Desde agosto de 2025,
+   continúo de forma independiente la investigación doctoral subyacente.}}
+
+\entry{2018 -- 2019}
+  {Profesor asistente de posgrado}
+  {Universidad de Kansas}
+  {\entrybody{Semestre de invierno — profesor responsable de un grupo de 33 estudiantes
+   de Math 115, Cálculo I, coordinado por el Dr.~W. Huang y A. Kolasinski. Di clases,
+   diseñé y corregí los exámenes y atendí la Help Room.\\[2pt]
+   Semestre de primavera — profesor asistente de Math 147, Cálculo III (Honors), con el
+   Prof.~E. Gavosto: el curso de cálculo más alto que se confiaba a los estudiantes de
+   posgrado. Impartí clases, corregí, atendí la Help Room y me encargué de la impresión
+   3D de los proyectos del alumnado.}}
+
+\entry{2017 -- 2018}
+  {Asistente de investigación de posgrado}
+  {Universidad de Kansas}
+  {\entrybody{Asistente de investigación con el Prof.~Rodolfo Torres, iniciándome en la
+   investigación en análisis armónico.}}
+
+\cvsection{educación}
+
+\entry{2017 -- 2020}
+  {Master of Arts in Mathematics}
+  {Universidad de Kansas, EE.\,UU. \,\textperiodcentered\, Nota media 4,0 / 4,0}
+  {\entrybody{Beneficiario de la Dean's Doctoral Fellowship.}}
+
+\entry{2015 -- 2016}
+  {Máster en Matemáticas y Aplicaciones}
+  {Universidad Autónoma de Madrid \,\textperiodcentered\, 8,0 / 10,0}
+  {\entrybody{Itinerario de iniciación a la investigación. Trabajo Fin de Máster:
+   \emph{El Teorema de la Corona}, dirigido por J. L. Fernández.}}
+
+\entry{2011 -- 2015}
+  {Grado en Matemáticas}
+  {Universidad Autónoma de Madrid \,\textperiodcentered\, 7,6 / 10,0}
+  {\entrybody{Trabajo Fin de Grado: \emph{La Transformada Rápida de Fourier y
+   Aplicaciones}, dirigido por E. Hernández.}}
+
+\cvsection{investigación}
+
+\entry{En escritura}
+  {A Decoupled Random-Sampling Hough Approach to Line Detection in 2D Point Clouds}
+  {Investigación completa \,\textperiodcentered\, se extiende a circunferencias \,\textperiodcentered\, dirigido a la revista IPOL}
+  {}
+
+\entry{Feb 2026}
+  {LitS: A novel Neighbourhood Descriptor for Point Clouds}
+  {arXiv:\href{https://arxiv.org/abs/2602.04838}{2602.04838} \,\textperiodcentered\, con F. F. Rivera, O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís y T. F. Pena}
+  {}
+
+\cvsection{aptitudes}
+
+\entry{Programación}
+  {\normalfont\small Dominio: \LaTeX, Sage, C++, Python \,\textperiodcentered\, Familiaridad: C, Java, MATLAB, R}
+  {}{}
+
+\entry{Idiomas}
+  {\normalfont\small Español y gallego (nativo) \,\textperiodcentered\, inglés (fluido)}
+  {}{}
+
+\vfill
+\begin{center}
+  \small\color{soft}Actualizado el 13 de julio de 2026 \,\textperiodcentered\, la versión larga vive en \href{https://jonatanbb.xyz}{jonatanbb.xyz}
+\end{center}
+
+\end{document}
