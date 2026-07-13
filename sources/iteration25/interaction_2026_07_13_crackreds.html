@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>crack reds — contact sheet</title>
+<style>
+  /* Same stage the cracks live on: the page's studio white */
+  body { background: #ffffff; color: #1c1a16; font: 14px/1.45 system-ui, sans-serif;
+         margin: 2rem auto; max-width: 1080px; padding: 0 1rem; }
+  h1 { font-size: 1.3rem; } h2 { font-size: 1.05rem; margin-top: 2.2rem; }
+  p.note { color: #555; max-width: 62rem; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 14px; margin-top: 1rem; }
+  figure { margin: 0; }
+  figcaption { font-size: 12.5px; margin-top: 4px; color: #333; }
+  figcaption b { font-size: 14px; }
+  canvas { display: block; background: #fff; border: 1px solid #eee; }
+  .ref { display: flex; gap: 22px; align-items: flex-start; margin-top: 1rem; }
+  /* the wrist band itself, straight out of assets/portrait.jpg, blown up 2x */
+  .wrist { width: 300px; height: 320px; background: url(assets/portrait.jpg) no-repeat;
+           background-size: 2400px 3200px; background-position: -1000px -2260px;
+           border: 1px solid #eee; }
+</style>
+</head>
+<body>
+<h1>Crack reds — browser-rendered contact sheet</h1>
+<p class="note">Every tile below draws the same crack pattern through the site's real
+pipeline: the three stroke classes at their live hairline widths (0.58 / 0.43 / 0.27&nbsp;px)
+and alphas (0.85 / 0.78 / 0.70), plus the crack canvas' 0.71&nbsp;px blur — on the page's
+white. So each tile shows what that base color would actually look like on the site at
+full pulse illumination. Reply with a tile label (e.g. <b>B3</b>).</p>
+
+<h2>Reference</h2>
+<div class="ref">
+  <figure>
+    <div class="wrist"></div>
+    <figcaption>the wrist band, from the about photo (2×)</figcaption>
+  </figure>
+  <figure id="current-slot"></figure>
+</div>
+
+<h2>Candidates, through the live pipeline</h2>
+<div class="grid" id="grid"></div>
+
+<h2>Same color, dilution removed</h2>
+<p class="note">How much of the wash is pure alpha/thinness: the current
+rgb(215,97,75) with the per-class alpha raised to 1.0, and with the stroke widths
+doubled (alpha kept as today).</p>
+<div class="grid" id="grid2"></div>
+
+<script>
+// mulberry32, fixed seed: every tile draws the identical crack pattern
+function rng(seed) { return function () {
+  seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+// one shared crack pattern: a main walk left->right plus couples and loners off it
+function pattern(w, h) {
+  const rnd = rng(20260713), segs = [];
+  const walk = (x, y, ang, steps, cls, jit) => {
+    for (let i = 0; i < steps; i++) {
+      const a = ang + (rnd() * 2 - 1) * jit;
+      const s = 9 + rnd() * 9;
+      const nx = x + Math.cos(a) * s, ny = y + Math.sin(a) * s;
+      segs.push([x, y, nx, ny, cls]);
+      x = nx; y = ny;
+      if (x < 2 || x > w - 2 || y < 2 || y > h - 2) break;
+    }
+    return [x, y];
+  };
+  let x = 4, y = h * 0.55;
+  while (x < w - 6) {
+    const from = [x, y];
+    [x, y] = walk(x, y, (rnd() - 0.5) * 0.5, 1, 2, 0.4);
+    if (rnd() < 0.55) walk(from[0], from[1], (rnd() - 0.5) * 2.4, 3 + (rnd() * 6 | 0), rnd() < 0.3 ? 1 : 0, 0.5);
+    y += (h * 0.55 - y) * 0.25;   // drift back toward the axis
+  }
+  return segs;
+}
+const SEGS = pattern(226, 110);
+
+// the live pipeline numbers (1024-wide page: signet scale s = 1.18)
+const S = 1.18, CW = 0.45 + 0.2 * S, BLUR = (0.6 * S).toFixed(2);
+const W3 = [0.4, 0.62, 0.85].map(k => k * CW);
+const A3 = [0.7, 0.78, 0.85];
+
+function tile(parent, label, rgbTxt, rgb, alphas, widths) {
+  const fig = document.createElement('figure');
+  const cv = document.createElement('canvas');
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = 226 * dpr; cv.height = 110 * dpr;
+  cv.style.width = '226px'; cv.style.height = '110px';
+  cv.style.filter = 'blur(' + BLUR + 'px)';
+  const c = cv.getContext('2d');
+  c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  c.lineCap = 'round'; c.lineJoin = 'round';
+  for (let cls = 0; cls < 3; cls++) {
+    c.lineWidth = widths[cls];
+    c.strokeStyle = 'rgba(' + rgb + ',' + alphas[cls] + ')';
+    c.beginPath();
+    for (const [ax, ay, bx, by, k] of SEGS) if (k === cls) { c.moveTo(ax, ay); c.lineTo(bx, by); }
+    c.stroke();
+  }
+  const cap = document.createElement('figcaption');
+  cap.innerHTML = '<b>' + label + '</b> · rgb(' + rgbTxt + ')';
+  fig.appendChild(cv); fig.appendChild(cap); parent.appendChild(fig);
+}
+
+const CANDS = [
+  ['A1', '215,97,75  — current'], ['A2', '205,80,60'], ['A3', '190,65,50'], ['A4', '175,52,44'],
+  ['A5', '160,40,38'],            ['B1', '220,70,55'], ['B2', '205,50,40'], ['B3', '190,35,32'],
+  ['B4', '170,25,25'],            ['B5', '150,20,20'], ['C1', '225,85,90'], ['C2', '210,60,70'],
+  ['C3', '190,40,55'],            ['C4', '230,50,45'], ['C5', '244,67,54'], ['D1', '140,10,15'],
+  ['D2', '120,15,20'],            ['D3', '235,35,35'], ['D4', '255,45,45'], ['D5', '180,45,60'],
+];
+const grid = document.getElementById('grid');
+for (const [label, txt] of CANDS)
+  tile(grid, label, txt, txt.split('—')[0].trim(), A3, W3);
+
+tile(document.getElementById('current-slot'), 'current', '215,97,75 — as the site renders it today',
+     '215,97,75', A3, W3);
+
+const g2 = document.getElementById('grid2');
+tile(g2, 'E1', '215,97,75 — alpha 1.0', '215,97,75', [1, 1, 1], W3);
+tile(g2, 'E2', '215,97,75 — width ×2', '215,97,75', A3, W3.map(w => 2 * w));
+tile(g2, 'E3', '215,97,75 — alpha 1.0 + width ×2', '215,97,75', [1, 1, 1], W3.map(w => 2 * w));
+</script>
+</body>
+</html>
