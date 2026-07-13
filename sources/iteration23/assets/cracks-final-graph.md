@@ -1,1 +1,0 @@
-../../../assets/cracks-final-graph.md
