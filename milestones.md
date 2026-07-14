@@ -3,6 +3,8 @@
 A running checklist of milestones, each paired with the iteration that first introduced it. Indirectly, also a global tracker of jonatanbb.xyz as it evolves into the professional profile site that it aims to be. 
 
 
+- [x] Implement a day/night mode — [iteration 27](sources/iteration27)
+- [x] CV pdf generation handled from this repo, and in the style of the page — [iteration 26](sources/iteration26)
 - [x] Add basic SEO metadata (robots.txt, sitemap.xml, JSON-LD Person block, Open Graph/Twitter tags, and canonical URL) — [iteration 25](sources/iteration25)
 - [x] The site's interactive layer is complete: lights, reflection, logo, pulse and cracks are done evolving — [iteration 24](sources/iteration24)
 - [x] The ignition pulse momentarily reveals the connections hiding between the illuminating points — a wink at my research years understanding the underlying connections inside point clouds — [iteration 24](sources/iteration24)
@@ -26,7 +28,7 @@ A running checklist of milestones, each paired with the iteration that first int
 - [x] Interactive lighting of the logo from a random scatter of illuminating points — [iteration 0](sources/iteration0)
 - [x] A design built around a gold/light palette and the 'bb' logo — [iteration 0](sources/iteration0)
 - [x] A clean static HTML CV/profile to build on — [iteration 0](sources/iteration0)
-- [ ] ~~Lightning connections cast their own light onto nearby page contents (as the points and gold words now do)~~ — [iteration 24](sources/iteration24)
 - [ ] ~~Animate the straightening of laid-down 'b''s into section-separating bars~~ — [iteration 20](sources/iteration20)
 - [x] ~~Unify illumination: the logo joins the reflective text-lighting technique, keeping its region-based nuances where they still beat the resulting look~~ — [iteration 21](sources/iteration21)
 - [x] ~~Gold/lit words as light sources, glowing and illuminating nearby page contents~~ — [iteration 22](sources/iteration22) & [iteration 23](sources/iteration23)
+- [ ] ~~Lightning connections cast their own light onto nearby page contents (as the points and gold words now do)~~ — [iteration 24](sources/iteration24)
