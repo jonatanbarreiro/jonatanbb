@@ -1,0 +1,11 @@
+#!/bin/sh
+# builds both CVs — main-en.tex and main-es.tex — and installs them beside this
+# script as cv-en.pdf / cv-es.pdf, the assets the site serves
+cd "$(dirname "$0")" || exit 1
+for lang in en es; do
+  pdflatex -interaction=nonstopmode -halt-on-error main-$lang.tex >/dev/null || { echo "pdflatex failed on main-$lang.tex — see main-$lang.log"; exit 1; }
+  pdflatex -interaction=nonstopmode -halt-on-error main-$lang.tex >/dev/null
+  mv main-$lang.pdf cv-$lang.pdf
+  rm -f main-$lang.aux main-$lang.log main-$lang.out
+  echo "built cv-$lang.pdf"
+done
