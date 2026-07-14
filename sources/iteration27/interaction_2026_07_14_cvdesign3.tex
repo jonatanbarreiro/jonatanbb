@@ -1,0 +1,196 @@
+% CV design draft 3 — "the plumbing" (second cut, to Jonatan's markup).
+% One gold pipe system, bicolor page (ink + the bar gold, the bronce tone retired):
+% the portrait's frame is a gold rectangle at the top LEFT; from its lower-left
+% corner the main pipe runs down the text margin; at every section it carries a
+% KNOT — the site's b rotated 225°, its bar crossing the pipe toward the section
+% name, its belly looping under, its long stick curved 45° to continue down as the
+% pipe (the b's own anatomy as a pipe junction; see the marked capture). At skills
+% the stem and top tip are removed: the bar just points at the name with the
+% site's hook, and the pipe ends. Out of the frame's top-right corner another
+% pipe end runs right, hook down, as the top bar of the 'J' of Jonatan — whose
+% 'o' is set a touch larger with the logo's two b's in its counter, the 'o' as
+% the annulus. Knot/bar art: interaction_2026_07_14_cvart2-*.pdf (printed from
+% the true b geometry). Section positions ride \pdfsavepos marks (aux round trip),
+% so the background pipe always meets the skills knot exactly: COMPILE TWICE.
+% English only — a dress rehearsal. pdflatex interaction_2026_07_14_cvdesign3.tex
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tgpagella}
+\usepackage[a4paper,margin=1.45cm,bottom=1.1cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{eso-pic}
+\usepackage[hidelinks]{hyperref}
+
+% bicolor: the ink and the bar gold; soft is a gray of the ink for secondary text
+\definecolor{ink}{HTML}{1C1A16}
+\definecolor{gold}{HTML}{FAD02A}
+\definecolor{soft}{HTML}{55514A}
+\color{ink}
+\hypersetup{colorlinks=true, urlcolor=gold, linkcolor=gold}
+
+\pagestyle{empty}
+\setlength{\parskip}{0pt}
+
+\newcommand{\portraitfile}{../../assets/PAKO4.jpg}
+\newcommand{\markfile}{../../assets/bb-mark.pdf}
+
+% ---- the pipe system ------------------------------------------------------
+% Art is drawn in b-primitive units (stroke 10.5u); printed here at 3.4pt stroke,
+% i.e. 0.32381 pt/u. The knot art is 96u x 118u with the pipe band 30u from its
+% left edge and the bar centreline 40u from its top; the raise puts the bar
+% ~2.5pt over the baseline and the kern puts the band centre on the pipe.
+\newcommand{\knotart}{\kern-8.01pt\raisebox{-22.76pt}[0pt][0pt]{\includegraphics[height=38.21pt]{interaction_2026_07_14_cvart2-knot.pdf}}}
+\newcommand{\knotskillsart}{\kern-8.01pt\raisebox{-13.69pt}[0pt][0pt]{\includegraphics[height=29.14pt]{interaction_2026_07_14_cvart2-knotskills.pdf}}}
+
+% record a page position (sp from the page's lower-left) into the aux
+\makeatletter
+\newcommand{\pipemark}[1]{\pdfsavepos
+  \protected@write\@auxout{}{\string\gdef\expandafter\string\csname pipe#1y\endcsname{\noexpand\the\pdflastypos}}}
+\makeatother
+
+% the main pipe: from the frame's lower-left corner (mark "ftop") straight down
+% the margin to the skills knot (mark "skills"), behind the knots — each knot's
+% art whites the band locally, so the seams and the bowls read as paper
+\AddToShipoutPictureBG{%
+  \ifcsname pipeskillsy\endcsname
+    \AtPageLowerLeft{\hspace{1.45cm}%
+      \raisebox{\csname pipeskillsy\endcsname sp}{\textcolor{gold}{%
+        \rule{3.4pt}{\dimexpr\csname pipeftopy\endcsname sp-\csname pipeskillsy\endcsname sp\relax}}}}%
+  \fi}
+
+% the J bar: a pipe end out of the frame's top-right corner, hook down, laid OVER
+% the text so it wears the J's top. Frame outer size = photo + 2(rule+sep).
+\newlength{\frameW}\setlength{\frameW}{\dimexpr 2.9cm+12pt\relax}
+\newlength{\frameH}\setlength{\frameH}{\dimexpr 3.86667cm+12pt\relax}
+% anchored to the "ftop" mark (the frame's real bottom), so the bar sits flush on
+% the corner whatever the first line's exact placement turns out to be
+\AddToShipoutPictureFG{%
+  \ifcsname pipeftopy\endcsname
+    \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+\frameW-0.4pt\relax}%
+      \raisebox{\dimexpr\csname pipeftopy\endcsname sp+\frameH-4.69pt\relax}{\includegraphics[height=4.69pt]{interaction_2026_07_14_cvart2-jbar.pdf}}}%
+  \fi}
+
+% the 'o' of Jonatan, a touch larger, wearing the logo's two b's in its counter
+\newcommand{\bbo}{\ooalign{\hss\raisebox{3.8pt}{\includegraphics[height=5.7pt]{interaction_2026_07_14_cvart2-bbo.pdf}}\hss\cr\scalebox{1.12}{o}}}
+
+% section head: the knot's bar arrives from the pipe and its turn marks the name
+\newcommand{\cvsection}[1]{%
+  \par\vspace{9pt}%
+  \noindent\knotart\hspace{.55em}{\large\color{gold}#1}%
+  \par\vspace{5pt}}
+\newcommand{\cvsectionlast}[1]{%
+  \par\vspace{9pt}%
+  \noindent\pipemark{skills}\knotskillsart\hspace{.55em}{\large\color{gold}#1}%
+  \par\vspace{5pt}}
+
+% timeline entry, indented clear of the pipe running down the margin
+\newcommand{\entry}[4]{%
+  \noindent\hspace{12pt}%
+  \begin{minipage}[t]{2.45cm}\raggedright\small\textbf{#1}\end{minipage}%
+  \hspace{.4cm}%
+  \begin{minipage}[t]{\dimexpr\textwidth-3.25cm\relax}
+    \textbf{#2}\\[1pt]
+    {\small\color{soft}#3}#4
+  \end{minipage}\par\vspace{5pt}}
+\newcommand{\entrybody}[1]{\\[2.5pt]{\small #1}}
+
+\begin{document}
+
+% ---- opening: the gold-framed portrait left, the name risen to its top edge ----
+\noindent\pipemark{ftop}%
+{\setlength{\fboxsep}{2.6pt}\setlength{\fboxrule}{3.4pt}\fcolorbox{gold}{white}{\includegraphics[width=2.9cm]{\portraitfile}}}%
+\hspace{14pt}%
+\raisebox{\dimexpr\frameH-14.8pt\relax}{\begin{minipage}[t]{\dimexpr\textwidth-\frameW-14pt\relax}
+  {\Huge J\kern.1em\bbo natan Barreiro Bastos}\\[8pt]
+  {\small\scshape\color{soft} mathematician \textperiodcentered\ predoctoral researcher}\\[10pt]
+  Mathematician by training, of the mostly theoretical kind — complex, functional
+  and harmonic analysis — with a lasting knack for modelling problems, mathematical
+  or not. Four years of applied research on LiDAR point clouds added the practical
+  layer: C++, Python, and the everyday craft of building software. Now finishing my
+  PhD and looking to move from academia into industry.
+\end{minipage}}
+\par\vspace{9pt}
+\begin{center}
+  {\small O Porriño, Pontevedra, Spain \,\textperiodcentered\, +34 678 25 50 96 \,\textperiodcentered\, \href{mailto:jonatanbb@tutanota.com}{jonatanbb@tutanota.com}}\\[2pt]
+  {\small\href{https://jonatanbb.xyz}{jonatanbb.xyz} \,\textperiodcentered\, Telegram \href{https://t.me/jonatanbb}{@jonatanbb} \,\textperiodcentered\, ORCID \href{https://orcid.org/0000-0003-0922-8055}{0000-0003-0922-8055}}
+\end{center}
+\vspace{1pt}
+
+\cvsection{experience}
+
+\entry{Apr 2021 --\\Jul 2025}
+  {Senior Research Technician}
+  {CiTIUS — Centro de Investigación en Tecnoloxías Intelixentes, USC}
+  {\entrybody{Predoctoral researcher in the LiDAR group under Dr.~Francisco F. Rivera.
+   Modelled and implemented detection and integration techniques for LiDAR and image
+   point clouds, primarily in C++. Since August 2025, continuing the underlying doctoral
+   research independently.}}
+
+\entry{2018 -- 2019}
+  {Graduate Teaching Assistant}
+  {University of Kansas}
+  {\entrybody{Winter semester — instructor of record for a 33-student section of Math 115
+   Calculus I, coordinated by Dr.~W. Huang and A. Kolasinski. Lectured, designed and
+   graded the tests, ran the Help Room.\\[2pt]
+   Spring semester — teaching assistant for Math 147 Calculus III (Honors), with
+   Prof.~E. Gavosto: the highest calculus course graduate students were entrusted with.
+   Taught classes, graded, ran the Help Room, and handled the 3D printing of student
+   projects.}}
+
+\entry{2017 -- 2018}
+  {Graduate Research Assistant}
+  {University of Kansas}
+  {\entrybody{Research assistant under Prof.~Rodolfo Torres, beginning research in
+   harmonic analysis.}}
+
+\cvsection{education}
+
+\entry{2017 -- 2020}
+  {Master of Arts in Mathematics}
+  {University of Kansas, USA \,\textperiodcentered\, GPA 4.0 / 4.0}
+  {\entrybody{Recipient of the Dean's Doctoral Fellowship.}}
+
+\entry{2015 -- 2016}
+  {Máster en Matemáticas y Aplicaciones}
+  {Universidad Autónoma de Madrid \,\textperiodcentered\, 8.0 / 10.0}
+  {\entrybody{Research initiation track. Thesis: \emph{El Teorema de la Corona} (The
+   Corona Theorem), advised by J. L. Fernández.}}
+
+\entry{2011 -- 2015}
+  {Grado en Matemáticas}
+  {Universidad Autónoma de Madrid \,\textperiodcentered\, 7.6 / 10.0}
+  {\entrybody{Thesis: \emph{La Transformada Rápida de Fourier y Aplicaciones} (The Fast
+   Fourier Transform and Applications), advised by E. Hernández.}}
+
+\cvsection{research}
+
+\entry{In writing}
+  {A Decoupled Random-Sampling Hough Approach to Line Detection in 2D Point Clouds}
+  {Research complete \,\textperiodcentered\, extends to circle detection \,\textperiodcentered\, aimed at the IPOL journal}
+  {}
+
+\entry{Feb 2026}
+  {LitS: A novel Neighbourhood Descriptor for Point Clouds}
+  {arXiv:\href{https://arxiv.org/abs/2602.04838}{2602.04838} \,\textperiodcentered\, with F. F. Rivera, O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís and T. F. Pena}
+  {}
+
+\cvsectionlast{skills}
+
+\entry{Programming}
+  {\normalfont\small Proficient: \LaTeX, Sage, C++, Python \,\textperiodcentered\, Familiar: C, Java, MATLAB, R}
+  {}{}
+
+\entry{Languages}
+  {\normalfont\small Spanish and Galician (native) \,\textperiodcentered\, English (fluent)}
+  {}{}
+
+\vfill
+\begin{center}
+  \raisebox{-2.4pt}{\includegraphics[height=11pt]{\markfile}}\hspace{7pt}{\small\color{soft}Updated July 14, 2026}
+\end{center}
+
+\end{document}

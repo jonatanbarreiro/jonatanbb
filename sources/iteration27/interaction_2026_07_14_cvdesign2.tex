@@ -1,0 +1,155 @@
+% CV design draft 2 of 5 — "ink masthead".
+% The header is a full ink band — the site's warm near-black — wearing the name in
+% paper white, the eyebrow and contact in muted light, the gold bb mark as a seal, and
+% the portrait framed in gold. The body stays light, sections as gold words over thin
+% gold rules. The strongest personality of the five. English only — a dress rehearsal.
+% Compile from this folder: pdflatex interaction_2026_07_14_cvdesign2.tex
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tgpagella}
+\usepackage[a4paper,margin=1.45cm,bottom=1.1cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{ink}{HTML}{1C1A16}
+\definecolor{gold}{HTML}{FAD02A}
+\definecolor{goldink}{HTML}{A8890F}
+\definecolor{soft}{HTML}{55514A}
+\definecolor{paper}{HTML}{FCFBF7}
+\definecolor{lightsoft}{HTML}{CFC8B9}
+\color{ink}
+\hypersetup{colorlinks=true, urlcolor=goldink, linkcolor=goldink}
+
+\pagestyle{empty}
+\setlength{\parskip}{0pt}
+
+\newcommand{\portraitfile}{../../assets/PAKO4.jpg}
+\newcommand{\markfile}{../../assets/bb-mark.pdf}
+\newcommand{\markgold}{interaction_2026_07_14_cvart-mark-gold.pdf}
+
+% section head: the gold lowercase word over a thin gold rule to the margin
+\newcommand{\cvsection}[1]{%
+  \par\vspace{7pt}%
+  \noindent\hbox to\textwidth{{\large\color{goldink}#1\hspace{.85em}%
+    \color{goldink}\leaders\hrule height 3.2pt depth -2.4pt\hfill}}%
+  \par\vspace{4.5pt}}
+
+\newcommand{\entry}[4]{%
+  \noindent
+  \begin{minipage}[t]{2.6cm}\raggedright\small\textbf{\color{goldink}#1}\end{minipage}%
+  \hspace{.45cm}%
+  \begin{minipage}[t]{\dimexpr\textwidth-3.05cm\relax}
+    \textbf{#2}\\[1pt]
+    {\small\color{soft}#3}#4
+  \end{minipage}\par\vspace{5.5pt}}
+\newcommand{\entrybody}[1]{\\[2.5pt]{\small #1}}
+
+\begin{document}
+
+% ---- the masthead: an ink band wearing name, seal and portrait ----
+\noindent{\setlength{\fboxsep}{0pt}\colorbox{ink}{%
+  \begin{minipage}{\textwidth}
+    \vspace{8pt}
+    \hspace{14pt}%
+    \begin{minipage}[c]{\dimexpr\textwidth-6.6cm\relax}
+      {\Huge\color{paper} Jonatan Barreiro Bastos}\\[7pt]
+      {\small\scshape\color{gold} mathematician \textperiodcentered\ predoctoral researcher}\\[10pt]
+      {\small\color{lightsoft} O Porriño, Pontevedra, Spain \,\textperiodcentered\, +34 678 25 50 96 \,\textperiodcentered\, \href{mailto:jonatanbb@tutanota.com}{\color{lightsoft}jonatanbb@tutanota.com}}\\[2pt]
+      {\small\color{lightsoft}\href{https://jonatanbb.xyz}{\color{gold}jonatanbb.xyz} \,\textperiodcentered\, Telegram \href{https://t.me/jonatanbb}{\color{lightsoft}@jonatanbb}}\\[2pt]
+      {\small\color{lightsoft} ORCID \href{https://orcid.org/0000-0003-0922-8055}{\color{lightsoft}0000-0003-0922-8055}}
+    \end{minipage}\hfill
+    \begin{minipage}[c]{1.9cm}
+      \centering\includegraphics[width=1.55cm]{\markgold}
+    \end{minipage}\hfill
+    \begin{minipage}[c]{3.15cm}
+      \raggedleft{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{1.6pt}\fcolorbox{gold}{ink}{\includegraphics[width=2.85cm]{\portraitfile}}}\hspace{12pt}
+    \end{minipage}
+    \vspace{8pt}
+  \end{minipage}}}
+\par\vspace{7pt}
+
+% ---- profile ----
+\noindent Mathematician by training, of the mostly theoretical kind — complex, functional
+and harmonic analysis — with a lasting knack for modelling problems, mathematical or not.
+Four years of applied research on LiDAR point clouds added the practical layer: C++,
+Python, and the everyday craft of building software. Now finishing my PhD and looking to
+move from academia into industry.
+
+\cvsection{experience}
+
+\entry{Apr 2021 --\\Jul 2025}
+  {Senior Research Technician}
+  {CiTIUS — Centro de Investigación en Tecnoloxías Intelixentes, USC}
+  {\entrybody{Predoctoral researcher in the LiDAR group under Dr.~Francisco F. Rivera.
+   Modelled and implemented detection and integration techniques for LiDAR and image
+   point clouds, primarily in C++. Since August 2025, continuing the underlying doctoral
+   research independently.}}
+
+\entry{2018 -- 2019}
+  {Graduate Teaching Assistant}
+  {University of Kansas}
+  {\entrybody{Winter semester — instructor of record for a 33-student section of Math 115
+   Calculus I, coordinated by Dr.~W. Huang and A. Kolasinski. Lectured, designed and
+   graded the tests, ran the Help Room.\\[2pt]
+   Spring semester — teaching assistant for Math 147 Calculus III (Honors), with
+   Prof.~E. Gavosto: the highest calculus course graduate students were entrusted with.
+   Taught classes, graded, ran the Help Room, and handled the 3D printing of student
+   projects.}}
+
+\entry{2017 -- 2018}
+  {Graduate Research Assistant}
+  {University of Kansas}
+  {\entrybody{Research assistant under Prof.~Rodolfo Torres, beginning research in
+   harmonic analysis.}}
+
+\cvsection{education}
+
+\entry{2017 -- 2020}
+  {Master of Arts in Mathematics}
+  {University of Kansas, USA \,\textperiodcentered\, GPA 4.0 / 4.0}
+  {\entrybody{Recipient of the Dean's Doctoral Fellowship.}}
+
+\entry{2015 -- 2016}
+  {Máster en Matemáticas y Aplicaciones}
+  {Universidad Autónoma de Madrid \,\textperiodcentered\, 8.0 / 10.0}
+  {\entrybody{Research initiation track. Thesis: \emph{El Teorema de la Corona} (The
+   Corona Theorem), advised by J. L. Fernández.}}
+
+\entry{2011 -- 2015}
+  {Grado en Matemáticas}
+  {Universidad Autónoma de Madrid \,\textperiodcentered\, 7.6 / 10.0}
+  {\entrybody{Thesis: \emph{La Transformada Rápida de Fourier y Aplicaciones} (The Fast
+   Fourier Transform and Applications), advised by E. Hernández.}}
+
+\cvsection{research}
+
+\entry{In writing}
+  {A Decoupled Random-Sampling Hough Approach to Line Detection in 2D Point Clouds}
+  {Research complete \,\textperiodcentered\, extends to circle detection \,\textperiodcentered\, aimed at the IPOL journal}
+  {}
+
+\entry{Feb 2026}
+  {LitS: A novel Neighbourhood Descriptor for Point Clouds}
+  {arXiv:\href{https://arxiv.org/abs/2602.04838}{2602.04838} \,\textperiodcentered\, with F. F. Rivera, O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís and T. F. Pena}
+  {}
+
+\cvsection{skills}
+
+\entry{Programming}
+  {\normalfont\small Proficient: \LaTeX, Sage, C++, Python \,\textperiodcentered\, Familiar: C, Java, MATLAB, R}
+  {}{}
+
+\entry{Languages}
+  {\normalfont\small Spanish and Galician (native) \,\textperiodcentered\, English (fluent)}
+  {}{}
+
+\vfill
+\begin{center}
+  \raisebox{-2.1pt}{\includegraphics[height=9.5pt]{\markfile}}\hspace{7pt}{\small\color{soft}Updated July 14, 2026}
+\end{center}
+
+\end{document}

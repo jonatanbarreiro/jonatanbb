@@ -17,28 +17,28 @@ Introduced in iteration 18.
 A single illuminating point emits light in two distinct ways. Keeping them
 separate is the mental model the code is built on:
 
-  GLOWING (atmospheric).  The soft radial glow around a point, and — when the
-      point is near something to aim at — the focused cones it throws: at the
-      annulus, and (iteration 20) at the page copy too. "Close" is one measure
-      everywhere: 2·r₋, the annulus' INNER DIAMETER (a point entering the bowl
-      sees the whole interior) — beyond it a point neither cones at nor lights
-      the logo. For the copy, every reflective element (text block, kicker row,
-      photo frame, contact icon) gets a coarse minimal bounding box; a point
-      outside a box within reach cones over the angular interval the box's
-      corners subtend (union over boxes, drawn as true sectors, with a brighter
-      core toward each element); a point INSIDE a box has no direction and
-      glows radially. This is the "air" around the light: how bright the space
-      near it looks. The logo OCCLUDES this layer (a point behind the logo is
-      blocked; near it the glow tightens into cones). Painted by main.js on the
-      cast/reflect canvases. Kept at partial intensity, so it doesn't try to
-      carry the whole effect.
+  GLOWING (atmospheric).  The soft radial glow around a point — and nothing
+      more. The glow is direction-free by design (iteration 22 dropped the old
+      aimed cones — at the annulus, at the copy's bounding boxes — outright):
+      the REFLECTIVE layer already shows exactly where a point lights, so the
+      air around it no longer needs to point anywhere. Every point glows
+      radially out to r₋ (the annulus' inner radius, its natural reach), with a
+      physical falloff — a point lamp over a flat patch, a bright core and a
+      soft tail. The glow is clipped OUT of the logo's disc, so no ambient air
+      enters the annulus (this clip replaces the reach cap the cones relied
+      on). The logo is still TRACKED by the points, but on one measure: a
+      point's boundary/element lighting of the logo is gated by its distance
+      to the annulus — full within one r₋ of the boundary, gone at 2·r₋ (the
+      inner DIAMETER: a point entering the bowl sees the whole interior).
+      Painted by main.js on the cast canvas. Kept at partial intensity, so it
+      doesn't try to carry the whole effect.
 
   REFLECTIVE.  The light actually landing on a surface and lighting it up — the
       page text going gold where a point is near. This is the layer iteration 18
       built. It is INDEPENDENT of the logo: the logo does not block it, and a
-      point in "cone mode" (close to the logo) still lights nearby copy. main.js
-      hands this layer the point field ungated (each point's full wake w) and
-      reflect.js renders it.
+      point close to (or inside) the annulus still lights nearby copy. main.js
+      hands this layer the point field ungated (each point's full wake w, out to
+      2·r₋ — twice the glow's reach) and reflect.js renders it.
 
 
 ------------------------------------------------------------------------------
@@ -150,5 +150,6 @@ GLOWING layer keeps its own colour (--glow #ffe666, deliberately cooler than
 the gold — decided iteration 19), so the ambient air contrasts with the
 reflective light.
 
-A later milestone will let these lit (gold) words behave as light sources of
-their own, casting reflective light on their neighbours.
+Lit (gold) words as light sources of their own — casting reflective light on
+their neighbours — was tried in iteration 22 and dropped in 23: a gold word is
+copy, not a lamp. They keep their colour and cast nothing.

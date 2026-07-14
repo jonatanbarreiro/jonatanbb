@@ -1,0 +1,161 @@
+% CV design draft 5 of 5 — "cards and chips".
+% The site's components sampled onto paper: section heads led by a solid gold block
+% (the reference CV's motif, in the site's gold), the research entries as the site's
+% pub cards — paper ground, hairline border, thick gold left edge — and the skills as
+% lit/dim chips. The portrait sits on the LEFT, wearing the ink band frame, with the
+% opening paragraph to its right. English only — a dress rehearsal.
+% Compile from this folder: pdflatex interaction_2026_07_14_cvdesign5.tex
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tgpagella}
+\usepackage[a4paper,margin=1.45cm,bottom=1.1cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{ink}{HTML}{1C1A16}
+\definecolor{gold}{HTML}{FAD02A}
+\definecolor{goldink}{HTML}{A8890F}
+\definecolor{soft}{HTML}{55514A}
+\definecolor{golddim}{HTML}{FDEAA1}   % the site's --lit-dim, flattened onto white
+\definecolor{cardbg}{HTML}{FCFBF7}    % the site's frosted paper panel
+\definecolor{cardline}{HTML}{DEDBD2}  % the site's hairline, flattened onto white
+\color{ink}
+\hypersetup{colorlinks=true, urlcolor=goldink, linkcolor=goldink}
+
+\pagestyle{empty}
+\setlength{\parskip}{0pt}
+
+\newcommand{\portraitfile}{../../assets/PAKO4.jpg}
+\newcommand{\markfile}{../../assets/bb-mark.pdf}
+
+% section head: a solid gold block leading the ink word (the reference CV's bar,
+% recast in the site's gold)
+\newcommand{\cvsection}[1]{%
+  \par\vspace{7pt}%
+  \noindent{\color{gold}\rule[-1.2pt]{1.9em}{9.4pt}}\hspace{.65em}{\large #1}%
+  \par\vspace{4.5pt}}
+
+% a pub card: paper ground, hairline border, a thick gold left edge (the box is
+% measured first so the gold edge runs its exact height)
+\newsavebox{\cardbox}
+\newcommand{\pubcard}[2]{%
+  \savebox{\cardbox}{\begin{minipage}{\dimexpr\textwidth-30pt\relax}
+    \vspace{4pt}\textbf{#1}\\[2pt]{\small\color{soft}#2}\vspace{4pt}
+  \end{minipage}}%
+  \noindent{\setlength{\fboxsep}{0pt}\fcolorbox{cardline}{cardbg}{%
+    \textcolor{gold}{\rule[-\dp\cardbox]{3pt}{\dimexpr\ht\cardbox+\dp\cardbox\relax}}%
+    \hspace{10pt}\usebox{\cardbox}\hspace{8pt}}}\par\vspace{4.5pt}}
+
+% skill chips: lit (full gold) and dim (half-lit gold), sharp-cornered like the site's
+\newcommand{\chiplit}[1]{{\setlength{\fboxsep}{3.2pt}\colorbox{gold}{\footnotesize #1}}}
+\newcommand{\chipdim}[1]{{\setlength{\fboxsep}{3.2pt}\colorbox{golddim}{\footnotesize #1}}}
+
+\newcommand{\entry}[4]{%
+  \noindent
+  \begin{minipage}[t]{2.6cm}\raggedright\small\textbf{#1}\end{minipage}%
+  \hspace{.45cm}%
+  \begin{minipage}[t]{\dimexpr\textwidth-3.05cm\relax}
+    \textbf{#2}\\[1pt]
+    {\small\color{soft}#3}#4
+  \end{minipage}\par\vspace{5.5pt}}
+\newcommand{\entrybody}[1]{\\[2.5pt]{\small #1}}
+
+\begin{document}
+
+% ---- opening: the ink-banded portrait LEFT, name + profile to its right ----
+\noindent
+\begin{minipage}[t]{3.15cm}
+  % the ink band frame: as thick as a section bar, the site's photo treatment
+  \raisebox{\dimexpr-\height+\ht\strutbox}{%
+    \setlength{\fboxsep}{0pt}\setlength{\fboxrule}{3.2pt}\fcolorbox{ink}{white}{\includegraphics[width=2.9cm]{\portraitfile}}}
+\end{minipage}\hfill
+\begin{minipage}[t]{\dimexpr\textwidth-3.75cm\relax}
+  {\Huge Jonatan Barreiro Bastos}\\[7pt]
+  {\small\scshape\color{goldink} mathematician \textperiodcentered\ predoctoral researcher}\\[9pt]
+  Mathematician by training, of the mostly theoretical kind — complex, functional
+  and harmonic analysis — with a lasting knack for modelling problems, mathematical
+  or not. Four years of applied research on LiDAR point clouds added the practical
+  layer: C++, Python, and the everyday craft of building software. Now finishing my
+  PhD and looking to move from academia into industry.
+\end{minipage}
+\par\vspace{11pt}
+\begin{center}
+  {\small O Porriño, Pontevedra, Spain \,\textperiodcentered\, +34 678 25 50 96 \,\textperiodcentered\, \href{mailto:jonatanbb@tutanota.com}{jonatanbb@tutanota.com}}\\[2pt]
+  {\small\href{https://jonatanbb.xyz}{jonatanbb.xyz} \,\textperiodcentered\, Telegram \href{https://t.me/jonatanbb}{@jonatanbb} \,\textperiodcentered\, ORCID \href{https://orcid.org/0000-0003-0922-8055}{0000-0003-0922-8055}}
+\end{center}
+\vspace{2pt}
+
+\cvsection{experience}
+
+\entry{Apr 2021 --\\Jul 2025}
+  {Senior Research Technician}
+  {CiTIUS — Centro de Investigación en Tecnoloxías Intelixentes, USC}
+  {\entrybody{Predoctoral researcher in the LiDAR group under Dr.~Francisco F. Rivera.
+   Modelled and implemented detection and integration techniques for LiDAR and image
+   point clouds, primarily in C++. Since August 2025, continuing the underlying doctoral
+   research independently.}}
+
+\entry{2018 -- 2019}
+  {Graduate Teaching Assistant}
+  {University of Kansas}
+  {\entrybody{Winter semester — instructor of record for a 33-student section of Math 115
+   Calculus I, coordinated by Dr.~W. Huang and A. Kolasinski. Lectured, designed and
+   graded the tests, ran the Help Room.\\[2pt]
+   Spring semester — teaching assistant for Math 147 Calculus III (Honors), with
+   Prof.~E. Gavosto: the highest calculus course graduate students were entrusted with.
+   Taught classes, graded, ran the Help Room, and handled the 3D printing of student
+   projects.}}
+
+\entry{2017 -- 2018}
+  {Graduate Research Assistant}
+  {University of Kansas}
+  {\entrybody{Research assistant under Prof.~Rodolfo Torres, beginning research in
+   harmonic analysis.}}
+
+\cvsection{education}
+
+\entry{2017 -- 2020}
+  {Master of Arts in Mathematics}
+  {University of Kansas, USA \,\textperiodcentered\, GPA 4.0 / 4.0}
+  {\entrybody{Recipient of the Dean's Doctoral Fellowship.}}
+
+\entry{2015 -- 2016}
+  {Máster en Matemáticas y Aplicaciones}
+  {Universidad Autónoma de Madrid \,\textperiodcentered\, 8.0 / 10.0}
+  {\entrybody{Research initiation track. Thesis: \emph{El Teorema de la Corona} (The
+   Corona Theorem), advised by J. L. Fernández.}}
+
+\entry{2011 -- 2015}
+  {Grado en Matemáticas}
+  {Universidad Autónoma de Madrid \,\textperiodcentered\, 7.6 / 10.0}
+  {\entrybody{Thesis: \emph{La Transformada Rápida de Fourier y Aplicaciones} (The Fast
+   Fourier Transform and Applications), advised by E. Hernández.}}
+
+\cvsection{research}
+
+\pubcard{A Decoupled Random-Sampling Hough Approach to Line Detection in 2D Point Clouds}
+  {In writing \,\textperiodcentered\, research complete \,\textperiodcentered\, extends to circle detection \,\textperiodcentered\, aimed at the IPOL journal}
+
+\pubcard{LitS: A novel Neighbourhood Descriptor for Point Clouds}
+  {arXiv:\href{https://arxiv.org/abs/2602.04838}{2602.04838} \,\textperiodcentered\, Feb 2026 \,\textperiodcentered\, with F. F. Rivera, O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís and T. F. Pena}
+
+\cvsection{skills}
+
+\entry{Programming}
+  {\normalfont\small\chiplit{\LaTeX}\hspace{2pt}\chiplit{Sage}\hspace{2pt}\chiplit{C++}\hspace{2pt}\chiplit{Python}\hspace{6pt}\chipdim{C}\hspace{2pt}\chipdim{Java}\hspace{2pt}\chipdim{MATLAB}\hspace{2pt}\chipdim{R}}
+  {}{}
+
+\entry{Languages}
+  {\normalfont\small Spanish and Galician (native) \,\textperiodcentered\, English (fluent)}
+  {}{}
+
+\vfill
+\begin{center}
+  \raisebox{-2.1pt}{\includegraphics[height=9.5pt]{\markfile}}\hspace{7pt}{\small\color{soft}Updated July 14, 2026}
+\end{center}
+
+\end{document}

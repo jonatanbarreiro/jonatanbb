@@ -45,8 +45,9 @@ inside point clouds.
 ## The CV
 
 The site also serves a print CV, in English and Spanish, and this repo builds it:
-`assets/cv-en/` and `assets/cv-es/` hold the LaTeX sources and a one-command build
-script each. Same palette as the site — ink, gold, light — none of the lighting.
+the LaTeX sources live in `assets/` (`main-en.tex`, `main-es.tex`) with a single
+`cv-build` command for both. Same palette as the site — ink, gold, light — none
+of the lighting.
 
 ## What it took
 
