@@ -4,11 +4,16 @@
 % retrato arriba a la izquierda; de su esquina inferior izquierda baja la tubería
 % principal por el margen; cada cabecera de sección es un NUDO — la b del sitio girada
 % 225°, su barra cruzando la tubería hacia el nombre, su barriga pasando por debajo,
-% su palo largo curvándose 45° para continuar la tubería hacia abajo. En aptitudes se
-% quita el palo largo y la barra señala el nombre con el gancho del sitio; la tubería
-% termina. El lado superior del marco atraviesa su esquina superior derecha hasta la
-% 'J' de Jonatan, dibujada como final de tubería (la punta del sitio en su cola); las
-% esquinas libres llevan giros anudados. Arte: los assets cv-*.pdf junto a este
+% su palo largo curvándose 45° para continuar la tubería hacia abajo. En aptitudes
+% se quita el palo largo y la barra señala el nombre con el gancho del sitio; la
+% tubería termina. Las dos esquinas libres llevan giros anudados a media escala (la
+% vertical encima arriba a la izquierda, la horizontal abajo a la derecha), la
+% superior derecha queda como junta lisa, y el lado inferior pasa por debajo de la
+% tubería principal. En cada cruce la tubería que pasa por debajo llega a tocar la
+% de encima, atenuándose sutilmente contra ella en su último trazo, al entrar y al
+% salir; en los nudos la línea a 45° de la barriga sigue recta bajo la barra, con lo
+% que el cruce queda centrado. El nombre va en tinta lisa, con aire tras el marco —
+% las tuberías se quedan en su lado. Arte: los assets cv-*.pdf junto a este
 % archivo, regenerados por cv-art.js (Chrome). Las posiciones de sección viajan por
 % el aux con \pdfsavepos: compilar con ./cv-build — hace dos pasadas e instala éste
 % como cv-es.pdf, el asset que sirve la página.
@@ -58,35 +63,33 @@
 
 \AddToShipoutPictureFG{%
   \ifcsname pipeftopy\endcsname
-    \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+1.7pt-18.13pt\relax}%
-      \raisebox{\dimexpr\csname pipeftopy\endcsname sp+\frameH-1.7pt-14.90pt\relax}{\includegraphics[height=33.03pt]{cv-corner.pdf}}}%
-    \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+\frameW-1.7pt-4.54pt\relax}%
-      \raisebox{\dimexpr\csname pipeftopy\endcsname sp+1.7pt-18.13pt\relax}{\rotatebox[origin=c]{180}{\includegraphics[height=33.03pt]{cv-corner.pdf}}}}%
-    \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+\frameW-1.7pt-4.53pt\relax}%
-      \raisebox{\dimexpr\csname pipeftopy\endcsname sp+\frameH-1.7pt-21.37pt\relax}{\includegraphics[height=25.26pt]{cv-jpipe.pdf}}}%
+    \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+1.7pt-12.30pt\relax}%
+      \raisebox{\dimexpr\csname pipeftopy\endcsname sp+\frameH-1.7pt-4.53pt\relax}{\includegraphics[height=16.84pt]{cv-corner.pdf}}}%
+    \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+\frameW-1.7pt-5.18pt\relax}%
+      \raisebox{\dimexpr\csname pipeftopy\endcsname sp+1.7pt-12.30pt\relax}{\rotatebox[origin=c]{180}{\includegraphics[height=21.05pt]{cv-corner-br.pdf}}}}%
+    % el lado inferior se atenúa bajo la tubería principal, sobre la propia regla
+    \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+3.4pt\relax}%
+      \raisebox{\csname pipeftopy\endcsname sp}{\includegraphics[height=3.4pt]{cv-underpass.pdf}}}%
   \fi}
 
-% la 'o' de Jonatan, algo mayor, con las dos b del logo — en oro — en la mitad
-% superior de su interior
-\newcommand{\bbo}{\ooalign{\hss\raisebox{5.3pt}{\includegraphics[height=5.7pt]{cv-bbo-gold.pdf}}\hss\cr\scalebox{1.12}{o}}}
-
 % un icono de contacto dorado sobre la línea de texto
-\newcommand{\cvic}[1]{\raisebox{-1.6pt}{\includegraphics[height=8.8pt]{#1}}\hspace{3.5pt}}
+\newcommand{\cvic}[1]{\raisebox{-3.7pt}{\includegraphics[height=13pt]{#1}}\hspace{3.5pt}}
 
 % cabecera de sección: la barra del nudo llega desde la tubería y su giro señala el nombre
 \newcommand{\cvsection}[1]{%
   \par\vspace{9pt}%
-  \noindent\knotart\hspace{.55em}{\large\color{gold}#1}%
+  \noindent\knotart\hspace{.55em}{\Large\color{gold}#1}%
   \par\vspace{5pt}}
 \newcommand{\cvsectionlast}[1]{%
   \par\vspace{9pt}%
-  \noindent\pipemark{skills}\knotskillsart\hspace{.55em}{\large\color{gold}#1}%
+  \noindent\pipemark{skills}\knotskillsart\hspace{.55em}{\Large\color{gold}#1}%
   \par\vspace{5pt}}
 
-% entrada de línea temporal, sangrada para dejar paso a la tubería del margen
+% entrada de línea temporal, sangrada para dejar paso a la tubería del margen;
+% las fechas van alineadas a la derecha, pegadas al cuerpo que fechan
 \newcommand{\entry}[4]{%
   \noindent\hspace{12pt}%
-  \begin{minipage}[t]{2.45cm}\raggedright\small\textbf{#1}\end{minipage}%
+  \begin{minipage}[t]{2.45cm}\raggedleft\small\textbf{#1}\end{minipage}%
   \hspace{.4cm}%
   \begin{minipage}[t]{\dimexpr\textwidth-3.25cm\relax}
     \textbf{#2}\\[1pt]
@@ -96,13 +99,15 @@
 
 \begin{document}
 
-% ---- apertura: el retrato con marco dorado a la izquierda; la tubería-J escribe la
-%      primera letra del nombre, y el texto arranca en la 'o' sobre su misma línea base ----
+% ---- apertura: el retrato con marco dorado a la izquierda (alzado la profundidad
+%      del fbox para que su base real quede en la línea "ftop" a la que va atado el
+%      sistema de tuberías); la barra-J corona la 'J' negra, cuyo remate se esconde
+%      bajo ella ----
 \noindent\pipemark{ftop}%
-{\setlength{\fboxsep}{2.6pt}\setlength{\fboxrule}{3.4pt}\fcolorbox{gold}{white}{\includegraphics[width=2.9cm]{\portraitfile}}}%
-\hspace{14pt}%
-\raisebox{\dimexpr\frameH-17.57pt\relax}{\begin{minipage}[t]{\dimexpr\textwidth-\frameW-14pt\relax}
-  {\Huge\hspace{10pt}\bbo natan Barreiro Bastos}\\[8pt]
+{\setlength{\fboxsep}{2.6pt}\setlength{\fboxrule}{3.4pt}\raisebox{\dimexpr\fboxsep+\fboxrule\relax}{\fcolorbox{gold}{white}{\includegraphics[width=2.9cm]{\portraitfile}}}}%
+\hspace{26pt}%
+\raisebox{\dimexpr\frameH-17.86pt\relax}{\begin{minipage}[t]{\dimexpr\textwidth-\frameW-26pt\relax}
+  {\Huge Jonatan Barreiro Bastos}\\[8pt]
   {\small\scshape\color{soft} matemático \textperiodcentered\ investigador predoctoral}\\[10pt]
   Matemático de formación, de perfil sobre todo teórico —análisis complejo,
   funcional y armónico—, con una maña de siempre para modelar problemas, matemáticos
@@ -110,14 +115,16 @@
   la capa práctica: C++, Python y el oficio diario de construir software. Ahora
   termino el doctorado y busco pasar de la academia a la industria.
 \end{minipage}}
-\par\vspace{9pt}
-% ---- el contacto, centrado: los iconos dorados llevan los campos, el texto queda en tinta ----
+\par\vspace{14pt}
+% ---- el contacto, centrado bajo la columna de la entrada (no bajo la página):
+%      los iconos dorados llevan los campos, el texto queda en tinta ----
 {\hypersetup{urlcolor=ink}
-\begin{center}
-  {\small \cvic{cv-ic-pin.pdf}O Porriño, Pontevedra \,\textperiodcentered\, \cvic{cv-ic-phone.pdf}+34 678 25 50 96 \,\textperiodcentered\, \cvic{cv-ic-tuta.pdf}\href{mailto:jonatanbb@tutanota.com}{jonatanbb@tutanota.com}}\\[3pt]
-  {\small \raisebox{-2pt}{\includegraphics[height=9.2pt]{cv-ic-bb.pdf}}\hspace{3.5pt}\href{https://jonatanbb.xyz}{jonatanbb.xyz} \,\textperiodcentered\, \cvic{cv-ic-tg.pdf}\href{https://t.me/jonatanbb}{@jonatanbb} \,\textperiodcentered\, \cvic{cv-ic-orcid.pdf}\href{https://orcid.org/0000-0003-0922-8055}{0000-0003-0922-8055}}
-\end{center}}
-\vspace{1pt}
+\noindent\hspace*{\dimexpr\frameW+26pt\relax}%
+\begin{minipage}{\dimexpr\textwidth-\frameW-26pt\relax}\centering
+  {\small \cvic{cv-ic-pin.pdf}O Porriño, Pontevedra \,\textperiodcentered\, \cvic{cv-ic-phone.pdf}+34 678 25 50 96 \,\textperiodcentered\, \cvic{cv-ic-tg.pdf}\href{https://t.me/jonatanbb}{@jonatanbb}}\\[3pt]
+  {\small \cvic{cv-ic-tuta.pdf}\href{mailto:jonatanbb@tutanota.com}{jonatanbb@tutanota.com} \,\textperiodcentered\, \cvic{cv-ic-www.pdf}\href{https://jonatanbb.xyz}{jonatanbb.xyz}}
+\end{minipage}\par}
+\vspace{4pt}
 
 \cvsection{experiencia}
 

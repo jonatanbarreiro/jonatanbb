@@ -20,10 +20,12 @@ Jonatan writes a deliberate prompt, you carry it out.
   copy*). No interaction files, no symlinks: real files, ready to ship.
 - `assets/` — the single asset store for the whole site (see *Assets*). It also
   hosts the CV build: `main-en.tex`, `main-es.tex` and `cv-build` (see *The CV*).
-- `gallery/` — one screenshot per iteration (`iterationNNN.png`, chronological),
-  plus `unsourced/` (`iteration-N.png`) for captures that predate the kept source.
-  A quick visual tour of the build. Generated at wrap-up at a fixed frame (see
-  *Rendering & gallery captures*).
+- `gallery/` — the screenshots per iteration, chronological: `iterationNNN.png`
+  through iteration 26, then — the site having day & night modes — one pair per
+  iteration, `iterationNNNW.png` (day, the default) and `iterationNNNB.png`
+  (night). Plus `unsourced/` (`iteration-N.png`) for captures that predate the
+  kept source. A quick visual tour of the build. Generated at wrap-up at a fixed
+  frame (see *Rendering & gallery captures*).
 
 
 ## Sessions and `prompts/`
@@ -75,9 +77,10 @@ behavior, or contents). An iteration may run across several turns.
      iteration folder holding the iteration's *entire* exchange — every turn in
      order, each prompt and final answer recorded **verbatim**, in the same labeled
      shape as the session log.
-  3. **Snapshot the site.** Render `gallery/iterationNNN.png` at the same frame as
-     the existing gallery shots (see *Rendering & gallery captures*). The point
-     scatter is RNG-driven by design — do not stage or chase a particular
+  3. **Snapshot the site.** Render the gallery pair — `gallery/iterationNNNW.png`
+     (day, the default theme) and `gallery/iterationNNNB.png` (night) — at the same
+     frame as the existing gallery shots (see *Rendering & gallery captures*). The
+     point scatter is RNG-driven by design — do not stage or chase a particular
      arrangement; only the frame must match.
   4. **Refresh the live copy.** Bring `sources/current/` up to this iteration's
      source (see *The live copy*) — the next iteration starts from it.
@@ -147,6 +150,10 @@ reach it with `NODE_PATH=/usr/local/lib/node_modules`. Gallery shots are **full-
 long screenshots**: viewport width 1024, deviceScaleFactor 1, `fullPage` from scrollY 0
 (the fixed logo renders once at the top — no stitching, no duplication). Iterations that
 carry the ignition pulse are captured mid-pulse (~2.25s after load) so the wave shows.
+Since the site gained day & night modes (iteration 27), every wrap-up takes the pair:
+the day shot as-is (`iterationNNNW.png`), and the night one (`iterationNNNB.png`) by
+seeding `localStorage['jbb:night'] = 'on'` before load (Playwright `addInitScript`),
+so the page boots into night through its own preference recall.
 
 
 ## Assets
