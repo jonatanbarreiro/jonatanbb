@@ -8,11 +8,12 @@
 % se quita el palo largo y la barra señala el nombre con el gancho del sitio; la
 % tubería termina. Las dos esquinas libres llevan giros anudados a media escala (la
 % vertical encima arriba a la izquierda, la horizontal abajo a la derecha), la
-% superior derecha queda como junta lisa, y el lado inferior pasa por debajo de la
-% tubería principal. En cada cruce la tubería que pasa por debajo llega a tocar la
-% de encima, atenuándose sutilmente contra ella en su último trazo, al entrar y al
-% salir; en los nudos la línea a 45° de la barriga sigue recta bajo la barra, con lo
-% que el cruce queda centrado. El nombre va en tinta lisa, con aire tras el marco —
+% superior derecha se prolonga en un palo saliente — gancho hacia abajo, señalando
+% el nombre —, y el lado inferior pasa por debajo de la tubería principal. En cada
+% cruce la tubería que pasa por debajo llega a tocar la de encima, atenuándose
+% sutilmente contra ella en su último trazo, al entrar y al salir; en los nudos la
+% tubería recorre el nudo por la x del propio buceo de la barriga, con lo que cruza
+% la barra justo donde reaparece por debajo. El nombre va en tinta lisa, con aire tras el marco —
 % las tuberías se quedan en su lado. Arte: los assets cv-*.pdf junto a este
 % archivo, regenerados por cv-art.js (Chrome). Las posiciones de sección viajan por
 % el aux con \pdfsavepos: compilar con ./cv-build — hace dos pasadas e instala éste
@@ -43,8 +44,8 @@
 \newcommand{\portraitfile}{PAKO4.jpg}
 
 % ---- el sistema de tuberías (véase main-en.tex para la geometría comentada) ----
-\newcommand{\knotart}{\kern-10.60pt\raisebox{-33.77pt}[0pt][0pt]{\includegraphics[height=55.70pt]{cv-knot.pdf}}}
-\newcommand{\knotskillsart}{\kern-10.60pt\raisebox{-20.81pt}[0pt][0pt]{\includegraphics[height=42.74pt]{cv-knot-skills.pdf}}}
+\newcommand{\knotart}{\kern-16.98pt\raisebox{-33.77pt}[0pt][0pt]{\includegraphics[height=55.70pt]{cv-knot.pdf}}}
+\newcommand{\knotskillsart}{\kern-16.98pt\raisebox{-20.81pt}[0pt][0pt]{\includegraphics[height=42.74pt]{cv-knot-skills.pdf}}}
 
 \makeatletter
 \newcommand{\pipemark}[1]{\pdfsavepos
@@ -67,6 +68,10 @@
       \raisebox{\dimexpr\csname pipeftopy\endcsname sp+\frameH-1.7pt-4.53pt\relax}{\includegraphics[height=16.84pt]{cv-corner.pdf}}}%
     \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+\frameW-1.7pt-5.18pt\relax}%
       \raisebox{\dimexpr\csname pipeftopy\endcsname sp+1.7pt-12.30pt\relax}{\rotatebox[origin=c]{180}{\includegraphics[height=21.05pt]{cv-corner-br.pdf}}}}%
+    % superior derecha: el lado superior se prolonga en el palo saliente, gancho
+    % hacia abajo, señalando el nombre
+    \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+\frameW-3.4pt\relax}%
+      \raisebox{\dimexpr\csname pipeftopy\endcsname sp+\frameH-1.7pt-2.99pt\relax}{\includegraphics[height=4.69pt]{cv-stick.pdf}}}%
     % el lado inferior se atenúa bajo la tubería principal, sobre la propia regla
     \AtPageLowerLeft{\hspace{\dimexpr 1.45cm+3.4pt\relax}%
       \raisebox{\csname pipeftopy\endcsname sp}{\includegraphics[height=3.4pt]{cv-underpass.pdf}}}%
@@ -197,7 +202,7 @@
 % la línea de cierre: la marca bb a su izquierda, un guiño al sitio en vez de una frase
 \vfill
 \begin{center}
-  \raisebox{-2.4pt}{\includegraphics[height=11pt]{bb-mark.pdf}}\hspace{7pt}{\small\color{soft}Actualizado el 14 de julio de 2026}
+  \raisebox{-2.4pt}{\includegraphics[height=11pt]{cv-ic-bb.pdf}}\hspace{7pt}{\small\color{soft}Actualizado el 14 de julio de 2026}
 \end{center}
 
 \end{document}

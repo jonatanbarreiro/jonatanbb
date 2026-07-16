@@ -8,14 +8,15 @@
 // belly loops under, and its long stick curves 45° into the band to carry the
 // pipe on down. Per Jonatan's markup the knots are scaled 1.5x (stroke kept).
 // At every crossing the under-pipe touches the pipe above and dims against
-// it — a subtle gold-to-umber ramp over its last stroke (10.5u), entering
-// and leaving — just enough shadow to give the piping personality. In the
-// knots the belly runs its 45° line straight under the bar (no north turn),
-// so the under-crossing sits more centred along the bar; the margin pipe
-// above and below the knot stays on one x.
+// it — a subtle gold shading over its last stroke (10.5u), entering and
+// leaving — just enough shadow to give the piping personality. In the knots
+// the belly runs its 45° line straight under the bar (no north turn), and the
+// pipe rides the dive's own x (19.7u) through the whole knot — entering from
+// above, re-emerging below and turning back down all on that line — so the
+// crossing reads as one pipe passing under the bar.
 const { chromium } = require('playwright-core');
 const GOLD = '#fad02a';
-const DARK = '#7a6516';   // the dive shade: gold at ~half light
+const DARK = '#bfa021';   // the dive shade: gold at ~3/4 light — a shadow, not a blackout
 // the fade of an under-pipe into its crossing: gold at distance, DARK at
 // contact; pad spread holds the end colours past the stops
 const FADE = (id, x1, y1, x2, y2) => `<linearGradient id="${id}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" gradientUnits="userSpaceOnUse" spreadMethod="pad">
@@ -25,34 +26,45 @@ const IC = `fill="none" stroke="${GOLD}" stroke-width="1.5" stroke-linecap="butt
 
 const jobs = [
 
-// ---- the section knot (bar centreline y=0, pipe band centred on x=0): the
-//      pipe dims into the bar from above on the pipe line; the belly's 45°
-//      line runs straight under the bar — diving at x=19.7, centred along
-//      the bar's reach — dimming over its last stroke. The belly is drawn
-//      first and overshoots into the bar band; the bar repaints over it ----
+// ---- the section knot (bar centreline y=0, pipe band centred on x=19.7 —
+//      the belly's dive x, so the pipe crosses the bar right where it
+//      re-emerges below): the pipe dims into the bar from above; the belly's
+//      45° line runs straight under the bar, dimming over its last stroke;
+//      the long stick's 45° turn lands back on the same x to carry the pipe
+//      down. The belly is drawn first and overshoots into the bar band; the
+//      bar repaints over it ----
 { name: 'cv-knot', w: 130, h: 172, svg: `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-38 -60 130 172">
-  <defs>${FADE('kin', 0, -15.75, 0, -5.25)}${FADE('kdg', -10.5, 0, 0, 0)}</defs>
-  <rect x="-6" y="-60" width="12" height="172" fill="#ffffff"/>
-  <rect x="-5.25" y="-60" width="10.5" height="44.25" fill="${GOLD}"/>
-  <rect x="-5.25" y="-15.75" width="10.5" height="10.5" fill="url(#kin)"/>
+  <defs>${FADE('kin', 19.7, -15.75, 19.7, -5.25)}${FADE('kdg', -10.5, 0, 0, 0)}</defs>
+  <rect x="13.7" y="-60" width="12" height="172" fill="#ffffff"/>
+  <rect x="14.45" y="-60" width="10.5" height="44.25" fill="${GOLD}"/>
+  <rect x="14.45" y="-15.75" width="10.5" height="10.5" fill="url(#kin)"/>
   <path d="M24.95 0 L-28.2 53.15 L-28.2 -5.25" ${STROKE}/>
   <rect x="-10.5" y="-5.25" width="18.5" height="10.5" fill="url(#kdg)" transform="translate(19.7 5.25) rotate(-45)"/>
-  <path d="M-28.2 0 L76.8 0 L0 76.8 L0 112" ${STROKE}/>
+  <path d="M-28.2 0 L76.8 0 L19.7 57.1 L19.7 112" ${STROKE}/>
 </svg>` },
 
 // ---- the skills knot: no stem — the bar ends in the site's hook, tip in line
 //      with the other knots' turn apexes (x = 89.5), and the pipe ends here ----
 { name: 'cv-knot-skills', w: 130, h: 132, svg: `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-38 -60 130 132">
-  <defs>${FADE('sin', 0, -15.75, 0, -5.25)}${FADE('sdg', -10.5, 0, 0, 0)}</defs>
-  <rect x="-6" y="-60" width="12" height="132" fill="#ffffff"/>
-  <rect x="-5.25" y="-60" width="10.5" height="44.25" fill="${GOLD}"/>
-  <rect x="-5.25" y="-15.75" width="10.5" height="10.5" fill="url(#sin)"/>
+  <defs>${FADE('sin', 19.7, -15.75, 19.7, -5.25)}${FADE('sdg', -10.5, 0, 0, 0)}</defs>
+  <rect x="13.7" y="-60" width="12" height="132" fill="#ffffff"/>
+  <rect x="14.45" y="-60" width="10.5" height="44.25" fill="${GOLD}"/>
+  <rect x="14.45" y="-15.75" width="10.5" height="10.5" fill="url(#sin)"/>
   <path d="M24.95 0 L-28.2 53.15 L-28.2 -5.25" ${STROKE}/>
   <rect x="-10.5" y="-5.25" width="18.5" height="10.5" fill="url(#sdg)" transform="translate(19.7 5.25) rotate(-45)"/>
   <path d="M-28.2 0 L65.2 0" ${STROKE}/>
   <polygon points="65.2,-5.25 89.5,-5.25 67.9,9.22 65.2,5.25" fill="${GOLD}"/>
+</svg>` },
+
+// ---- the frame's top-right salient stick: the top side runs on past the
+//      corner and ends in the site's hook, down, pointing at the name — the
+//      skills knot's own ending, a shade longer ----
+{ name: 'cv-stick', w: 84.3, h: 14.47, svg: `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5.25 84.3 14.47">
+  <rect x="0" y="-5.25" width="60" height="10.5" fill="${GOLD}"/>
+  <polygon points="60,-5.25 84.3,-5.25 62.7,9.22 60,5.25" fill="${GOLD}"/>
 </svg>` },
 
 // ---- the TOP LEFT knotty corner, half-scale: the top side dips under the
