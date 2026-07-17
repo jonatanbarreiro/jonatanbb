@@ -1,28 +1,31 @@
-// jonatanbb.xyz — REFLECTIVE lighting of the page copy
+// jonatanbb.xyz —REFLECTIVE lighting of the page copy
 // The site's illumination has two layers. The GLOWING layer is the atmospheric radial glow around a
 // point, painted on the cast canvas out to r₋ and clipped out of the logo disc. This file is the
-// other layer: REFLECTIVE light — the points actually shading the page ink gold, out to 2·r₋. It is
+// other layer: REFLECTIVE light —the points actually shading the page ink gold, out to 2·r₋. It is
 // deliberately independent of the logo (main.js hands it the point field un-gated, un-clipped), so a
 // point just outside the annulus still shades nearby copy well inside it though its glow never enters.
-// The illuminating points are the only light sources — gold copy stays gold but casts nothing.
+// The illuminating points are the only light sources —gold copy stays gold but casts nothing.
 //
 // How: every word (and the section-rule bars) is rasterised into a coverage mask at its own PAGE
-// rect — the mask covers the whole page and is uploaded once per reflow, scrolling only moves a
-// shader uniform; a WebGL fragment shader reads edge normals from that coverage and shades each
-// glyph ink→gold by how lit it is, ADDED over the real DOM text (which is never hidden — so it
-// degrades to plain copy if a GPU ever drops the context, and section rules / links keep
-// rendering). Word rects and baselines are taken from real font metrics and recached on any
-// reflow (load / font / resize / zoom), so the gold stays registered with the text.
+// rect —the mask covers the whole page and is uploaded once per reflow. The canvas itself is
+// PAGE-ANCHORED too: absolutely positioned over the whole page, it scrolls with the copy in the
+// compositor, so a pure scroll repaints nothing and the gold can never lag the text (mobile's
+// async scrolling outruns any scroll-event repaint of a fixed canvas). A WebGL fragment shader
+// reads edge normals from the coverage and shades each glyph ink→gold by how lit it is, ADDED
+// over the real DOM text (which is never hidden —so it degrades to plain copy if a GPU ever
+// drops the context, and section rules / links keep rendering). Word rects and baselines are
+// taken from real font metrics and recached on any reflow (load / font / resize / zoom), so the
+// gold stays registered with the text.
 //
 // Selection & click borrow the interaction idea: selecting text turns those words gold inside a
 // hollow, sharp-cornered black outline (replacing the native highlight); clicking a word toggles it
 // gold. Both golds are interaction light, so the master light (bulb) gates them: lights off, a click
-// does nothing and a selection shows only the box. The gold is the word's own colour — it lights no
-// neighbours (gold words as light sources was tried in iteration 22 and dropped in 23).
+// does nothing and a selection shows only the box. The gold is the word's own colour —it lights
+// no neighbours; a gold word is copy, not a lamp.
 //
 // The ignition pulse also lights this layer: the shader carries the wave's envelope (announcer ->
 // front -> requiem, the same three circumferences the logo reads), so every masked pixel rises as
-// the wave passes — raked from the i-dot's side, resolving to flat full gold at the front — and
+// the wave passes —raked from the i-dot's side, resolving to flat full gold at the front— and
 // hands back to the steady point light as it drains.
 (function () {
   "use strict";
@@ -31,22 +34,21 @@
 
   // ---------- WebGL ----------
   let gl = null, glcv = null, mcv = null, mc = null, tex = null, prog = null, glok = true, prepped = false;
-  const uni = {}; let words = [], bars = [], tips = [], frames = [], icons = [], rules = [], lastKey = "";
+  const uni = {}; let words = [], bars = [], tips = [], frames = [], icons = [], rules = [], lastKey = "", lastScene = "";
   const MAXL = 24;   // shader light slots (the illuminating points, each reaching 2·r₋)
   const VERT = "attribute vec2 p; varying vec2 uv;" +
     "void main(){ uv = vec2((p.x+1.0)*0.5, (1.0-p.y)*0.5); gl_Position = vec4(p,0.0,1.0); }";
   const FRAG =
-    // highp where available: the mask coords now span the whole PAGE (thousands of
+    // highp where available: the mask coords span the whole PAGE (thousands of
     // px), and mediump's half-float ulp at that range is a visible fraction of a texel
     "#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n" +
     "varying vec2 uv; uniform sampler2D tex; uniform vec2 res;" +
     "uniform vec2 lp[" + MAXL + "]; uniform float li[" + MAXL + "]; uniform float lr[" + MAXL + "]; uniform int ln;" +
     // the ignition wave: pc = i-dot (device px), pw = (front radius, lead, trail), pon = live
     "uniform vec2 pc; uniform vec3 pw; uniform int pon;" +
-    // The mask texture holds the WHOLE PAGE, not the viewport: ts its device size,
-    // so the live scroll (in mask px), kk the view->mask scale. Scrolling is just
-    // these uniforms — no re-raster, no texture upload (that per-scroll upload was
-    // the scroll stutter). Lights and the wave stay in viewport device px.
+    // Mask and canvas both hold the WHOLE PAGE: ts the mask's device size, so its
+    // offset (0 now that the canvas is page-anchored too), kk the canvas->mask
+    // scale. Lights and the wave arrive in page device px.
     "uniform vec2 ts; uniform vec2 so; uniform float kk;" +
     "void main(){" +
     "  vec2 px = uv * res;" +
@@ -109,11 +111,12 @@
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    glcv.width = 0; lastKey = "";
+    glcv.width = 0; lastKey = ""; lastScene = "";
   }
   function initGL() {
     glcv = document.createElement("canvas"); glcv.id = "reflect-gl"; document.body.appendChild(glcv);
-    gl = glcv.getContext("webgl", { alpha: true });
+    // no depth/stencil/msaa: a page-sized target and a fullscreen quad need none of it
+    gl = glcv.getContext("webgl", { alpha: true, depth: false, stencil: false, antialias: false });
     if (!gl) { glok = false; return; }
     glcv.addEventListener("webglcontextlost", e => e.preventDefault());          // allow restore
     glcv.addEventListener("webglcontextrestored", () => initResources());        // rebuild GPU objects
@@ -122,8 +125,8 @@
   }
 
   // ---------- words, bars, robust baselines ----------
-  // A visual word can span several spans (inline markup splits its text nodes —
-  // "Barreiro" is Barre|i|ro around the i-dot anchor). Pieces not separated by
+  // A visual word can span several spans (inline markup splits its text nodes
+  // —"Barreiro" is Barre|i|ro around the i-dot anchor). Pieces not separated by
   // whitespace share one data-g group, so the word clicks and selects as a unit.
   let GID = 0;
   const groupOf = w => w.dataset.g
@@ -142,7 +145,7 @@
     }
     return document.body;
   }
-  // Wrap EVERY visible text node on the page — geometry over selectors, so
+  // Wrap EVERY visible text node on the page —geometry over selectors, so
   // whatever copy the page grows stays reflective. Idempotent (already-wrapped
   // text is skipped), so an i18n refill just gets its fresh nodes wrapped on the
   // next prep.
@@ -188,7 +191,7 @@
       const base = { el: s, tt: cs.textTransform, font,
         ls: cs.letterSpacing === "normal" ? "0px" : cs.letterSpacing,
         blk: blockOf(s),                        // block, for the reflective boxes
-        cx: r.left + sx, cy: r.top + sy };      // the span's own rect — the sentinel reference
+        cx: r.left + sx, cy: r.top + sy };      // the span's own rect —the sentinel reference
       const push = (text, f) => words.push(Object.assign({ text,
         w: f.right - f.left,                    // the DOM width the raster must land on
         px: f.left + sx, top: f.top + sy, bot: f.bottom + sy,   // page coords
@@ -216,7 +219,7 @@
     }
     // The section rules (.kicker::after) are STRAIGHTENED b's (see styles.css): a bar
     // as thick as the b's ribbon with the b's top tip on each end (hook up left, hook
-    // down right). Lit as three superimposed gold pieces — tip / bar / tip — hairline
+    // down right). Lit as three superimposed gold pieces —tip / bar / tip— hairline
     // seams between them, so the joints read subtly like the b's own middle joint.
     // Tip corners in b-primitive units of u = thickness/10.5 (from bb.svg's top tip).
     bars = []; tips = []; frames = []; icons = []; rules = [];
@@ -227,11 +230,11 @@
       const kr = k.getBoundingClientRect(), last = ws[ws.length - 1].getBoundingClientRect();
       const fs = parseFloat(getComputedStyle(k).fontSize);
       // the bar sits .85em off the name (flex gap) and .85em short of the right edge
-      // (its margin-right) — keep in step with .kicker in styles.css
+      // (its margin-right) —keep in step with .kicker in styles.css
       const xL = last.right + sx + 0.85 * fs, xR = kr.right + sx - 0.85 * fs;
       const T = 0.2875 * fs, u = T / 10.5;                   // ribbon thickness; tip unit
       const cY = kr.top + sy + kr.height / 2 + BAR_DY * fs;  // the bar's centreline, level with the name
-      // the section rule is ink on its heading's line — feed its full extent (xL..xR,
+      // the section rule is ink on its heading's line —feed its full extent (xL..xR,
       // past where the straight run is inset for the tips) in as a box, so the tight
       // segmentation groups it WITH the heading. Live geometry, no baked positions.
       rules.push({ x0: xL, y0: cY - T / 2, x1: xR, y1: cY + T / 2, blk: k });
@@ -244,7 +247,7 @@
       tips.push([[xR, cY - 5.25*u], [xR - 21.6169*u, cY + 9.2189*u], [xR - tipL, cY + 5.25*u], [xR - tipL, cY - 5.25*u]]);
       bars.push({ x: xL + tipL + SEAM, y: cY - T / 2, w: xR - xL - 2 * (tipL + SEAM), h: T });
     }
-    // The photo frame: the crossed-tips band (see frameGeom in main.js) — 4
+    // The photo frame: the crossed-tips band (see frameGeom in main.js) —4
     // straight runs, each profiled across the band like a section rule's body,
     // and the corner tip primitives (the over/under weave pieces, per the box's
     // data-frame mode), solid with hairline seams so the joints read like the b's.
@@ -258,7 +261,7 @@
       for (const rn of g.runs) frames.push({ pts: off(rn.pts), grad: off(rn.grad) });
     }
     // Every line-art svg on the page (contact icons, the bulb, the language
-    // pill — anything but the logo and the frame ink) is the b's own kind of
+    // pill —anything but the logo and the frame ink) is the b's own kind of
     // ink: rasterise its stroked shapes and its text so points and the pulse
     // light them too.
     for (const svg of document.querySelectorAll("svg")) {
@@ -293,20 +296,20 @@
     }
     window.LITBOXES = buildBoxes(sx, sy);   // the tight page segmentation, kept for later use
     prepped = true;
-    lastKey = "";   // a fresh cache always re-rasters — even if scroll/canvas look unchanged
+    lastKey = "";   // a fresh cache always re-rasters —even if scroll/canvas look unchanged
   }
 
   // ---------- the reflective boxes: tight line groups (page segmentation) ----------
   // A tight bounding box per visual line group (window.LITBOXES, page coords). Nothing
-  // consumes it right now (the cones that used to are gone), but it is deliberately kept
-  // — the segmentation is sound and a near-future step will want it.
+  // consumes it right now, but it is deliberately kept —the segmentation is sound and
+  // a near-future step will want it.
   // Words cluster into visual LINES (same vertical band, small gaps bridged even
-  // across elements — a chips row reads as one line); lines then merge downward
+  // across elements —a chips row reads as one line); lines then merge downward
   // only within the same block and only while the box stays TIGHT (a line that
-  // would widen the box much starts a new one — the lede splits where its float
+  // would widen the box much starts a new one —the lede splits where its float
   // ends). A section rule is fed in as ink on its heading's line, so it joins that
   // box; the line-art svgs and the photo frames are boxes of their own. All from
-  // live geometry each prep — no positions baked in, so it survives content edits.
+  // live geometry each prep —no positions baked in, so it survives content edits.
   function buildBoxes(sx, sy) {
     const rows = [];
     const ink = words.map(w => ({ px: w.px, w: w.w, top: w.top, bot: w.bot, blk: w.blk }));
@@ -342,7 +345,7 @@
     return out;
   }
   // Sentinels: three cached words re-measured against the live DOM. If any has moved,
-  // the whole cache is stale — some reflow arrived without (or before) its event: a
+  // the whole cache is stale —some reflow arrived without (or before) its event: a
   // browser zoom's settling, a restored scroll mid-load, a late image or font. Cheap
   // (three rect reads on an already-clean layout), self-healing within one frame.
   function cacheFresh() {
@@ -354,26 +357,36 @@
     }
     return true;
   }
-  function ensureSize() {
-    const dpr = Math.min(1.5, devicePixelRatio || 1);
-    const W = Math.round(innerWidth * dpr), H = Math.round(innerHeight * dpr);
+  // The render target covers the WHOLE PAGE (the canvas is page-anchored); its
+  // density yields to the GPU's dimension limits and to a pixel budget on very
+  // tall pages —the gold softens rather than the layer breaking or the GPU
+  // drowning in memory.
+  let maxDim = 0;
+  const PXBUDGET = 16e6;              // device px the page-sized target may spend
+  function ensureSize(pw, ph) {
+    if (!maxDim) {
+      const vd = gl.getParameter(gl.MAX_VIEWPORT_DIMS) || [4096, 4096];
+      maxDim = Math.min(gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) || 4096, vd[0], vd[1]);
+    }
+    const dpr = Math.min(1.5, devicePixelRatio || 1,
+      (maxDim - 2) / pw, (maxDim - 2) / ph, Math.sqrt(PXBUDGET / (pw * ph)));
+    const W = Math.max(1, Math.round(pw * dpr)), H = Math.max(1, Math.round(ph * dpr));
     if (glcv.width !== W || glcv.height !== H) {
       glcv.width = W; glcv.height = H;
       gl.viewport(0, 0, W, H);
     }
-    // the CSS size updates OUTSIDE the resize branch: a zoom can land the device
-    // size back on the same backing (1920-wide window at 110%: round(1745.45×1.1)
-    // = 1920) — the branch skips, and a stale CSS size would show the whole layer
-    // scaled off the origin (the "name displaced" zoom capture)
-    if (glcv.style.width !== innerWidth + "px" || glcv.style.height !== innerHeight + "px") {
-      glcv.style.width = innerWidth + "px"; glcv.style.height = innerHeight + "px";
+    // the CSS size updates OUTSIDE the resize branch: a reflow can land the same
+    // backing on a different page size —a stale CSS size would show the whole
+    // layer scaled off the origin
+    if (glcv.style.width !== pw + "px" || glcv.style.height !== ph + "px") {
+      glcv.style.width = pw + "px"; glcv.style.height = ph + "px";
     }
     return dpr;
   }
-  // The mask is rasterised over the WHOLE PAGE, once per reflow — not per scroll.
-  // Scrolling then only moves a shader uniform: the old viewport mask re-drew every
-  // word and re-uploaded ~2M device px to the GPU on every scrolled frame, which is
-  // what kept the main thread late and the gold (and the cracks) trailing the page.
+  // The mask is rasterised over the WHOLE PAGE, once per reflow —not per scroll.
+  // Scrolling then only moves a shader uniform: a viewport-sized mask would re-draw
+  // every word and re-upload ~2M device px to the GPU on every scrolled frame,
+  // keeping the main thread late and the gold (and the cracks) trailing the page.
   // texDpr matches the view dpr but yields to MAX_TEXTURE_SIZE on very tall pages
   // (the gold softens rather than the layer breaking).
   let texDpr = 1, maxTex = 0;
@@ -401,7 +414,7 @@
       } else mc.fillText(txt, w.px, w.baseline);
     }
     // Ink strokes are NOT flat rects (a flat interior reads as a dead plateau to the
-    // normal-reading shader — only the edges would ever light) but profiled: full
+    // normal-reading shader —only the edges would ever light) but profiled: full
     // coverage in the middle, soft shoulders at the long edges, so the shader sees
     // stroke-like normals along the whole piece and lights it like a glyph stem.
     const shoulders = g => {
@@ -419,11 +432,11 @@
       mc.fillStyle = shoulders(mc.createLinearGradient(0, b.y, 0, b.y + b.h));
       mc.fillRect(b.x, b.y, b.w, b.h);
     }
-    // the rules' b-tips: solid ink pieces — their own sharp boundary carries the normals
+    // the rules' b-tips: solid ink pieces —their own sharp boundary carries the normals
     mc.fillStyle = "#fff";
     for (const t of tips) { poly(t); mc.fill(); }
-    // profiled polygon pieces — the photo frame's bar runs, and the selection
-    // outline's mitre-cut sides — each lit across its own thickness
+    // profiled polygon pieces —the photo frame's bar runs, and the selection
+    // outline's mitre-cut sides —each lit across its own thickness
     const profiled = f => {
       mc.fillStyle = shoulders(mc.createLinearGradient(
         f.grad[0][0], f.grad[0][1], f.grad[1][0], f.grad[1][1]));
@@ -448,35 +461,45 @@
   window.TEXT_LIGHT = function (lights, f) {
     if (!prepped || !cacheFresh()) prep();
     if (!glok || gl.isContextLost()) return;
-    const dpr = ensureSize();
-    // The key carries the layout world, NOT the scroll: page size, zoom state
-    // (dpr + CSS viewport — zooming in and back out can land on the SAME canvas
-    // size with a different world underneath, the proportional gold drift of the
-    // zoom captures). Scroll rides the shader uniforms below; a re-raster only
-    // happens when the page itself changes.
+    // The key carries the layout world: page size, zoom state (dpr + CSS
+    // viewport —zooming in and back out can land on the SAME canvas size with
+    // a different world underneath, a proportional gold drift). A re-raster
+    // only happens when the page itself changes.
     const pw = document.documentElement.scrollWidth, ph = document.documentElement.scrollHeight;
+    const dpr = ensureSize(pw, ph);
     const key = pw + ":" + ph + ":" + glcv.width + ":" + glcv.height + ":" + dpr + ":" + innerWidth;
-    if (key !== lastKey) { raster(dpr, pw, ph); lastKey = key; }
-    // the light list the shader reads: the point field, each reaching its passed r (2·r₋).
-    // The illuminating points are the only reflective light sources — gold words no longer
-    // light their neighbours (they stay gold as copy, but cast nothing).
-    const src = [];
-    for (const L of lights) src.push({ x: L.x, y: L.y, r: L.r, i: L.i });
-    const n = Math.min(MAXL, src.length), lp = new Float32Array(MAXL * 2), li = new Float32Array(MAXL), lr = new Float32Array(MAXL);
-    for (let k = 0; k < n; k++) { lp[k*2] = src[k].x*dpr; lp[k*2+1] = src[k].y*dpr; li[k] = src[k].i; lr[k] = src[k].r*dpr; }
+    const fresh = key !== lastKey;
+    if (fresh) { raster(dpr, pw, ph); lastKey = key; }
+    // the light list the shader reads, moved to PAGE device px (main.js hands
+    // viewport px), each reaching its passed r (2·r₋). The illuminating points
+    // are the only reflective light sources —gold words don't light their
+    // neighbours (they stay gold as copy, but cast nothing).
+    const n = Math.min(MAXL, lights.length), lp = new Float32Array(MAXL * 2), li = new Float32Array(MAXL), lr = new Float32Array(MAXL);
+    for (let k = 0; k < n; k++) {
+      lp[k*2] = (lights[k].x + f.sx) * dpr; lp[k*2+1] = (lights[k].y + f.sy) * dpr;
+      li[k] = lights[k].i; lr[k] = lights[k].r * dpr;
+    }
+    const pu = f.pulse ? [(f.pulse.x + f.sx) * dpr, (f.pulse.y + f.sy) * dpr, f.pulse.R * dpr,
+      Math.max(1, f.pulse.lead * dpr), Math.max(1, f.pulse.trail * dpr)] : null;
+    // everything on the canvas is page-anchored, so when no light has moved the
+    // frame is a no-op —a pure scroll costs nothing here, the compositor moves
+    // the already-painted canvas with the page
+    const scene = key + "|" + n + "|" + Array.from(lp.subarray(0, n * 2), v => v.toFixed(1)) +
+      "|" + Array.from(li.subarray(0, n), v => v.toFixed(3)) + "|" + (pu ? pu.map(v => v.toFixed(1)) : "");
+    if (!fresh && scene === lastScene) return;
+    lastScene = scene;
     gl.useProgram(prog);
     gl.uniform2f(uni.res, glcv.width, glcv.height);
     gl.uniform2fv(uni.lp, lp); gl.uniform1fv(uni.li, li); gl.uniform1fv(uni.lr, lr); gl.uniform1i(uni.ln, n);
-    if (f.pulse) {           // the ignition wave, from main.js while it travels
-      gl.uniform2f(uni.pc, f.pulse.x * dpr, f.pulse.y * dpr);
-      gl.uniform3f(uni.pw, f.pulse.R * dpr,
-        Math.max(1, f.pulse.lead * dpr), Math.max(1, f.pulse.trail * dpr));
+    if (pu) {                // the ignition wave, from main.js while it travels
+      gl.uniform2f(uni.pc, pu[0], pu[1]);
+      gl.uniform3f(uni.pw, pu[2], pu[3], pu[4]);
       gl.uniform1i(uni.pon, 1);
     } else gl.uniform1i(uni.pon, 0);
-    // where the page-space mask sits under this viewport: its size, the scroll
-    // (in mask px) and the view->mask scale — all the scrolling ever touches
+    // the page-space mask under the page-space canvas: same origin, only the
+    // densities differ
     gl.uniform2f(uni.ts, mcv.width, mcv.height);
-    gl.uniform2f(uni.so, f.sx * texDpr, f.sy * texDpr);
+    gl.uniform2f(uni.so, 0, 0);
     gl.uniform1f(uni.kk, texDpr / dpr);
     gl.uniform1i(uni.tex, 0);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
@@ -487,7 +510,7 @@
   // The gold is interaction-layer light, so it wears a class the lights-off CSS can
   // mute; with the master light off a click toggles nothing at all.
   const clicked = new Set(); let selected = new Set(); let selOverlay = null;
-  let selPieces = [];         // the outline's lit pieces, page coords — rasterised as ink too
+  let selPieces = [];         // the outline's lit pieces, page coords —rasterised as ink too
   const lightsOff = () => document.body.classList.contains("lights-off");
   function applyHighlights() {
     for (const s of document.querySelectorAll(".litw"))
@@ -520,7 +543,7 @@
       lines.sort((a, b) => a.top - b.top);
       // Only the selection's overall beginning and end are CLOSED (a side stroke with
       // mitre-cut corners); where the stroke continues on the next line the end stays
-      // OPEN — no side, the top/bottom strokes running a little past the text to say
+      // OPEN —no side, the top/bottom strokes running a little past the text to say
       // so. Sharp corners throughout (roundedness is the annulus' and the points').
       const t = 3, g = 0.8;                               // stroke thickness; corner seam
       lines.forEach((L, i) => {
@@ -559,7 +582,7 @@
   // ---------- recache on any reflow, so the gold stays registered ----------
   const reprep = () => { prepped = false; };
   // A browser zoom fires a burst of resizes while layout is still settling, and rects
-  // read mid-burst can be a fraction stale — so besides the immediate recache, take a
+  // read mid-burst can be a fraction stale —so besides the immediate recache, take a
   // second one once the burst has quieted (and ask for a frame to repaint from it).
   let settleT = 0;
   const reprepSettle = () => {
@@ -570,7 +593,7 @@
   window.addEventListener("litrelayout", reprep);
   window.addEventListener("resize", reprepSettle);
   if (window.visualViewport) window.visualViewport.addEventListener("resize", reprepSettle);   // browser zoom
-  // a late font swap reflows the text without a resize — recache AND repaint
+  // a late font swap reflows the text without a resize —recache AND repaint
   if (document.fonts && document.fonts.ready)
     document.fonts.ready.then(() => { reprep(); window.dispatchEvent(new Event("scroll")); });
 })();

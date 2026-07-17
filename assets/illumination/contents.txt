@@ -2,12 +2,10 @@
  ILLUMINATION OF THE PAGE CONTENTS  (the text, not the logo)
 ==============================================================================
 
-Companion to bb.txt. bb.txt is about the LOGO — how the two 'b's (and, by the
+Companion to bb.txt. bb.txt is about the LOGO —how the two 'b's (and, by the
 same points, the annulus) are lit. This file is about the other thing the
-illuminating points light: the PAGE COPY — the running text, the headings and
+illuminating points light: the PAGE COPY —the running text, the headings and
 the section rules of the site itself.
-
-Introduced in iteration 18.
 
 
 ------------------------------------------------------------------------------
@@ -17,28 +15,26 @@ Introduced in iteration 18.
 A single illuminating point emits light in two distinct ways. Keeping them
 separate is the mental model the code is built on:
 
-  GLOWING (atmospheric).  The soft radial glow around a point — and nothing
-      more. The glow is direction-free by design (iteration 22 dropped the old
-      aimed cones — at the annulus, at the copy's bounding boxes — outright):
-      the REFLECTIVE layer already shows exactly where a point lights, so the
-      air around it no longer needs to point anywhere. Every point glows
-      radially out to r₋ (the annulus' inner radius, its natural reach), with a
-      physical falloff — a point lamp over a flat patch, a bright core and a
-      soft tail. The glow is clipped OUT of the logo's disc, so no ambient air
-      enters the annulus (this clip replaces the reach cap the cones relied
-      on). The logo is still TRACKED by the points, but on one measure: a
-      point's boundary/element lighting of the logo is gated by its distance
-      to the annulus — full within one r₋ of the boundary, gone at 2·r₋ (the
-      inner DIAMETER: a point entering the bowl sees the whole interior).
-      Painted by main.js on the cast canvas. Kept at partial intensity, so it
-      doesn't try to carry the whole effect.
+  GLOWING (atmospheric).  The soft radial glow around a point —and nothing
+      more. The glow is direction-free: the REFLECTIVE layer already shows
+      exactly where a point lights, so the air around it doesn't need to point
+      anywhere. Every point glows radially out to r₋ (the annulus' inner
+      radius, its natural reach), with a physical falloff —a point lamp over
+      a flat patch, a bright core and a soft tail. The glow is clipped OUT of
+      the logo's disc, so no ambient air enters the annulus. The logo is still
+      TRACKED by the points, but on one measure: a point's boundary/element
+      lighting of the logo is gated by its distance to the annulus —full
+      within one r₋ of the boundary, gone at 2·r₋ (the inner DIAMETER: a point
+      entering the bowl sees the whole interior). Painted by main.js on the
+      cast canvas. Kept at partial intensity, so it doesn't try to carry the
+      whole effect.
 
-  REFLECTIVE.  The light actually landing on a surface and lighting it up — the
-      page text going gold where a point is near. This is the layer iteration 18
-      built. It is INDEPENDENT of the logo: the logo does not block it, and a
-      point close to (or inside) the annulus still lights nearby copy. main.js
-      hands this layer the point field ungated (each point's full wake w, out to
-      2·r₋ — twice the glow's reach) and reflect.js renders it.
+  REFLECTIVE.  The light actually landing on a surface and lighting it up —the
+      page text going gold where a point is near. It is INDEPENDENT of the
+      logo: the logo does not block it, and a point close to (or inside) the
+      annulus still lights nearby copy. main.js hands this layer the point
+      field ungated (each point's full wake w, out to 2·r₋ —twice the glow's
+      reach) and reflect.js renders it.
 
 
 ------------------------------------------------------------------------------
@@ -46,75 +42,79 @@ separate is the mental model the code is built on:
 ------------------------------------------------------------------------------
 
 The page copy is real DOM text; it is never replaced or hidden. Over it sits a
-fixed, full-viewport WebGL canvas that ADDS gold where the text is lit:
+page-sized WebGL canvas that ADDS gold where the text is lit. The canvas is
+PAGE-ANCHORED —absolutely positioned over the whole page, it scrolls with the
+copy in the compositor, so a pure scroll repaints nothing and the gold can
+never lag the text (its density yields to the GPU's limits and a pixel budget
+on very tall pages):
 
   - Each WORD (every heading and body word, wrapped in a <span class="litw">) and
     each section RULE (the black .kicker::after bars) is rasterised into a
     coverage mask at its own screen rect. Word rects and baselines come from real
     font metrics and are recached on any reflow (load / font-load / resize /
     browser zoom), so the gold stays registered with the glyphs at every size.
-    Registration is also SELF-HEALING (iteration 20): every frame, three sentinel
-    words are re-measured against the cache — any drift (a zoom settling, a
-    restored scroll, a late font) recaches and re-rasters within that frame. A
-    recache always invalidates the raster, and the raster's cache key carries the
-    zoom state (dpr + CSS viewport), because zooming in and back out can land on
-    the same canvas size with a different world underneath — the cause of the
-    proportional gold drift the iteration-20 zoom captures showed.
+    Registration is also SELF-HEALING: every frame, three sentinel words are
+    re-measured against the cache —any drift (a zoom settling, a restored
+    scroll, a late font) recaches and re-rasters within that frame. A recache
+    always invalidates the raster, and the raster's cache key carries the zoom
+    state (dpr + CSS viewport), because zooming in and back out can land on the
+    same canvas size with a different world underneath.
 
   - A fragment shader reads edge normals from that coverage and shades each glyph
     ink -> gold by how lit it is, from the point field (diffuse + a little
     specular, falling off over the point's reach). It is composited OVER the real
-    text, so if the GPU ever drops the context the page just shows plain copy — it
-    can never go blank — and the section rules and links keep rendering.
+    text, so if the GPU ever drops the context the page just shows plain copy —it
+    can never go blank— and the section rules and links keep rendering.
 
   - The raster is PINNED to the DOM, both ends of every word: the canvas is told
-    the word's letter-spacing (canvas ignores CSS spacing by default — the cause
-    of a gold shade drifting open along a long word), and whatever advance-width
-    quirk remains, the raster is scaled onto the word's real DOM width. The gold
-    cannot drift along a word.
+    the word's letter-spacing (canvas ignores CSS spacing by default), and
+    whatever advance-width quirk remains, the raster is scaled onto the word's
+    real DOM width. The gold cannot drift along a word. A word that FRAGMENTS
+    across a line break (the breaker takes a dash mid-token as a break point:
+    'hello-world' can end a line at the dash) is rasterised per line fragment
+    —each fragment gets its own slice of the text at its own rect, never the
+    whole-span rect smeared between the lines.
 
-  - The section rules are STRAIGHTENED b's (iteration 19): a bar as thick as the
-    b's ribbon, wearing the b's top tip on each end — hook up on the left, hook
-    down on the right (the 180° twin, like the monogram's two b's). Lit as three
-    superimposed gold pieces — tip / bar / tip — with a hairline seam between
+  - The section rules are STRAIGHTENED b's: a bar as thick as the b's ribbon,
+    wearing the b's top tip on each end —hook up on the left, hook down on the
+    right (the 180° twin, like the monogram's two b's). Lit as three
+    superimposed gold pieces —tip / bar / tip— with a hairline seam between
     them, so the joints read subtly, like the b's own middle joint. The straight
     run is rasterised not flat (a flat interior reads as a dead plateau to the
     normal-reading shader) but profiled: full coverage in the middle, soft
-    shoulders at the long edges — stroke-like normals along the whole bar.
+    shoulders at the long edges —stroke-like normals along the whole bar.
 
-  - The about-photo FRAME is the same ink, rebuilt in iteration 20 as the bars'
-    own material referencing the b's: a band one section-bar thick, each side
-    wearing both b-tips hooked toward the exterior and, mirrored about the
-    band's midline, toward the interior (poking subtly into the photo at the
-    ends). Its dissection is Jonatan's, red-dotted onto the BW render: TWELVE
-    exact non-overlapping pieces — 4 straight runs, cut off where each hook
-    ends, and 8 corner PRIMITIVES, each a 7-cornered hook-end extended through
-    half the corner square so the pair meets along the corner's full 45°
-    diagonal (a solid joint; the first build's tips touched only at a point and
-    read fragile). The small notch beyond each outer corner stays open. The ink
-    is an SVG built by main.js (frameGeom, shared through LITAPI); the lighting
-    is the same twelve pieces — runs profiled across the band, primitives
-    solid, hairline seams at the cuts and along each diagonal.
+  - The about-photo FRAME is the same ink, the bars' own material referencing
+    the b's: a band one section-bar thick, each side wearing both b-tips hooked
+    toward the exterior and, mirrored about the band's midline, toward the
+    interior (poking subtly into the photo at the ends). Its dissection is
+    TWELVE exact non-overlapping pieces —4 straight runs, cut off where each
+    hook ends, and 8 corner PRIMITIVES, each a 7-cornered hook-end extended
+    through half the corner square so the pair meets along the corner's full
+    45° diagonal (a solid joint). The small notch beyond each outer corner
+    stays open. The ink is an SVG built by main.js (frameGeom, shared through
+    LITAPI); the lighting is the same twelve pieces —runs profiled across the
+    band, primitives solid, hairline seams at the cuts and along each diagonal.
 
   - The CONTACT ICONS (the Tuta mark, the Telegram plane) are line-art in the
-    same ink, so iteration 20 rasterises their SVG paths into the mask too: a
-    near point — or the ignition wave — lights them like everything else.
+    same ink, so their SVG paths are rasterised into the mask too: a near
+    point —or the ignition wave— lights them like everything else.
 
   - The SELECTION OUTLINE (see §3) is ink too, and rasterised with everything
     else in the photo frame's schematic: mitre-cut sides with corner seams. The
     gold layer sits ABOVE the outline's black divs (the divs live below the GL
-    canvas) — with the stack the other way round the box's lighting is painted
-    but never seen, which is exactly what iteration 19 shipped.
+    canvas) —with the stack the other way round the box's lighting would be
+    painted but never seen.
 
-  - The IGNITION PULSE lights this layer as it travels (iteration 20): the
-    shader carries the wave's tent envelope by each pixel's distance to the
-    i-dot — rising from the announcer to the main front, draining to half at
-    the requiem and to zero a trail later, the same three circumferences the
-    logo reads. While rising the light rakes from the i-dot's direction and
-    resolves to a flat, direction-free full gold as the front lands (the b
-    elements' own treatment), and it is taken as MAX against the steady point
-    light, so the wave lifts each glyph over its resting glow and hands back as
-    it leaves. Cost: a few shader ops per masked pixel — no extra passes.
+  - The IGNITION PULSE lights this layer as it travels: the shader carries the
+    wave's tent envelope by each pixel's distance to the i-dot —rising from
+    the announcer to the main front, draining to half at the requiem and to
+    zero a trail later, the same three circumferences the logo reads. While
+    rising the light rakes from the i-dot's direction and resolves to a flat,
+    direction-free full gold as the front lands (the b elements' own
+    treatment), and it is taken as MAX against the steady point light, so the
+    wave lifts each glyph over its resting glow and hands back as it leaves.
+    Cost: a few shader ops per masked pixel —no extra passes.
 
   - A visual word split over several spans by inline markup ("Barreiro" is
     Barre|i|ro around the i-dot anchor) is grouped: the pieces share one word
@@ -129,27 +129,25 @@ The reflective idea extends to how text is picked out:
 
   - Selecting text turns the selected words gold and replaces the native
     selection highlight with a hollow, SHARP-cornered BLACK outline (one box per
-    line — roundedness stays reserved for the annulus and the points). Across
+    line —roundedness stays reserved for the annulus and the points). Across
     multiple lines only the selection's overall beginning and end are closed;
     an end where the stroke continues on the next line stays open, the box run
     a little past the text to say so.
-  - Clicking a word toggles it gold. Either way the whole word turns — a grouped
+  - Clicking a word toggles it gold. Either way the whole word turns —a grouped
     word (see above) never lights in parts.
   - Both golds belong to the INTERACTION layer, so the master light (the bulb)
-    gates them (iteration 20): lights off, a click toggles nothing, a selection
-    shows only the box (words stay ink — the gold is a CSS class the lights-off
-    page mutes), and the contact icons no longer warm on hover.
+    gates them: lights off, a click toggles nothing, a selection shows only the
+    box (words stay ink —the gold is a CSS class the lights-off page mutes),
+    and the contact icons don't warm on hover.
 
-The gold is the OFFICIAL site gold #fad02a (--gold, iteration 19): the shade of
-a clicked word, of the annulus at max, of a fully lit letter. Partial
-illumination everywhere mixes it with black along the warm ember ramp (incRGB),
-never by fading gold over the pale page — that path washes the warmth out. The
-ramp's low end is kept YELLOW (G tracking R closely): earlier stops leaned
-brown/bronze in dim light and read olive on the b's beside a clicked word. The
-GLOWING layer keeps its own colour (--glow #ffe666, deliberately cooler than
-the gold — decided iteration 19), so the ambient air contrasts with the
-reflective light.
+The gold is the OFFICIAL site gold #fad02a (--gold): the shade of a clicked
+word, of the annulus at max, of a fully lit letter. Partial illumination
+everywhere mixes it with black along the warm ember ramp (incRGB), never by
+fading gold over the pale page —that path washes the warmth out. The ramp's
+low end is kept YELLOW (G tracking R closely), so dim light never leans
+brown/bronze or reads olive beside a clicked word's true gold. The GLOWING
+layer keeps its own colour (--glow #ffe666, deliberately cooler than the
+gold), so the ambient air contrasts with the reflective light.
 
-Lit (gold) words as light sources of their own — casting reflective light on
-their neighbours — was tried in iteration 22 and dropped in 23: a gold word is
-copy, not a lamp. They keep their colour and cast nothing.
+The illuminating points are the only light sources: a gold word is copy, not a
+lamp —it keeps its colour and casts nothing.

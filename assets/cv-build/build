@@ -1,0 +1,24 @@
+#!/bin/sh
+# builds both CVs —main-en.tex and main-es.tex (two pdflatex passes each: the
+# pipe geometry rides \pdfsavepos marks through the aux)— and installs them
+# named for what produced them:
+#   ./build <N>       -> ../jonatanbb-cv-en-iN.pdf + ../jonatanbb-cv-es-iN.pdf
+#                        (the store copies iteration N links)
+#   ./build current   -> sources/current/assets/jonatanbb-cv-en.pdf + jonatanbb-cv-es.pdf
+#                        (the live pair the site serves)
+# every CV pdf carries the jonatanbb- prefix —the served name IS the stored name,
+# so a phone download reads right with no renaming anywhere in the chain
+case "$1" in
+  current)   dest="../../sources/current/assets/jonatanbb-cv-LANG.pdf" ;;
+  ''|*[!0-9]*) echo "usage: ./build <iteration-number>|current"; exit 1 ;;
+  *)         dest="../jonatanbb-cv-LANG-i$1.pdf" ;;
+esac
+cd "$(dirname "$0")" || exit 1
+for lang in en es; do
+  pdflatex -interaction=nonstopmode -halt-on-error main-$lang.tex >/dev/null || { echo "pdflatex failed on main-$lang.tex —see main-$lang.log"; exit 1; }
+  pdflatex -interaction=nonstopmode -halt-on-error main-$lang.tex >/dev/null
+  out=$(echo "$dest" | sed "s/LANG/$lang/")
+  mv main-$lang.pdf "$out"
+  rm -f main-$lang.aux main-$lang.log main-$lang.out
+  echo "built $out"
+done

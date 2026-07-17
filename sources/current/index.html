@@ -2,24 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- the layout never squeezes under 780px: a phone gets the desktop composition,
+       scaled to its screen —about 2x its native width— instead of a thread-thin
+       reflow (desktop ignores this) -->
+  <meta name="viewport" content="width=780">
   <title>Jonatan Barreiro</title>
-  <meta name="description" content="Jonatan — mathematician and predoctoral researcher. Geometry, point clouds, and detection methods.">
+  <meta name="description" content="Jonatan —mathematician and predoctoral researcher. Geometry, point clouds, and detection methods.">
   <link rel="canonical" href="https://jonatanbb.xyz/">
   <!-- social preview cards (Open Graph + Twitter); title/description mirror the ones above -->
   <meta property="og:type" content="profile">
   <meta property="og:url" content="https://jonatanbb.xyz/">
   <meta property="og:title" content="Jonatan Barreiro">
-  <meta property="og:description" content="Jonatan — mathematician and predoctoral researcher. Geometry, point clouds, and detection methods.">
+  <meta property="og:description" content="Jonatan —mathematician and predoctoral researcher. Geometry, point clouds, and detection methods.">
   <!-- the share-card image is the logo itself, lit from its centre point, on a
-       transparent background — so a shared link carries the mark, not a face -->
+       transparent background —so a shared link carries the mark, not a face -->
   <meta property="og:image" content="https://jonatanbb.xyz/assets/bb-card.png">
   <meta property="og:image:width" content="1000">
   <meta property="og:image:height" content="1000">
   <meta property="og:image:alt" content="The bb monogram of jonatanbb.xyz, lit up by the point at its centre">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Jonatan Barreiro">
-  <meta name="twitter:description" content="Jonatan — mathematician and predoctoral researcher. Geometry, point clouds, and detection methods.">
+  <meta name="twitter:description" content="Jonatan —mathematician and predoctoral researcher. Geometry, point clouds, and detection methods.">
   <meta name="twitter:image" content="https://jonatanbb.xyz/assets/bb-card.png">
   <link rel="icon" type="image/svg+xml" href="assets/bb.svg">
   <link rel="stylesheet" href="styles.css">
@@ -34,7 +37,7 @@
     "jobTitle": "Mathematician · Predoctoral researcher",
     "affiliation": {
       "@type": "Organization",
-      "name": "CiTIUS — Centro de Investigación en Tecnoloxías Intelixentes",
+      "name": "CiTIUS —Centro de Investigación en Tecnoloxías Intelixentes",
       "url": "https://citius.gal/",
       "parentOrganization": {
         "@type": "CollegeOrUniversity",
@@ -52,7 +55,7 @@
   <!-- The page's WORDS live outside this file: assets/content.en.js and assets/content.es.js
        hold every translatable string, one editable map per language. This file is the
        STRUCTURE; each translatable node carries data-i18n="key" and is filled by main.js from
-       the active language's map. To change the site's text, edit the two content files — not
+       the active language's map. To change the site's text, edit the two content files —not
        the markup here. (Proper names, dates and GPAs that read the same in both languages stay
        inline below.) -->
 
@@ -80,9 +83,8 @@
         <path class="bulb-fil" d="M26 40c2-6 4-6 6 0s4 6 6 0" fill="none" stroke="#1c1a16" stroke-width="2.2"/>
       </svg>
     </button>
-    <!-- the night toggle: a mitred-ray sun by day, a crescent by night —
-         the winner of the ten candidates drafted this iteration. The moon wears the
-         same glow gold as the sun (a light motif, not an ink one). -->
+    <!-- the night toggle: a mitred-ray sun by day, a crescent by night. The moon
+         wears the same glow gold as the sun (a light motif, not an ink one). -->
     <button class="night-toggle" id="night-toggle" type="button" aria-pressed="false" aria-label="Switch to night mode">
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <g class="tg-day">
@@ -116,9 +118,9 @@
        content, clipped out of the logo disc; painted by main.js each frame. -->
   <canvas class="cast-canvas" id="cast-canvas" aria-hidden="true"></canvas>
 
-  <!-- The cracks: a radial-flow tree of the sample field, rooted at the i-dot —
-       each point joins the graph through the parent that sees it closest to its own
-       radial direction — each link a compass-walk crack. Invisible at rest; they
+  <!-- The cracks: a radial-flow tree of the sample field, rooted at the i-dot
+       —each point joins the graph through the parent that sees it closest to its own
+       radial direction —each link a compass-walk crack. Invisible at rest; they
        light as the ignition wave passes and ember-cool away behind it. Painted by
        main.js. -->
   <canvas class="crack-canvas" id="crack-canvas" aria-hidden="true"></canvas>
@@ -134,7 +136,7 @@
   <div class="signet" aria-hidden="true">
     <svg viewBox="0 0 400 400" class="signet__svg" id="signet-svg">
       <!-- the reconstructed circle: thick black baseline. It IS the bb logo's
-           enclosing annulus (see assets/bb.svg) — same centre, radius and
+           enclosing annulus (see assets/bb.svg) —same centre, radius and
            thickness, mapped into this 0..400 viewBox. The points illuminate the
            arcs they can see (lit gold bands painted on .reflect-canvas). -->
       <circle class="signet__circle" cx="200" cy="200" r="120"
@@ -170,7 +172,7 @@
   <!-- "WILLING TO WORK", carved into the ring on the arc facing the screen centre.
        This is a layer of REAL DOM TEXT (one <span> per letter), NOT a canvas: each letter
        is positioned + rotated onto the ring by main.js and recoloured by the light on its
-       own arc — incandescent, dark wine when barely lit to hot orange when fully lit. Kept
+       own arc —incandescent, dark wine when barely lit to hot orange when fully lit. Kept
        above the bands so its lighting never falls behind the ring. -->
   <div class="ring-letters" id="ring-letters" aria-hidden="true"></div>
 
@@ -202,7 +204,7 @@
           <p data-i18n="ab1"></p>
           <!-- the photo sits below the opening paragraph, floating left with the second
                and third to its right. assets/portrait.png is the cutout of the PAKO set's
-               pick (background lifted, so the page — day or night — shows through; the
+               pick (background lifted, so the page —day or night— shows through; the
                original flat-white portrait.jpg stays beside it for the JSON-LD card).
                The hooked frame ink (an SVG) is built inside this box by main.js. -->
           <div class="about__photo">
@@ -338,15 +340,15 @@
         <h2 class="contact__head" data-i18n="chead"></h2>
         <ul class="contact__links">
           <li>
-            <a class="contact__icon" href="mailto:jonatanbb@tutanota.com" aria-label="Email (Tuta) — jonatanbb@tutanota.com">
+            <a class="contact__icon" href="mailto:jonatanbb@tutanota.com" aria-label="Email (Tuta) —jonatanbb@tutanota.com">
               <!-- the Tuta brand mark, traced as line-art to match the Telegram plane and the b's:
-                   the three parts of the logo drawn as their boundaries — the left triangle (3 corners),
+                   the three parts of the logo drawn as their boundaries —the left triangle (3 corners),
                    the roof bar (4 corners) and the forward-leaning "M" (13 corners). Corners read off the
                    hand-dotted reference capture (Jonatan marked every vertex), then mapped uniformly into
-                   the box — so the four M sticks share one thickness, the central valley sits at its true
+                   the box —so the four M sticks share one thickness, the central valley sits at its true
                    depth, and the bar carries its real height. The three parts are then nudged apart along
-                   their shared edges (each rigidly, shapes untouched) so the bands between them — all equal
-                   — open into a clear separating gap. -->
+                   their shared edges (each rigidly, shapes untouched) so the bands between them —all equal—
+                  open into a clear separating gap. -->
               <!-- miterlimit 6: keeps every M cusp sharply mitred while clipping the long spike the
                    triangle's very acute bottom vertex would otherwise throw past its tip -->
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="6" aria-hidden="true">
@@ -357,10 +359,10 @@
             </a>
           </li>
           <li>
-            <a class="contact__icon" href="https://t.me/jonatanbb" rel="me" aria-label="Telegram — @jonatanbb">
-              <!-- the Telegram plane, line-art with its four salient tips made sharp:
-                   the rounding fillets are gone, each tip is now the true mitred vertex
-                   where its two edges meet (like the b's) -->
+            <a class="contact__icon" href="https://t.me/jonatanbb" rel="me" aria-label="Telegram —@jonatanbb">
+              <!-- the Telegram plane, line-art with its four salient tips sharp: no
+                   rounding fillets —each tip is the true mitred vertex where its
+                   two edges meet (like the b's) -->
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8" aria-hidden="true">
                 <path d="M22.73 3.79 1.29 12.04 7.3 14 9.36 20.41 12.6 17.3 17.94 21.25Z"/>
                 <path d="M7.3 14 18.5 7 9.4 15.4"/>

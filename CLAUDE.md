@@ -1,4 +1,4 @@
-# CLAUDE.md — jonatanbb.xyz
+# CLAUDE.md —jonatanbb.xyz
 
 This repo builds **jonatanbb.xyz**, a small static website, in the open. The site
 grows through numbered **iterations** —each one a single development step of its
@@ -9,19 +9,19 @@ Jonatan writes a deliberate prompt, you carry it out.
 
 ## Map
 
-- `CLAUDE.md` — this file; the repo's workflow and conventions.
-- `README.md` — the website's README (its making-of); the repo's public face.
-- `milestones.md` — the site's milestone checklist; Jonatan's to maintain. Leave it
+- `CLAUDE.md` —this file; the repo's workflow and conventions.
+- `README.md` —the website's README (its making-of); the repo's public face.
+- `milestones.md` —the site's milestone checklist; Jonatan's to maintain. Leave it
   untouched unless he tells you to change it.
-- `prompts/` — full session logs, `sessionNNNN.log`, every turn verbatim.
-- `sources/iterationN/` — the site source at step N (`index.html`, `styles.css`,
+- `prompts/` —full session logs, `sessionNNNN.log`, every turn verbatim.
+- `sources/iterationN/` —the site source at step N (`index.html`, `styles.css`,
   `main.js`, `assets/`), plus that iteration's `interaction_*` files.
-- `sources/current/` — the deployable copy of the newest source (see *The live
+- `sources/current/` —the deployable copy of the newest source (see *The live
   copy*). No interaction files, no symlinks: real files, ready to ship.
-- `assets/` — the single asset store for the whole site (see *Assets*). It also
-  hosts the CV build: `main-en.tex`, `main-es.tex` and `cv-build` (see *The CV*).
-- `gallery/` — the screenshots per iteration, chronological: `iterationNNN.png`
-  through iteration 26, then — the site having day & night modes — one pair per
+- `assets/` —the single asset store for the whole site (see *Assets*). It also
+  hosts the CV build, self-contained in `assets/cv-build/` (see *The CV*).
+- `gallery/` —the screenshots per iteration, chronological: `iterationNNN.png`
+  through iteration 26, then —the site having day & night modes— one pair per
   iteration, `iterationNNNW.png` (day, the default) and `iterationNNNB.png`
   (night). Plus `unsourced/` (`iteration-N.png`) for captures that predate the
   kept source. A quick visual tour of the build. Generated at wrap-up at a fixed
@@ -39,7 +39,7 @@ A new session begins whenever Jonatan starts a fresh conversation here.
   1. `Jonatan on YYYY-MM-DD at ~HH:MM:` + the **full prompt, verbatim**.
   2. One blank line.
   3. `Claude <model> on YYYY-MM-DD at ~HH:MM:` + the **full answer**, where
-     `<model>` is whichever model produced that turn — a single iteration may be
+     `<model>` is whichever model produced that turn —a single iteration may be
      shared across models (e.g. a mid-turn switch on hitting a usage limit), so
      label each turn with the model that actually answered it. (Logs through
      session 0017 read `Claude 4.8`; later ones name `Fable 5` / `Opus 4.8`.)
@@ -51,39 +51,42 @@ A new session begins whenever Jonatan starts a fresh conversation here.
 
 ## Iteration workflow (the site source)
 
-Source prompts are recognizable — they are about the actual website (its appearance,
+Source prompts are recognizable —they are about the actual website (its appearance,
 behavior, or contents). An iteration may run across several turns.
 
 - **Start a new iteration only when Jonatan explicitly says to.** Then:
-  1. Copy `sources/current/` to `sources/iteration{N+1}/` — `current` is by contract
+  1. Copy `sources/current/` to `sources/iteration{N+1}/` —`current` is by contract
      the newest source (every wrap-up refreshes it; see below).
   2. Re-link its assets: `current` carries real files, so replace each one with the
      standard relative symlink to its copy in the store (content-identical; move it
      into the store first if it is somehow missing there).
-  3. Work the new iteration's source per the prompt, turn after turn.
-- **Otherwise, build on the current (highest) iteration** — work its source per the
+  3. Check for a pending between-iterations CV edit: if `current`'s CV pair
+     differs from the newest `jonatanbb-cv-*-iN.pdf` in the store, run `./build {N+1}` and
+     point the new iteration's CV symlinks at the result (see *The CV*).
+  4. Work the new iteration's source per the prompt, turn after turn.
+- **Otherwise, build on the current (highest) iteration** —work its source per the
   prompt, turn after turn.
-- **Wrap up an iteration when Jonatan calls for it to end** — *close*, *finish*,
+- **Wrap up an iteration when Jonatan calls for it to end** —*close*, *finish*,
   *wrap up*, or any plain equivalent, wherever it sits in the prompt and even when
   paired with work to do first ("do X to close iteration N" means: do X, then wrap
-  up). Don't hold out for a more explicit phrasing or a closing imperative — that
+  up). Don't hold out for a more explicit phrasing or a closing imperative —that
   call *is* the go-ahead: wrap up right then, do not pause to make him verify.
   Wrapping up is exactly four things, after the source work is done:
   1. **Save the files used.** Every file Jonatan attached during the iteration is
      *moved* into the iteration folder as
-     `interaction_<yyyy>_<mm>_<dd>_<keyword>.<ext>` — moved, not copied, so no
+     `interaction_<yyyy>_<mm>_<dd>_<keyword>.<ext>` —moved, not copied, so no
      clutter is left behind wherever he handed it to you.
   2. **Write the whole exchange.** Create `interaction_<yyyy>_<mm>_<dd>.md` in the
-     iteration folder holding the iteration's *entire* exchange — every turn in
+     iteration folder holding the iteration's *entire* exchange —every turn in
      order, each prompt and final answer recorded **verbatim**, in the same labeled
      shape as the session log.
-  3. **Snapshot the site.** Render the gallery pair — `gallery/iterationNNNW.png`
-     (day, the default theme) and `gallery/iterationNNNB.png` (night) — at the same
+  3. **Snapshot the site.** Render the gallery pair —`gallery/iterationNNNW.png`
+     (day, the default theme) and `gallery/iterationNNNB.png` (night)— at the same
      frame as the existing gallery shots (see *Rendering & gallery captures*). The
-     point scatter is RNG-driven by design — do not stage or chase a particular
+     point scatter is RNG-driven by design —do not stage or chase a particular
      arrangement; only the frame must match.
   4. **Refresh the live copy.** Bring `sources/current/` up to this iteration's
-     source (see *The live copy*) — the next iteration starts from it.
+     source (see *The live copy*) —the next iteration starts from it.
 
 If a past wrap-up's gallery shot is somehow missing, generate it before copying for
 a new iteration.
@@ -92,7 +95,7 @@ Notes:
 - A source turn is recorded in **both** the session log and the iteration's
   interaction md.
 - **No intermediate bookkeeping.** Only the finished source and the interaction
-  files live in an iteration — never copies of in-progress source. The previous
+  files live in an iteration —never copies of in-progress source. The previous
   iteration's source is the clean slate that, together with the interaction files,
   pins down the step.
 - If Jonatan needs to hand you a file, he will say where to find it in the prompt.
@@ -102,7 +105,7 @@ Notes:
 ## The live copy (`sources/current/`)
 
 Iterations are set-in-stone blocks; the folder Jonatan actually copies to the server
-is `sources/current/` — the newest source, dereferenced (real files where iterations
+is `sources/current/` —the newest source, dereferenced (real files where iterations
 carry asset symlinks) and without interaction files. Refresh it whenever the live
 source changes: at every iteration wrap-up, and on between-iteration touch-ups that
 don't open a new iteration (a rebuilt CV pdf, say). Refreshing `current` never counts
@@ -111,33 +114,49 @@ as an iteration.
 
 ## The CV
 
-The repo also builds the CV the site serves — two LaTeX sources living directly in
-`assets/`, `main-en.tex` and `main-es.tex`, plus one runnable `assets/cv-build`
-that compiles both with pdflatex (two passes each: the pipe geometry rides
-`\pdfsavepos` marks through the aux) and installs them as `assets/cv-en.pdf` /
-`cv-es.pdf` — the files the page links. Each source names its portrait (a
-`\portraitfile` macro pointing into the PAKO photo set) and closes with the
-logo mark in the pipes' gold (`cv-ic-bb.pdf`, part of the cv-art set). The design is "the plumbing" (iteration 27): bicolor — the ink and the bar
-gold — with one gold pipe system tying photo frame, section knots (the site's b
-rotated 225°) and the J of the name together; its vector artwork is the
-`assets/cv-*.pdf` set, regenerated by `assets/cv-art.js` (drives system Chrome,
-like the gallery captures). The wording is the site's, terser.
+The repo also builds the CV the site serves. Everything CV lives in
+`assets/cv-build/`: the two LaTeX sources (`main-en.tex`, `main-es.tex`), the
+runnable `build` script, and `art.js` with the vector artwork it regenerates
+under `art/` —the pipe pieces and the gold icons (drives system Chrome, like
+the gallery captures). The built pdfs land *outside* the folder and are
+versioned like the content files, `-iN` for the iteration that produced them:
+
+- `./build <N>` compiles both languages with pdflatex (two passes each: the pipe
+  geometry rides `\pdfsavepos` marks through the aux) and installs them as
+  `assets/jonatanbb-cv-en-iN.pdf` / `jonatanbb-cv-es-iN.pdf` —the store copies
+  iteration N links as its `assets/jonatanbb-cv-en.pdf` / `jonatanbb-cv-es.pdf`.
+  Every CV pdf carries the `jonatanbb-` prefix, store and served alike —one
+  convention, no renaming anywhere in the chain (a phone names its download
+  after the file).
+- `./build current` installs the pair as `sources/current/assets/jonatanbb-cv-en.pdf` /
+  `jonatanbb-cv-es.pdf` instead, replacing the live files the site serves —for CV
+  touch-ups between iterations (a new CV item, say), which never open an
+  iteration. The store is untouched: the edit waits in `current` until the next
+  iteration declares it —the iteration-start check in *Iteration workflow*
+  runs `./build` for the new N whenever `current`'s pair differs from the
+  store's newest.
+
+Each source names its portrait (a `\portraitfile` macro pointing into the PAKO
+photo set in `assets/`) and closes with the logo mark in the pipes' gold
+(`art/ic-bb.pdf`). The design is "the plumbing": bicolor —the ink and the bar
+gold— one gold pipe system tying the photo frame and the section knots (the
+site's b rotated 225°) together, every crossing articulated by a hairline seam.
+The wording is the site's, terser.
 
 When Jonatan updates his CV he will edit the tex sources himself, or hand
-annotations over to be integrated. Either way: rebuild with `cv-build`, refresh
-`sources/current/`, and do **not** open a new iteration for it.
+annotations over to be integrated.
 
 
 ## The site's text is Jonatan's
 
-The website's **text content** — every word a visitor reads: the page copy, the
+The website's **text content** —every word a visitor reads: the page copy, the
 section headings, the hero lede, link and button text, the document `<title>` and
 meta description, the language files in `assets/content.*.js`, and the CV sources
-in `assets/cv-*/main.tex` — is **deliberate and authored by Jonatan**. Do not write, reword, translate, condense, "polish", or
-otherwise alter it unless he **explicitly asked** you to. When a task only moves or
-restructures text (externalizing it, re-keying it, changing the markup around it),
-carry the existing words across **verbatim** — structure is yours to shape, wording
-is not.
+in `assets/cv-build/main-*.tex`— is **deliberate and authored by Jonatan**. Do not write,
+reword, translate, condense, "polish", or otherwise alter it unless he
+**explicitly asked** you to. When a task only moves or restructures text
+(externalizing it, re-keying it, changing the markup around it), carry the existing
+words across **verbatim** —structure is yours to shape, wording is not.
 
 
 ## Rendering & gallery captures
@@ -147,7 +166,7 @@ capture gallery shots. Node, Chrome and the driver are all installed system-wide
 and on `PATH`; the driver is `playwright-core` under the global module dir, so
 reach it with `NODE_PATH=/usr/local/lib/node_modules`. Gallery shots are **full-page
 long screenshots**: viewport width 1024, deviceScaleFactor 1, `fullPage` from scrollY 0
-(the fixed logo renders once at the top — no stitching, no duplication). Iterations that
+(the fixed logo renders once at the top —no stitching, no duplication). Iterations that
 carry the ignition pulse are captured mid-pulse (~2.25s after load) so the wave shows.
 Since the site gained day & night modes (iteration 27), every wrap-up takes the pair:
 the day shot as-is (`iterationNNNW.png`), and the night one (`iterationNNNB.png`) by
@@ -174,21 +193,21 @@ file there. This kills cross-iteration duplication.
 ## Git
 
 Versioning is Jonatan's: commits are how he marks development breakpoints. Use git
-in **read mode only** (`status`, `diff`, `log`, `show`) — never stage, commit,
+in **read mode only** (`status`, `diff`, `log`, `show`) —never stage, commit,
 branch, revert, or otherwise alter history.
 
 
 ## Housekeeping
 
-- Iteration folders are a deliberate historical archive — *not* legacy to tidy or
+- Iteration folders are a deliberate historical archive —*not* legacy to tidy or
   purge.
 - Keep the repo, and particularly the live iteration, clean: edit in place, no
   backups or scratch files, no intermediate source copies.
 - **Files made for Jonatan to see** (a render, a mockup, a contact sheet) go straight
-  into the live iteration folder, named like an interaction file — never a scratch or
+  into the live iteration folder, named like an interaction file —never a scratch or
   temp dir he'd have to go hunting in.
 - **Installing software.** Iteration prompts run with CC in auto mode, so you may
-  install software when a prompt genuinely needs it — no need to ask first. But
+  install software when a prompt genuinely needs it —no need to ask first. But
   install it **system-wide** (on `PATH`, under a standard prefix), never into a
   private per-tool location only you would know to look in. If a system-wide install
   needs sudo or otherwise can't be done from here, stop and tell Jonatan the exact
@@ -197,9 +216,15 @@ branch, revert, or otherwise alter history.
 
 ## Code style (site source)
 
-- Comments express *intent* — short, verb-led statements of what the next code
+- Comments express *intent* —short, verb-led statements of what the next code
   does. Use them sparingly; if the code reads itself, leave it alone.
 - One-line comments take no trailing period. Inline comments are lightly padded
   from the code, not so much that their line becomes unclear.
-- No defensive coding when it hurts readability — prefer loud failure to silent
+- No defensive coding when it hurts readability —prefer loud failure to silent
   guards, unless the guard genuinely reduces the site's security exposure.
+- **Em dashes, Jonatan's convention** —it governs everything written for the repo
+  (site copy, CV, docs, code comments), not chat answers. An em dash introducing an
+  intruding thought carries no space on the intrusion's side: `word —intrusion— word`.
+  When a stop cuts the intrusion short instead of a closing dash, the same rule
+  holds: `word —intrusion. Next sentence`. Spaced em dashes stay only where the
+  dash is no intrusion (a date range: `2021 — 2025`).

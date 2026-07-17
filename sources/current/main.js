@@ -1,4 +1,4 @@
-// jonatanbb.xyz — light progressive enhancement only
+// jonatanbb.xyz —light progressive enhancement only
 
 // fill the footer year
 document.getElementById("year").textContent = new Date().getFullYear();
@@ -11,20 +11,20 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
   const TAU = 2 * Math.PI;
   const N = 180;          // uniform angular partition of each ring half (2° arcs)
-  const LEVELS = 32;      // discrete heat levels for the letters — many, so the cool-down reads smooth
+  const LEVELS = 32;      // discrete heat levels for the letters —many, so the cool-down reads smooth
 
   // ---- scatter the sample field: a fresh draw on every load ---------------
   // seeded from the clock so the arrangement differs each time the page opens.
   // BLUE NOISE, by best-candidate sampling: each point is the best of K uniform
-  // candidates — the one farthest from every point already placed. Well-spread
+  // candidates —the one farthest from every point already placed. Well-spread
   // like a grid never is, irregular like a uniform draw, but without the weird
   // clusters a uniform draw sometimes lands.
   (function scatter() {
     // Density, not a fixed count: the field spreads over the WHOLE page width (the side
-    // margins included, on purpose — they decorate a wide screen), and the density sets
-    // what the CONTENT COLUMN (max-width 1080px) would hold — on a wide screen that means
-    // proportionally more points overall. HALVED from the old ~17-per-column: the cracks
-    // only flash with the pulse now, so the field reads sparse, not like a fracture map.
+    // margins included, on purpose —they decorate a wide screen), and the density sets
+    // what the CONTENT COLUMN (max-width 1080px) would hold —on a wide screen that means
+    // proportionally more points overall. Kept low: the cracks only flash with the
+    // pulse, so the field should read sparse, not like a fracture map.
     const fullW = Math.max(360, window.innerWidth || 1024);
     const contentW = Math.min(fullW, 1080);
     const M = Math.max(9, Math.min(32, Math.round(8.5 * 1.15 * fullW / contentW)));
@@ -61,7 +61,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
   // An 18th sample point, pinned to the circle's centre at load and then
   // page-anchored like all the others (so it scrolls away with the page). It is a
-  // real, visible dot — the logo is only lit from within while it (or another
+  // real, visible dot —the logo is only lit from within while it (or another
   // interior point) is on screen. Pixel position set by layoutDots().
   const centreDot = document.createElement("span");
   centreDot.className = "pt pt--centre";
@@ -69,15 +69,15 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
   // A second hardcoded point on the 'i' of "Barreiro" (its tittle), page-anchored
   // to that letter; positioned by layoutDots() once the text is laid out. This is the
-  // 'I' — the pulse root, and the root of the crack tree.
+  // 'I' —the pulse root, and the root of the crack tree.
   const iSpan = document.querySelector(".hero__i");
   const iDot = document.createElement("span");
   iDot.className = "pt pt--i";
   field.appendChild(iDot);
 
-  // The field's BOTTOM ANCHOR is the 'i' of "get in touch" — a position only, no dot:
-  // the visible point that used to ride that tittle sat visibly off it (Firefox above,
-  // Chrome on the stem — the engines disagree on a Range's rect), and the gold 'i'
+  // The field's BOTTOM ANCHOR is the 'i' of "get in touch" —a position only, no dot:
+  // a visible point riding that tittle sits visibly off it (Firefox above,
+  // Chrome on the stem —the engines disagree on a Range's rect), and the gold 'i'
   // carries its own tittle anyway. layoutDots() reads the position to clamp the field.
 
   const dotEls = [...field.querySelectorAll(".pt")];
@@ -85,23 +85,23 @@ document.getElementById("year").textContent = new Date().getFullYear();
   let ptPx = 24;          // perceived dot diameter in px (set by layoutDots); also the drag hit size
 
   // ---- ignition: the load sequence ----------------------------------------
-  // On load nothing is lit — only the page and the bare black dots. The dot on the
+  // On load nothing is lit —only the page and the bare black dots. The dot on the
   // 'i' first GATHERS light: it begins wrapped in a glow as wide as the whole page
   // and pulls it inward over PREAMBLE seconds, warming from black to gold along the
   // annulus' own colour path as the glow tightens onto the point's natural reach.
-  // Then it FREES that light as a pulse — a main front from the point, an announcer
+  // Then it FREES that light as a pulse —a main front from the point, an announcer
   // born a natural-reach ahead (the gathered glow itself), a requiem born a moment
-  // behind — draining the i-dot back to black as it goes. The pulse sweeps the page:
+  // behind— draining the i-dot back to black as it goes. The pulse sweeps the page:
   // each point lights up as the announcer reaches it, is full at the main front, then
   // drains LINEARLY to half at the requiem and EMBER-COOLS to black (the ring message's
-  // own fade) — and only once it is that first-load black dot again does it bulb on as a
+  // own fade) —and only once it is that first-load black dot again does it bulb on as a
   // real light whose glow and logo-light track the bulb. The logo (each b element, each
   // ring arc) responds in step, timed from the i-dot, but excited only while the wave
   // passes: rising to the front, then draining linearly to zero a requiem-gap behind it.
   // Reloads must not replay the browser's remembered scroll: the spacers sized below
   // (the lede clear, the logo margin fix) land after the restore and shift the page
   // under it, so every F5 compounded into a fresh, random-feeling jump. The load
-  // sequence is built from the top anyway — every load starts there.
+  // sequence is built from the top anyway —every load starts there.
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
   const reduceMotion = window.matchMedia &&
@@ -133,7 +133,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // is three expanding circumferences: announcer (lead ahead), main front (at r), requiem
   // (trail behind). A piece is excited only while the wave is actually passing it: dark
   // until the announcer arrives, rising linearly to full at the main front, then DRAINING
-  // linearly — to half at the requiem, to zero a requiem-gap later (same rate) — and dark
+  // linearly —to half at the requiem, to zero a requiem-gap later (same rate)— and dark
   // after. This is only TIMING and level; the direction is applied where the piece paints.
   function pulseEnv(r) {
     const Tp = ign.Tp; if (Tp < 0) return 0;
@@ -146,11 +146,11 @@ document.getElementById("year").textContent = new Date().getFullYear();
     return 0;
   }
   // The pulse envelope a b ELEMENT feels. An element has extent, so it reads the wave by
-  // two distances from the i-dot: its nearest VERTEX rV (where the announcer first touches —
-  // it begins to light) and its CENTRE OF MASS rC (where the main front sits — it is FULLY
+  // two distances from the i-dot: its nearest VERTEX rV (where the announcer first touches
+  // —it begins to light) and its CENTRE OF MASS rC (where the main front sits —it is FULLY
   // lit, mostly yellow). It rises linearly from the first to the second, then drains linearly
   // to half as the requiem reaches the centre and to zero a requiem-gap later. Returns env
-  // (level) and rise (0 at the announcer, 1 from the front on — fades the raking to flat max).
+  // (level) and rise (0 at the announcer, 1 from the front on —fades the raking to flat max).
   function elemEnv(rV, rC) {
     const Tp = ign.Tp; if (Tp < 0) return { env: 0, rise: 0 };
     const Rp = IGN.SPEED * Tp, trail = ign.trail;
@@ -186,7 +186,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   const root = document.documentElement;
   let drag = null;        // active drag: {kind:'dot',i,el,ox,oy} | {kind:'logo',ox,oy,baseDx,baseDy}
   let logoDx = 0, logoDy = 0;   // current logo viewport offset (px), applied through --sig-dx/dy
-  let geo = null;         // last frame's circle geometry {cx,cy,R,scale,rIn,rOut} — for hit-testing
+  let geo = null;         // last frame's circle geometry {cx,cy,R,scale,rIn,rOut} —for hit-testing
   let lightsOn = true;    // master light toggle (the bulb): off kills the points, the lights and the roll
   let nightOn = false;    // night palette toggle (body.night; wired near the other controls below)
   let NIGHT_INK = [236, 229, 212];   // the night annulus ink the carved letters fade into (re-read on toggle)
@@ -201,9 +201,9 @@ document.getElementById("year").textContent = new Date().getFullYear();
   const heatAge  = new Array(chars.length).fill(0); // seconds since that peak
   let heatT = 0;          // timestamp of the last heat update (ms)
   // Cool-down for the ring letters is a STRETCHED exponential exp(-(age/τ)^β): a hot letter
-  // holds its glow a moment, then falls off so it's fully gone ~3s after illumination — a
+  // holds its glow a moment, then falls off so it's fully gone ~3s after illumination —a
   // slow ember fade (τ trimmed again, each pass landing the full-bright fade ~1s sooner). The
-  // points reuse it for their own ember tail. (The b faces no longer cool — they light only.)
+  // points reuse it for their own ember tail. (The b faces don't cool —they light only.)
   const COOL_TAU = 1.1, COOL_BETA = 1.6;
   const coolDecay = age => Math.exp(-Math.pow(age / COOL_TAU, COOL_BETA));
   // seconds for a half-lit ember (0.5·coolDecay) to fade to a black dot; the bulb waits for it
@@ -212,7 +212,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // A point's wake level (--lit) under the pulse, by its distance r from the i-dot. It
   // matches the ring message's life: dark until the announcer arrives, a linear rise to
   // full at the main front, a linear drain to half at the requiem, then the message's own
-  // stretched-exponential ember cool to black — and only then (the first-load black dot
+  // stretched-exponential ember cool to black —and only then (the first-load black dot
   // again) does its bulb play, settling into steady light. Returns {lit, phase}.
   function pointLit(r) {
     const Tp = ign.Tp;
@@ -236,12 +236,12 @@ document.getElementById("year").textContent = new Date().getFullYear();
   const R_OVER_THK = 120 / 17.537;    // mid radius / ring thickness (= 6.843), scale-free
   const CENTRE_ANG = Math.PI;         // the string is centred on the left arc (faces screen centre)
   const STRING_ROT = -Math.PI / 5;    // turn the whole string π/5 anticlockwise so WORK lands on the
-                                      // arc the central point lights — WORK alone reads as a faint cue
+                                      // arc the central point lights —WORK alone reads as a faint cue
   // The ring message is REAL DOM TEXT, not a canvas: a fixed layer of one <span> per letter,
   // each positioned + rotated onto the ring and recoloured by the light on its arc. Real glyphs
   // stay crisp at any rotation (no canvas raster + downsample softening them), and a handful of
-  // transform/colour writes per frame costs almost nothing — where the old supersampled,
-  // full-viewport letters canvas was the page's single heaviest per-frame paint.
+  // transform/colour writes per frame costs almost nothing —where a supersampled,
+  // full-viewport letters canvas would be the page's single heaviest per-frame paint.
   const lettersLayer = document.getElementById("ring-letters");
   const mctx = document.createElement("canvas").getContext("2d");   // offscreen, for glyph metrics only
   const letterEls = [];                                  // one span per letter (null for spaces)
@@ -255,7 +255,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   }
 
   // The site's gold&black mixing path: how partial illumination looks. A lit thing
-  // does NOT fade linearly from black to gold (that passes through cool olive) — it
+  // does NOT fade linearly from black to gold (that passes through cool olive) —it
   // warms through dark amber first, black-body-ish, and lands exactly on the official
   // gold #fad02a (--gold) at full. Shared by the ring letters, the b faces, the
   // annulus bands and the i-dot core, so every half-lit gold on the page agrees.
@@ -288,7 +288,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   const krctx = crackCanvas ? crackCanvas.getContext("2d") : null;
   const DIFFUSE = 1.4;                              // reflect-canvas blur (CSS px ≈ DIFFUSE × s)
   const CAST_ALPHA = 0.16;                          // peak alpha reference (the gather glow)
-  const GLOW_PEAK = 0.22;                           // peak alpha of a point's radial glow — the atmospheric layer; reflect.js carries the rest
+  const GLOW_PEAK = 0.22;                           // peak alpha of a point's radial glow —the atmospheric layer; reflect.js carries the rest
   const PRIM = [[27.5,86.5],[21,93],[21,58],[49.5,86.5],[0,136],[0,1.445],[4.856,8.7]];
   const USES = [[44.6,81.8],[119,57.75]];
   const KLOGO = 0.835096;
@@ -297,10 +297,10 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
   // ===== b illumination =============================================
   // The 'b' is split into 9 pieces (2 tips, 4 sticks, 3 joints), each into 2 elements
-  // (left/right) — the unit objects of lighting. An interior light inside a b's 7-8-9
+  // (left/right) —the unit objects of lighting. An interior light inside a b's 7-8-9
   // triangle lands in one of 7 regions; the region fixes which elements light (on their
-  // inner face). The whole model — corners, pieces, elements, the 7 regions and the 3
-  // exterior half-planes, with every lit set — is documented in
+  // inner face). The whole model —corners, pieces, elements, the 7 regions and the 3
+  // exterior half-planes, with every lit set— is documented in
   //   version0/assets/illumination/   (bb.txt + the b-split*/b-out* svgs).
   // Geometry below is in canonical bb-primitive units for one b (the two b's share it
   // under their USE translate). Each element carries the face it shows the light f=[A,B],
@@ -341,7 +341,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
                             // need a much larger gain to read as strongly as an interior light does
   // B_POLY: each element's full polygon (point-in-element test). B_SIL: the 12-corner
   // silhouette. B_OUT: each element's OUTER face + inward profile. B_G_*: which elements
-  // an exterior light beyond each triangle edge lights — edge 7-8 -> the left elements,
+  // an exterior light beyond each triangle edge lights —edge 7-8 -> the left elements,
   // 8-9 -> the bottom, 7-9 -> the belly elements seen through the open mouth (lit on
   // their inner face). See bb.txt.
   const B_POLY = [
@@ -432,7 +432,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
   // ---- b element illuminance per [b][face][element][sample]: face 0 = the element's
   // inner face (interior / mouth lights), face 1 = its outer face (exterior lights).
-  // Elements glow incandescent at their CURRENT illumination — no heat memory, no cool-down.
+  // Elements glow incandescent at their CURRENT illumination —no heat memory, no cool-down.
   const BHN = 2*2*18*11, bhBase = (b, face, el) => (((b*2+face)*18+el)*11);
   const bRaw = new Float32Array(BHN);
   // accumulate one light's cosβ/dist onto a face's 11 samples, skipping any sample whose
@@ -440,7 +440,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // through solid logo). occs holds BOTH b's silhouettes, so this covers a face hidden
   // behind the other b AND a face hidden behind its own b's body (self-occlusion). The
   // ray ends ON the lit face, which is an edge of its own silhouette, but that touch is
-  // at the segment's far end and segInt's open interval ignores it — only a true
+  // at the segment's far end and segInt's open interval ignores it —only a true
   // intervening crossing blocks.
   function accFace(base, ax, ay, ex, ey, nx, ny, px, py, occs, gain) {
     for (let j = 0; j <= 10; j++) {
@@ -457,7 +457,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // light inside a b lights the elements of its region; an exterior light lights the outer
   // faces it sees by half-plane against the 7-8-9 edges; a light behind an element lights
   // that element (its own pass, below). All occluded by both b's. Elements glow at their
-  // CURRENT illumination — no cool-down — so the nuanced lighting reads directly.
+  // CURRENT illumination —no cool-down— so the nuanced lighting reads directly.
   function lightAndPaintB(cx, cy, scale, cR, sR, inn) {
     if (!ctx) return;
     bRaw.fill(0);
@@ -465,7 +465,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     const ONEL_REACH = 31.5 * scl;   // a behind-element light heats only within this radius of itself
                                      // (6× a face's 5.25 half-ribbon width ≈ 1.5 annulus thicknesses)
     const ONEL_DEPTH = 0.5;          // and reaches only this fraction of the element's full depth
-                                     // (iteration10 option B: 0 = no behind lighting, else 0.5 or 0.25)
+                                     // (0 = no behind lighting, else 0.5 or 0.25)
     const FA = [[[],[]],[[],[]]], FB = [[[],[]],[[],[]]], FN = [[[],[]],[[],[]]], silVp = [];
     for (let b = 0; b < 2; b++) {
       const t = USES[b];
@@ -488,7 +488,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
       const W = (p.w == null ? 1 : p.w) * (p.gate == null ? 1 : p.gate);   // wake level × logo-engagement
       if (W <= 0) continue;                                   // a not-yet-awake or too-far point lights nothing
       if (p.role === 'region' && p.ridx >= 0) {
-        // a region light sees a face only through the open notch — occlude by both b's so it
+        // a region light sees a face only through the open notch —occlude by both b's so it
         // lights just the slice it can actually see, not the whole face through intervening logo
         for (const el of B_LIT[p.ridx]) add(p.bk, 0, el, p.px, p.py, silVp, GAIN_B * W);
       } else if (p.role === 'ext') {
@@ -511,7 +511,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     }
 
     // behind-element pass: each onEl light glows a localized hotspot on its element, reaching
-    // only ONEL_DEPTH of the element's full depth (iteration10's behind-lighting reach option)
+    // only ONEL_DEPTH of the element's full depth
     if (ONEL_DEPTH > 0) for (const p of inn) {
       if (p.role !== 'onEl' || p.eidx < 0) continue;
       if ((p.w == null ? 1 : p.w) <= 0) continue;             // not awake yet
@@ -539,11 +539,11 @@ document.getElementById("year").textContent = new Date().getFullYear();
     ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
   }
 
-  // The b's pulse response. EVERY element lights as the wave sweeps it — no facing test, so
+  // The b's pulse response. EVERY element lights as the wave sweeps it —no facing test, so
   // a piece whose outward face is turned from the i-dot still fills (the wave carries the
   // energy there). Each is timed by elemEnv off two distances to the i-dot: its nearest
-  // vertex (the announcer first touch — it begins to light) and its centre of mass (the main
-  // front — it is FULLY lit). At that peak the whole element paints opaque gold, depth-filled
+  // vertex (the announcer first touch —it begins to light) and its centre of mass (the main
+  // front —it is FULLY lit). At that peak the whole element paints opaque gold, depth-filled
   // across its width, so it reads mostly yellow with only the soft seam where it meets its
   // neighbour. The WAY it gets there still encodes direction: the face begins RAKED from the
   // i-dot side and resolves to a flat, direction-free max as the front lands (rise drives the
@@ -568,7 +568,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
         const N = [F.n[0]*cR - F.n[1]*sR, F.n[0]*sR + F.n[1]*cR];
         // the raking shape: a light set off the face toward the i-dot, nearer samples brighter;
         // normalised so the detail is always legible, then faded into uniform by `rise`. A face
-        // turned away sees no rake (raw ~0) and simply brightens flat — no wrong-way artefact.
+        // turned away sees no rake (raw ~0) and simply brightens flat —no wrong-way artefact.
         const cfx = (A[0]+B[0])/2, cfy = (A[1]+B[1])/2;
         let lx = ix - cfx, ly = iy - cfy; const L = Math.hypot(lx, ly) || 1; lx /= L; ly /= L;
         const Ds = Math.hypot(B[0]-A[0], B[1]-A[1]) * 1.5 + 1;
@@ -592,7 +592,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
   // ---- occlusion: a b is opaque, so an interior point may not light the inner
   // wall "through" it. Each b is approximated by the triangle of its 3 OUTER
-  // extreme corners (top P5, belly P3, bottom P4 — the outward-drifted corners).
+  // extreme corners (top P5, belly P3, bottom P4 —the outward-drifted corners).
   // From an interior point the b blocks the angular span its triangle subtends;
   // the point emits only in the largest clear gap. (bb-primitive units.)
   const HWp = 10.5 / 2;
@@ -622,7 +622,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     while (d < g.lo) d += TAU; while (d >= g.lo + TAU) d -= TAU; return d <= g.hi; };
 
   // ss>1 supersamples: the canvas backs at dpr·ss device px but is shown at CSS size, so the
-  // browser downsamples — true antialiasing for content too fine to read at the bare device
+  // browser downsamples —true antialiasing for content too fine to read at the bare device
   // resolution (the ring letters, ~7px bold, were aliasing badly on 1× displays).
   function fitCanvas(cv, c, blurPx, ss) {
     const dpr = (window.devicePixelRatio || 1) * (ss || 1);
@@ -635,7 +635,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   function sizeCanvas() {
     const s = signet.getBoundingClientRect().width / 400;
     if (ctx)  fitCanvas(reflectCanvas, ctx,  DIFFUSE * s);    // bands + glints, diffused
-    if (cctx) { castBlur = 2.2 * s; fitCanvas(castCanvas, cctx, castBlur); }  // the glow, lightly softened
+    if (cctx) { castBlur = 2.2 * s; fitCastCanvas(); }        // the glow, lightly softened
     if (pctx) fitCanvas(pulseCanvas, pctx, 1.2 * s);         // the ignition pulse, softly
     // the crack canvas is NOT fitted here: it is page-anchored and page-sized,
     // fitted lazily by drawCracks only while the wave lives (see fitCrackCanvas)
@@ -696,8 +696,8 @@ document.getElementById("year").textContent = new Date().getFullYear();
     let mx = 0; for (let k = 0; k < M; k++) if (alpha[k] > mx) mx = alpha[k];
     if (mx < 0.004) return;
     const g = ctx.createConicGradient(0, b.cx, b.cy);
-    // arc colour follows the warm mixing path (incRGB), not flat gold faded out —
-    // a half-lit arc reads dark amber like the letters, not washed-out olive
+    // arc colour follows the warm mixing path (incRGB), not flat gold faded out
+    // —a half-lit arc reads dark amber like the letters, not washed-out olive
     for (let k = 0; k <= M; k++) {
       const a = alpha[k % M], c = incRGB(Math.min(1, a));
       g.addColorStop(k / M, `rgba(${c[0]},${c[1]},${c[2]},${a.toFixed(3)})`);
@@ -738,32 +738,32 @@ document.getElementById("year").textContent = new Date().getFullYear();
   { const m = getComputedStyle(document.documentElement).getPropertyValue("--glow-rgb").match(/\d+/g);
     if (m && m.length === 3) CAST_GLOW = m.map(Number); }
   // The logo is still TRACKED by the points (its boundary/element lighting, gated by
-  // q.gate — full by gap rIn, gone at 2·rIn: the logo starts lighting from points 2·r₋
+  // q.gate —full by gap rIn, gone at 2·rIn: the logo starts lighting from points 2·r₋
   // away, so it reads more prominently than the copy). But nothing is AIMED at it any
   // more: the points glow radially, and the reflective layer shows what they light.
   // How a point's radial glow falls off with normalised radius s = r/R: f(0)=1 at the core,
   // f(1)=0 at the clipped rim. Keeping f(1)=0 fixes the reach at R.
-  // BUILD: physical falloff — a point lamp at height 1 over a flat patch, lit by inverse-square
+  // BUILD: physical falloff —a point lamp at height 1 over a flat patch, lit by inverse-square
   // × Lambert's cosine: E(s) = cosθ/d² = (1+s²)^-3/2, renormalised so the rim value E(1) maps to 0.
-  // A bright concentrated core with a soft tail — reads as a real light source, not a flat disc.
+  // A bright concentrated core with a soft tail —reads as a real light source, not a flat disc.
   const GLOW_RIM = Math.pow(2, -1.5);                 // E at the rim s=1
   const glowFalloff = s => (Math.pow(1 + s * s, -1.5) - GLOW_RIM) / (1 - GLOW_RIM);
 
   // ---- the crossed-tips photo frame ----------------------------------------
   // The frame is 4 two-same-side-tip bars, one per side, hooks exterior, in the
   // section rules' own proportions (u = T/10.5, bb.svg's top tip). Each bar
-  // overshoots both corners by t = 18.0429u — Jonatan's SECOND MATCH: the bars
+  // overshoots both corners by t = 18.0429u —Jonatan's SECOND MATCH: the bars
   // pushed apart until the two tips' oblique sides cross exactly at their shared
-  // MIDPOINT — so at every corner the two tips weave over each other. The tip
+  // MIDPOINT— so at every corner the two tips weave over each other. The tip
   // pointing anticlockwise wrt the frame's centre lies ON TOP; the other passes
   // under. The lighting tiles the ink into the 4 straight runs (profiled) plus
   // per-corner solid primitives, by mode:
-  //   "plain"    — the top tip whole (1 piece), the under tip's two visible ends;
-  //   "elements" — the top tip split as the b tip's two elements, the under tip's
+  //   "plain"    —the top tip whole (1 piece), the under tip's two visible ends;
+  //   "elements" —the top tip split as the b tip's two elements, the under tip's
   //                two elements each clipped by the top tip (4 pieces).
   // Coords are image-local (origin the image's top-left, y down). Every corner is
-  // the top-right one ROTATED about the image centre (rotations, not mirrors —
-  // the over/under weave gives the frame 4-fold TURN symmetry, like a pinwheel).
+  // the top-right one ROTATED about the image centre (rotations, not mirrors
+  // —the over/under weave gives the frame 4-fold TURN symmetry, like a pinwheel).
   function frameGeom(Wi, Hi, B, seam, mode) {
     const T = 2 * B, u = T / 10.5, sm = seam || 0;
     const cut = (24.2734 - 18.0429) * u;                 // joint plane, inside the corner
@@ -814,7 +814,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     return { prims, runs };
   }
 
-  // draw (or refresh) each photo frame's ink as an SVG inside its box — real page
+  // draw (or refresh) each photo frame's ink as an SVG inside its box —real page
   // structure, so it renders whatever the lighting is doing. The pieces tile the
   // frame exactly (runs + corner primitives), so the ink is just their seamless
   // fills. data-frame on the box picks the corner tiling ("plain" / "elements").
@@ -857,45 +857,68 @@ document.getElementById("year").textContent = new Date().getFullYear();
     }
     return g;
   }
-  // the cast canvas MINUS the logo's outer disc, set as a clip: no exterior glow (a
-  // point's, a gold word's) ever spills onto or into the annulus (a rect wound one way,
-  // the disc the other, even-odd). This replaces the reach cap the old cones relied on.
-  function clipOutLogo(c, cx, cy, rOut) {
-    c.beginPath();
-    c.rect(0, 0, castCanvas._cw, castCanvas._ch);
-    c.arc(cx, cy, rOut, 0, TAU, true);
-    c.clip("evenodd");
+  // The cast canvas is PAGE-anchored and page-sized (like the cracks): a fixed canvas
+  // repainted against the live scroll always trails the compositor, so the disks
+  // sheared off their points on a phone. Painted in page coordinates, an already-drawn
+  // disk rides the page pixel-perfect however late the paint lands. Backed at a capped
+  // density —the glow is blurred anyway— with a pixel budget for very tall pages.
+  const CAST_PXBUDGET = 12e6;
+  function fitCastCanvas() {
+    const w = document.documentElement.clientWidth, h = document.documentElement.scrollHeight;
+    const dpr = Math.min(1.5, window.devicePixelRatio || 1,
+                         Math.sqrt(CAST_PXBUDGET / (w * h)), 8192 / w, 8192 / h);
+    if (castCanvas._cw === w && castCanvas._ch === h && castCanvas._dpr === dpr &&
+        castCanvas._blur === castBlur) return;
+    castCanvas._cw = w; castCanvas._ch = h; castCanvas._dpr = dpr; castCanvas._blur = castBlur;
+    castCanvas.width = Math.round(w * dpr); castCanvas.height = Math.round(h * dpr);
+    castCanvas.style.width = w + "px"; castCanvas.style.height = h + "px";
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    castCanvas.style.filter = castBlur > 0 ? `blur(${castBlur.toFixed(2)}px)` : "none";
   }
-  // Each point's radial glow — the atmospheric halo around it, out to r₋ (the annulus'
+  // Each point's radial glow —the atmospheric halo around it, out to r₋ (the annulus'
   // inner radius, the point's reach). There is NO direction to it: the reflective layer
-  // already shows where a point lights, so the old aimed/logo cones are gone — points
-  // glow radially, always. Clipped out of the logo disc.
-  function drawGlow(ext, cx, cy, rOut, rIn) {
+  // already shows where a point lights —points glow radially, always. Clipped out of
+  // the logo disc and to the viewport band plus a viewport of overscan on each side
+  // —the band and the hole are the two viewport-tied things here, refreshed each
+  // paint while the pre-painted disks never move.
+  function drawGlow(ext, cx, cy, rOut, rIn, sx, sy, vh) {
     if (!cctx) return;
+    fitCastCanvas();
     cctx.clearRect(0, 0, castCanvas._cw, castCanvas._ch);
+    const top = Math.max(0, sy - vh), bot = Math.min(castCanvas._ch, sy + 2 * vh);
     cctx.save();
-    clipOutLogo(cctx, cx, cy, rOut);
+    cctx.beginPath();
+    cctx.rect(0, top, castCanvas._cw, bot - top);
+    cctx.arc(cx + sx, cy + sy, rOut, 0, TAU, true);
+    cctx.clip("evenodd");
     for (const q of ext) {
       const w = q.w == null ? 1 : q.w; if (w <= 0) continue;
-      cctx.fillStyle = radialGlow(cctx, q.px, q.py, rIn, CAST_GLOW, GLOW_PEAK * w);
-      cctx.beginPath(); cctx.arc(q.px, q.py, rIn, 0, TAU); cctx.fill();
+      const py = q.py + sy;
+      if (py + rIn < top || py - rIn > bot) continue;
+      cctx.fillStyle = radialGlow(cctx, q.px + sx, py, rIn, CAST_GLOW, GLOW_PEAK * w);
+      cctx.beginPath(); cctx.arc(q.px + sx, py, rIn, 0, TAU); cctx.fill();
     }
     cctx.restore();
   }
 
   // The i-dot GATHERING its light, before the pulse: a radial glow as wide as the
   // page that tightens onto the point's natural reach over the preamble, brightening
-  // as it concentrates. prog is 0..1 across the gather; (icx,icy) is the i-dot. Drawn
-  // on the cast canvas (above the page), after drawGlow has cleared it.
-  function drawPreambleGlow(icx, icy, prog, glowR, Rpage) {
+  // as it concentrates. prog is 0..1 across the gather; (ix,iy) is the i-dot in PAGE
+  // coordinates (the canvas is page-anchored). Drawn on the cast canvas (above the
+  // page) after drawGlow has cleared it, kept to the same overscan band.
+  function drawPreambleGlow(ix, iy, prog, glowR, Rpage, sy, vh) {
     if (!cctx) return;
     const radius = glowR + (Rpage - glowR) * Math.pow(1 - prog, 1.5);   // shrinks, fast late
     const peak = CAST_ALPHA * 1.6 * (0.30 + 0.70 * prog);               // concentrates -> brighter
-    cctx.fillStyle = radialGlow(cctx, icx, icy, radius, CAST_GLOW, peak);
-    cctx.beginPath(); cctx.arc(icx, icy, radius, 0, TAU); cctx.fill();
+    const top = Math.max(0, sy - vh), bot = Math.min(castCanvas._ch, sy + 2 * vh);
+    cctx.save();
+    cctx.beginPath(); cctx.rect(0, top, castCanvas._cw, bot - top); cctx.clip();
+    cctx.fillStyle = radialGlow(cctx, ix, iy, radius, CAST_GLOW, peak);
+    cctx.beginPath(); cctx.arc(ix, iy, radius, 0, TAU); cctx.fill();
+    cctx.restore();
   }
 
-  // The visible ignition pulse: three concentric bands expanding from the i-dot — a
+  // The visible ignition pulse: three concentric bands expanding from the i-dot —a
   // faint announcer ahead (born a natural-reach out, so it continues the gathered glow),
   // the bright main front from the point, and a faint requiem born a moment behind once
   // the front has travelled TRAIL. So the front reads as a dressed pulse, not a naked
@@ -926,7 +949,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   }
 
   // The incandescent ring message, as DOM text. It RIDES the logo's spin (angle += rotRad)
-  // and is oriented to read on the BOTTOM half of the ring — at rest on the left arc, rolling
+  // and is oriented to read on the BOTTOM half of the ring —at rest on the left arc, rolling
   // to the bottom as you scroll; it inverts only once it rolls past, which we accept. Each
   // letter heats INSTANTLY to the light on its arc, then cools by the shared stretched
   // exponential. We touch a span only when it changes: its transform when it moves, its colour
@@ -950,7 +973,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
         heatAge[i] += dt; heat[i] = cooled;
         if (heat[i] > target + 0.003) cooling = true;
       }
-      if (!el) continue;                                     // a space — no glyph
+      if (!el) continue;                                     // a space —no glyph
       const lvl = Math.round(heat[i] * LEVELS);
       if (lvl <= 0) {                                        // dark: hide it (remember, so we stop rewriting)
         if (letterLvl[i] !== 0) { el.style.opacity = "0"; letterLvl[i] = 0; }
@@ -968,7 +991,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
           const c = incRGB(lvl / LEVELS), k = 1 - lvl / LEVELS;
           el.style.color = `rgb(${Math.round(c[0] + (NIGHT_INK[0] - c[0]) * k)},${Math.round(c[1] + (NIGHT_INK[1] - c[1]) * k)},${Math.round(c[2] + (NIGHT_INK[2] - c[2]) * k)})`;
         } else el.style.color = incandescent(lvl / LEVELS);
-        if (letterLvl[i] <= 0) el.style.opacity = "1";       // was hidden — show it
+        if (letterLvl[i] <= 0) el.style.opacity = "1";       // was hidden —show it
         letterLvl[i] = lvl;
       }
     }
@@ -989,7 +1012,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
       if (markEl) markEl.setAttribute("transform", MARK_BASE);
       if (ctx)  ctx.clearRect(0, 0, reflectCanvas._cw || 0, reflectCanvas._ch || 0);
       if (cctx) cctx.clearRect(0, 0, castCanvas._cw || 0, castCanvas._ch || 0);
-      // the ring letters are DOM text, hidden by the lights-off CSS — nothing to clear here
+      // the ring letters are DOM text, hidden by the lights-off CSS —nothing to clear here
       if (pctx) pctx.clearRect(0, 0, pulseCanvas._cw || 0, pulseCanvas._ch || 0);
       if (window.TEXT_LIGHT) window.TEXT_LIGHT([], { sx: window.scrollX, sy: window.scrollY, vw: window.innerWidth, vh: window.innerHeight });
       return;
@@ -1024,7 +1047,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
       // ember-cooled to black and bulbed back to steady
       const endT = Math.max(pulseT0 + (Rmax + IGN.TRAIL) / IGN.SPEED,
                             pulseT0 + (maxDot + IGN.TRAIL) / IGN.SPEED + COOL_DONE + IGN.P_BULB);
-      if (T >= endT) {                                           // sequence over — settle into steady light
+      if (T >= endT) {                                           // sequence over —settle into steady light
         ign.on = false; igOn = false;
         for (let i = 0; i < dotEls.length; i++) setLit(i, 1);
         setCore("");
@@ -1048,10 +1071,10 @@ document.getElementById("year").textContent = new Date().getFullYear();
       const p = dotPos[i]; if (!p) continue;
       const px = p.x - sx, py = p.y - sy;
       const dx = px - cx, dy = py - cy, dist = Math.hypot(dx, dy), th = Math.atan2(dy, dx);
-      // logo engagement: the point sees the logo only within 2·rIn of its boundary —
-      // the annulus' INNER DIAMETER (a point entering the bowl sees the whole interior).
+      // logo engagement: the point sees the logo only within 2·rIn of its boundary
+      // —the annulus' INNER DIAMETER (a point entering the bowl sees the whole interior).
       // Full by gap = rIn, gone at 2·rIn; gates the logo's boundary/element illumination,
-      // so the logo starts lighting from points 2·r₋ away — farther than they glow (r₋).
+      // so the logo starts lighting from points 2·r₋ away —farther than they glow (r₋).
       const gate = Math.max(0, Math.min(1, 2 - (dist - rOut) / rIn));
 
       let w = 1;                              // steady state: every point fully awake
@@ -1067,7 +1090,9 @@ document.getElementById("year").textContent = new Date().getFullYear();
       }
 
       if (w <= 0) continue;
-      const inView = px > -glowR && px < vw + glowR && py > -glowR && py < vh + glowR;
+      // a viewport of vertical overscan: the page-anchored glow paints a band one
+      // viewport past each edge (see drawGlow), so its points must survive this cut
+      const inView = px > -glowR && px < vw + glowR && py > -glowR - vh && py < 2 * vh + glowR;
       if (gate <= 0 && !inView) continue;     // neither engages the logo nor can glow into the view
       if (dist >= rOut) ext.push({ th, d: dist, px, py, w, gate });
       else if (dist < rIn) inn.push({ th, d: dist, px, py, w, gate });
@@ -1126,10 +1151,11 @@ document.getElementById("year").textContent = new Date().getFullYear();
       toneOut[k] = to; toneIn[k] = ti;
     }
 
-    drawGlow(ext, cx, cy, rOut, rIn);
+    drawGlow(ext, cx, cy, rOut, rIn, sx, sy, vh);
     if (phase === "gather")
-      drawPreambleGlow(icx, icy, gatherProg, glowR,
-        Math.hypot(vw, document.documentElement.scrollHeight));   // page diagonal
+      drawPreambleGlow(icx + sx, icy + sy, gatherProg, glowR,
+        Math.hypot(vw, document.documentElement.scrollHeight),    // page diagonal
+        sy, vh);
     drawReflections({ alphaOut: toneOut, alphaInner: toneIn, cx, cy, rOut, rIn,
       maxReach: 0.45 * thk,                          // reach trimmed 10% (flatter falloff)
       overshoot: 2.5 * scale });
@@ -1143,7 +1169,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     drawCracks(scale);   // the cracks, alive only while the wave passes them
 
     // hand the point field to the REFLECTIVE layer (reflect.js). Each point lights the copy by
-    // its full wake w, out to 2·r₋ — twice the glow's reach. The glow stops at r₋ and is clipped
+    // its full wake w, out to 2·r₋ —twice the glow's reach. The glow stops at r₋ and is clipped
     // out of the logo disc, but the reflection is not: a point just outside the annulus still
     // shades nearby copy well inside it, while its glow never crosses the ring.
     if (window.TEXT_LIGHT) {
@@ -1166,7 +1192,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // cached here so draw() needs no per-frame layout reads.
   // Size the lede's float spacer to the logo's band: height down to the annulus
   // ink's bottom edge, width from the lede's right margin back to the ink's left
-  // edge — so the lede's first lines wrap short of the logo and the lines below
+  // edge —so the lede's first lines wrap short of the logo and the lines below
   // its bottom run wide. Sized from the logo's LOAD position (the fixed signet at
   // scroll 0), which is the view where hero and logo actually share the screen.
   function layoutLede(c) {
@@ -1185,29 +1211,56 @@ document.getElementById("year").textContent = new Date().getFullYear();
     root.style.setProperty("--lede-clear-w", w.toFixed(1) + "px");
   }
 
+  // The STABLE viewport height —100vh, the large viewport with the browser chrome
+  // retracted. On a phone innerHeight dances with the collapsing URL bar, and a fit
+  // taken off it dances too (the logo grew on the first scroll); CSS vh does not,
+  // so the fit is probed through a fixed 100vh element and stays put.
+  const vhProbe = document.createElement("div");
+  vhProbe.style.cssText = "position:fixed;top:0;left:0;width:0;height:100vh;visibility:hidden;pointer-events:none";
+  function stableVh() {
+    document.body.appendChild(vhProbe);
+    const h = vhProbe.getBoundingClientRect().height;
+    vhProbe.remove();
+    return h || window.innerHeight;
+  }
+
   function layoutDots() {
-    // Guarantee the logo a breathing margin below the viewport's top edge. Its CSS
-    // placement (top 34% − 81.64% of a width-capped box) leaves the annulus ink
-    // nearly touching — or poking past — the top on wide-and-short windows
-    // (maximized Chrome), while a narrower window shrinks the logo and opens the
-    // margin (the Firefox reference capture). Measured from the live rect —
-    // browser-independent, like the i-dot's baseline anchor — and applied as a
-    // plain downward offset the .signet transform reads.
+    // Fit the logo to the viewport's shape. The CSS anchors (top min(34vh, 26vw),
+    // width min(46.08vw, 480px)) already suit any desktop-shaped or portrait
+    // viewport; a very SHORT one (a phone held sideways) instead gets the mark
+    // resized to 30% of the visible height and seated by the top right corner
+    // —at full size it would swallow most of the view.
+    const vw = window.innerWidth, hv = stableVh();
+    const shortV = hv < 560;
+    // annulus outer diameter = 0.6438 × the box width (0.6·w + 2 × 8.7685·w/400)
+    if (shortV) root.style.setProperty("--sig-w", (0.30 * hv / 0.6438).toFixed(1) + "px");
+    else root.style.removeProperty("--sig-w");
     root.style.setProperty("--sig-fix", "0px");
+    root.style.setProperty("--sig-asx", "0px");
     const c0 = circle();
     if (!c0.R) return;
-    const fix = 0.05 * window.innerHeight - (c0.cy - (c0.R + 8.7685 * c0.scale));
-    if (fix > 0) root.style.setProperty("--sig-fix", fix.toFixed(1) + "px");
-    const c = circle();       // re-measure with the margin applied
-    layoutLede(c);            // reflow the lede next — everything below it shifts
+    const rOut0 = c0.R + 8.7685 * c0.scale;
+    // Guarantee the annulus ink a breathing margin below the viewport's top edge
+    // —on wide-and-short windows the width-capped logo would otherwise graze or
+    // poke past it. Measured from the live rect —browser-independent, like the
+    // i-dot's baseline anchor— and applied through the .signet transform. On the
+    // short viewport the margin is wider and EXACT (the corner seat) —plus a text
+    // line's worth of extra air off the toggles row— and the plain margin is kept
+    // off the right edge through --sig-asx.
+    const margin = (shortV ? 0.15 : 0.05) * hv;
+    const fix = margin + (shortV ? 28 : 0) - (c0.cy - rOut0);
+    if (fix > 0 || shortV) root.style.setProperty("--sig-fix", fix.toFixed(1) + "px");
+    if (shortV) root.style.setProperty("--sig-asx", (vw - margin - rOut0 - c0.cx).toFixed(1) + "px");
+    const c = circle();       // re-measure with the fit applied
+    layoutLede(c);            // reflow the lede next —everything below it shifts
     const gapPx = 12.225 * KLOGO * c.scale;
-    // the dots scale with the (now 20%-smaller) logo, which left them too small; nudge the
-    // ratio up so they land halfway back — 0.95 × (gap) × 1.125, i.e. half of the 20% shrink
-    // restored — then grown 50% (×1.5) so the points read boldly against the cracks
+    // the dots scale with the logo, where the raw gap reads too small; the ratio is
+    // nudged up (0.95 × gap × 1.125) and grown 50% (×1.5) so the points read boldly
+    // against the cracks
     ptPx = 1.6035 * gapPx;
     field.style.setProperty("--pt", ptPx.toFixed(1) + "px");
     // pin the two hardcoded dots to their home (logo centre / the 'i'), unless the
-    // visitor has since dragged them — a moved dot keeps where it was put
+    // visitor has since dragged them —a moved dot keeps where it was put
     if (!centreDot._moved) {
       centreDot.style.left = (c.cx + window.scrollX).toFixed(1) + "px";
       centreDot.style.top  = (c.cy + window.scrollY).toFixed(1) + "px";
@@ -1216,7 +1269,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
       const r = iSpan.getBoundingClientRect();
       // Anchor the tittle to the text BASELINE, not the inline box. The glyph sits on the
       // baseline and both engines place it there alike; the inline box top/height they do
-      // NOT agree on (small-caps leading differs), which used to drift the dot between
+      // NOT agree on (small-caps leading differs), which would drift the dot between
       // Firefox and Chrome. The baseline comes from the zero-size .hero__i-base marker; the
       // upward lift is in em (font-relative, identical everywhere). Horizontal stays the
       // glyph's own centre (advance widths agree across engines).
@@ -1232,7 +1285,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
       dotPos.push({ x: r.left + r.width / 2 + window.scrollX, y: r.top + r.height / 2 + window.scrollY });
     }
     // keep the sample field strictly between the two anchors: any point above the 'I' or
-    // below the bottom anchor (the 'i' of the contact head — a position, not a dot) is
+    // below the bottom anchor (the 'i' of the contact head —a position, not a dot) is
     // dropped (hidden and taken out of every light/crack loop). The 'I' and the
     // logo-centre dot are exempt.
     const yTop = dotPos[iIndex] ? dotPos[iIndex].y : -Infinity;
@@ -1249,9 +1302,9 @@ document.getElementById("year").textContent = new Date().getFullYear();
     buildCracks(true);                                // (re)build the crack graph + place its cracks
   }
   // The bottom anchor's page position: the 'i' (or í/ì/j) tittle in the contact head.
-  // The head's text may already be wrapped into .litw word spans by reflect.js — its
+  // The head's text may already be wrapped into .litw word spans by reflect.js —its
   // first prep races this layout, and which one lands first varies by browser and by
-  // load — so walk the head's TEXT NODES rather than trust firstChild.
+  // load— so walk the head's TEXT NODES rather than trust firstChild.
   function contactAnchor() {
     const h = document.querySelector(".contact__head");
     if (!h) return null;
@@ -1268,19 +1321,19 @@ document.getElementById("year").textContent = new Date().getFullYear();
         }
       }
     }
-    const r = h.getBoundingClientRect();   // no i/j in the active language — the head's centre
+    const r = h.getBoundingClientRect();   // no i/j in the active language —the head's centre
     return { x: r.left + r.width / 2 + window.scrollX, y: r.top + r.height * 0.28 + window.scrollY };
   }
 
   // ---- the crack graph: a radial-flow tree rooted at the 'I' -----------------------
   // Built ONCE per layout (load / resize / language), never on a drag. Take the dots by
-  // increasing distance from the 'I' — the logo-centre dot is a regular point here —
+  // increasing distance from the 'I' —the logo-centre dot is a regular point here—
   // and link each newcomer DIRECTIONALLY, so the tree reads as an energy wave flowing
   // out of the 'I', not a global crack. Each point already in the tree looks outward
   // along its own radial direction (the ray 'I'→itself: the direction the pulse was
   // travelling when it passed) through an angular window of aperture π/4 to each side
   // (range π/2). The newcomer links to whichever point sees it closest to its radial
-  // axis; if no point sees it, it falls back to the 'I' itself — the root is the last
+  // axis; if no point sees it, it falls back to the 'I' itself —the root is the last
   // resort, its own radial direction being undefined.
   let crackEdges = [];      // [{ p, c }] parent→child dot indices (p was already in the tree)
   let crackWalks = [];      // one compass walk per edge, in the edge frame (x 0..D along, y across)
@@ -1315,7 +1368,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     cracksBuilt = true;
   }
 
-  // t (px): ~half the hero name's letter height, so 2t ≈ its caps — the crack band's half-thickness
+  // t (px): ~half the hero name's letter height, so 2t ≈ its caps —the crack band's half-thickness
   function crackT() {
     const nm = document.querySelector(".hero__name");
     return 0.34 * (nm ? parseFloat(getComputedStyle(nm).fontSize) : 40);
@@ -1324,17 +1377,17 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // ---- the compass walk: the crack between two linked dots ------------------------
   // A broken compass points at the far dot with a uniform error in (−π/4, π/4). The walk
   // lives in the edge frame (x 0..D along the link, y across) inside a LIPSCHITZ diamond:
-  // |y| ≤ λ·min(x, D−x), with λ set so the top edge passes through (D/2, h) — every crack
+  // |y| ≤ λ·min(x, D−x), with λ set so the top edge passes through (D/2, h) —every crack
   // is BORN at one dot and CONVERGES into the other. The CORE group walks it dot to dot
   // hugging the axis: its own bound is the half-band ±h/2 cut by the diamond, and it sees
   // that bound and turns inward rather than cross it. MANY LONERS split off with their own
-  // biased compasses; a loner dies after a few steps or falling off the diamond — unless
+  // biased compasses; a loner dies after a few steps or falling off the diamond —unless
   // its path crosses the core first: CROSSING THE MAIN CRACK MEANS JOINING IT, the track
   // ends at the crossing and a small isle closes. Now and then a COUPLE leaves together:
-  // ONE track walked double file — drawn thicker, a width between a loner's and the main
-  // crack's — that on every step may SPLIT; when it does, the two part in genuinely
+  // ONE track walked double file —drawn thicker, a width between a loner's and the main
+  // crack's— that on every step may SPLIT; when it does, the two part in genuinely
   // different directions (two diverging steps each, then fully independent loners, each
-  // obeying the same fall/join rules). O(steps·loners) per edge — cheap, built once.
+  // obeying the same fall/join rules). O(steps·loners) per edge —cheap, built once.
   const CRK = {
     STEP: 14,                  // nominal step length (px; shrunk so short edges still get steps)
     JIT: 0.5,                  // a loner's per-step wobble, as a fraction of the π/4 error
@@ -1359,13 +1412,13 @@ document.getElementById("year").textContent = new Date().getFullYear();
         err = -Math.abs(err) * Math.sign(y || ny);
         nx = x + Math.cos(err) * s; ny = y + Math.sin(err) * s;
         const b = bound(nx);
-        if (Math.abs(ny) > b) ny = b * Math.sign(ny);       // pinched tighter than a turn — clamp
+        if (Math.abs(ny) > b) ny = b * Math.sign(ny);       // pinched tighter than a turn —clamp
       }
       x = nx; y = ny;
       core.push([x, y]);
     }
     core.push([D, 0]);                                      // the diamond's far apex: lands ON the dot
-    // where a track first crosses the core — the fraction along a→b, or null
+    // where a track first crosses the core —the fraction along a→b, or null
     const hit = (ax, ay, bx, by) => {
       let best = null;
       for (let i = 1; i < core.length; i++) {
@@ -1380,7 +1433,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     };
     // a track off the core: its own biased compass, until it joins the core, falls off
     // the diamond, or its steps run out. `force` first steps take the bias with no
-    // wobble — how a fresh split's halves are made to genuinely part ways.
+    // wobble —how a fresh split's halves are made to genuinely part ways.
     const tracks = [];      // each: { pts, w }  w: 0 loner, 1 couple (drawn double file)
     const wander = (x0, y0, bias, nSteps, force) => {
       const pts = [[x0, y0]];
@@ -1391,7 +1444,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
         const qx = wx + Math.cos(e) * s, qy = wy + Math.sin(e) * s;
         const u = hit(wx, wy, qx, qy);
         if (u != null) { pts.push([wx + (qx-wx) * u, wy + (qy-wy) * u]); break; }   // joins the main crack
-        if (Math.abs(qy) > env(qx)) break;                  // fell off the diamond — the path ends
+        if (Math.abs(qy) > env(qx)) break;                  // fell off the diamond —the path ends
         pts.push([qx, qy]);
         wx = qx; wy = qy;
       }
@@ -1434,8 +1487,8 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
   // Lay each edge's walk into page space: x stretched along the live parent→child link,
   // y carried across it unscaled (the band keeps its true thickness). Each stroke keeps
-  // its midpoint's distance from the 'I' — the pulse clock reads it. Arithmetic only —
-  // safe to re-run on every drag.
+  // its midpoint's distance from the 'I' —the pulse clock reads it. Arithmetic only
+  // —safe to re-run on every drag.
   function placeCracks() {
     crackSegs = [];
     if (!cracksBuilt) return;
@@ -1467,16 +1520,14 @@ document.getElementById("year").textContent = new Date().getFullYear();
     placeCracks();
   }
 
-  // the cracks' ink — official this round: the EMBER RAMP (incRGB), the site's own
+  // the cracks' ink: the EMBER RAMP (incRGB), the site's own
   // gold&black mixing path, driven by the wave's envelope. A piece warms through
   // dark amber under the announcer, wears the official gold at the front, and cools
-  // back down the same path as it dies — the crack and the wave read as one event.
-  // (Chosen over a flat nuclei gold and a white-hot-front variant; the wrist-band
-  // red of iterations 25–26 is retired.)
+  // back down the same path as it dies —the crack and the wave read as one event.
 
   // A crack piece's life under the pulse, by its distance r from the 'I': dark until the
   // announcer arrives, a linear rise to full at the main front, SUSTAINED full until the
-  // requiem passes, then the ring message's own stretched-exponential ember cool — and
+  // requiem passes, then the ring message's own stretched-exponential ember cool —and
   // gone. The cracks live only while the wave does; the site at rest never shows them.
   function crackEnv(r) {
     const Tp = ign.Tp;
@@ -1493,7 +1544,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // (the fixed-canvas version repainted against the live scroll and trailed the
   // compositor, ghosting the strokes mid-scroll). dpr is capped: the strokes are
   // sub-pixel and softened anyway, and the canvas is as tall as the page. No CSS
-  // blur here — a filter over a page-sized layer costs a full-page pass every
+  // blur here —a filter over a page-sized layer costs a full-page pass every
   // frame; the whisker of glow is painted instead (the halo pass below).
   function fitCrackCanvas() {
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
@@ -1507,15 +1558,15 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // Paint the live cracks: every stroke at its own pulse level, batched into a few
   // quantized Path2D strokes per width class so the wave still costs a handful of
   // calls. Three widths: loner < couple (double file) < the main crack; each level
-  // is laid as a wider faint HALO under a crisp core — the soft edge the old canvas
-  // blur used to give, at no filter cost. Everything with env ≥ 0.02 lives within
+  // is laid as a wider faint HALO under a crisp core —a soft edge at no filter
+  // cost. Everything with env ≥ 0.02 lives within
   // R = front + lead of the 'I' (the cool tail is interior), so only that band of
   // the canvas is ever cleared. Once the wave is gone the canvas is released
-  // outright — the cracks never show again until the next load.
+  // outright —the cracks never show again until the next load.
   const CRACK_LVL = 20;
   const CRACK_W = [0.4, 0.62, 0.85], CRACK_A = [0.8, 0.88, 0.95];
   let crackClean = true;    // whether the canvas is empty (and, once the wave dies, freed)
-  let crackTick = 0;        // last repaint (ms) — the envelope holds ~30fps; the strokes
+  let crackTick = 0;        // last repaint (ms) —the envelope holds ~30fps; the strokes
                             // are page-anchored, so scrolling stays smooth regardless
   function drawCracks(scale) {
     if (!krctx) return;
@@ -1587,7 +1638,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
   // done here from the window pointer stream. A dot is grabbable from its centre out
   // to just past its diffused edge; the logo from anywhere on the annulus band or
   // inside either b's silhouette (the annulus is a radius test; a b uses the same
-  // b-primitive point-in-silhouette test the lighting uses — see bb.txt).
+  // b-primitive point-in-silhouette test the lighting uses —see bb.txt).
   // A held drag relights on the fly through schedule().
   function hitDot(x, y) {
     const hitR = ptPx * 0.6;              // narrow: centre to just over the diffused boundary
@@ -1629,6 +1680,11 @@ document.getElementById("year").textContent = new Date().getFullYear();
     }
     schedule();                            // relight as it moves
   }
+  // On touch, a moving finger is the browser's scroll gesture: it fires pointercancel
+  // and the grabbed piece falls mid-drag. While a drag is live, this non-passive
+  // touchmove listener claims the gesture instead —it exists only for the drag's
+  // lifetime, so normal scrolling never waits on it.
+  const claimTouch = e => e.preventDefault();
   function onUp() {
     drag = null;
     document.body.style.cursor = "";
@@ -1636,6 +1692,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     window.removeEventListener("pointermove", onMove);
     window.removeEventListener("pointerup", onUp);
     window.removeEventListener("pointercancel", onUp);
+    window.removeEventListener("touchmove", claimTouch);
   }
   function onDown(e) {
     if (e.button) return;                                       // primary button only
@@ -1654,6 +1711,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
+    window.addEventListener("touchmove", claimTouch, { passive: false });
   }
   // grab cursor when hovering something draggable (cheap: uses cached geometry)
   function onHover(e) {
@@ -1669,21 +1727,22 @@ document.getElementById("year").textContent = new Date().getFullYear();
   const langBtn  = document.getElementById("lang-switch");
 
   // persistence: remember just three functional choices (language, light on/off, day/night) across visits,
-  // in localStorage. These are preferences the visitor sets themselves — no tracking, no personal
-  // data, nothing sent anywhere — so they need no cookie notice. Wrapped so private-mode throws are
+  // in localStorage. These are preferences the visitor sets themselves —no tracking, no personal
+  // data, nothing sent anywhere— so they need no cookie notice. Wrapped so private-mode throws are
   // swallowed (the site just stops remembering, never breaks).
   const STORE = "jbb:";
   const remember = (k, v) => { try { localStorage.setItem(STORE + k, v); } catch (e) {} };
   const recall   = (k)    => { try { return localStorage.getItem(STORE + k); } catch (e) { return null; } };
 
   // bulb: off removes the points + every lighting layer (CSS), freezes the logo upright AND
-  // un-pins it — the logo stops riding the viewport and becomes a static image anchored to the
+  // un-pins it —the logo stops riding the viewport and becomes a static image anchored to the
   // page (CSS swaps it to position:absolute), so it scrolls away with the content. on returns
   // straight to steady light and re-pins it (no re-ignition).
   function anchorLogoToPage() {
-    // the fixed logo sits at top:34% of the viewport; absolute-anchor it to the same spot on
+    // the fixed logo sits at top:min(34vh, 26vw); absolute-anchor it to the same spot on
     // the page (at scrollY 0 the page top and viewport top coincide), so it holds there and scrolls off
-    root.style.setProperty("--sig-abs-top", (0.34 * window.innerHeight).toFixed(1) + "px");
+    root.style.setProperty("--sig-abs-top",
+      Math.min(0.34 * stableVh(), 0.26 * window.innerWidth).toFixed(1) + "px");
   }
   function setLights(on) {
     lightsOn = on;
@@ -1695,7 +1754,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
       ign.on = false;                                       // kill any still-running ignition
       rotRad = 0;
       if (markEl) markEl.setAttribute("transform", MARK_BASE);
-      // clear any live drag offset so the logo drops back to its original spot — otherwise a
+      // clear any live drag offset so the logo drops back to its original spot —otherwise a
       // logo dragged onto the name would be frozen there when the light goes out
       logoDx = logoDy = 0;
       root.style.setProperty("--sig-dx", "0px");
@@ -1730,14 +1789,34 @@ document.getElementById("year").textContent = new Date().getFullYear();
     schedule();
   }
   if (nightBtn) nightBtn.addEventListener("click", () => setNight(!nightOn));
-  // initial theme: a remembered toggle wins; failing that, follow the browser's own scheme
-  const nightPref = recall("night");
-  if (nightPref === "on" || (nightPref === null && window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches)) setNight(true);
+  // initial theme: day, always —the system scheme is ignored. Only the visitor's own
+  // toggle switches to night, and setNight remembers whichever side they leave it on
+  if (recall("night") === "on") setNight(true);
+
+  // ---- the contact icons on a touch screen: two taps, like a cursor ----
+  // With no cursor there is no hover, so a tap used to gold the icon and follow the
+  // link in one blow. On hoverless devices the first tap now only ARMS the icon
+  // (the .armed class wears the hover dress); the second tap —the click— follows.
+  // Tapping anywhere else disarms. Mouse browsers report (hover: hover) and skip this.
+  if (window.matchMedia && window.matchMedia("(hover: none)").matches) {
+    let armed = null;
+    const disarm = () => { if (armed) { armed.classList.remove("armed"); armed = null; } };
+    for (const icon of document.querySelectorAll(".contact__icon")) {
+      icon.addEventListener("click", (e) => {
+        if (armed === icon) { disarm(); return; }   // second tap: follow the link
+        e.preventDefault();                          // first tap: just light it up
+        disarm();
+        icon.classList.add("armed"); armed = icon;
+      });
+    }
+    document.addEventListener("click", (e) => {
+      if (armed && !armed.contains(e.target)) disarm();
+    });
+  }
 
   // language + content: the page's words live OUTSIDE this file, in assets/content.en.js and
   // assets/content.es.js (each a plain window.CONTENT_<LANG> map of data-i18n key -> text,
-  // loaded by their own <script> tags before this one — no fetch, so it works from file://).
+  // loaded by their own <script> tags before this one —no fetch, so it works from file://).
   // index.html holds only the structure; every translatable node carries data-i18n="key" and
   // is filled here from the active language's map. Proper names, dates and GPAs stay inline.
   const EN = window.CONTENT_EN || {}, ES = window.CONTENT_ES || {};
@@ -1768,12 +1847,12 @@ document.getElementById("year").textContent = new Date().getFullYear();
     // runs at PARSE time (this script sits at the end of <body>); forcing a dot relayout that
     // early pins the page into a slow CPU-compositing path for every later frame (drove a
     // superfluid page down to ~30fps). On load, start() does the first layout+draw anyway; a
-    // language TOGGLE reflows the text, so it relayouts there — post-load, where it's harmless.
+    // language TOGGLE reflows the text, so it relayouts there —post-load, where it's harmless.
     if (langBtn) langBtn.addEventListener("click", () => { setLang(lang === "en" ? "es" : "en"); layoutDots(); draw(); });
     setLang(recall("lang") === "es" ? "es" : "en");         // initial fill from the content files (start() handles first layout)
   }
 
-  // restore a remembered "interaction off" before the load sequence — so the ignition is
+  // restore a remembered "interaction off" before the load sequence —so the ignition is
   // skipped and the logo comes up static and page-anchored from the first paint
   if (recall("light") === "off") setLights(false);
 
