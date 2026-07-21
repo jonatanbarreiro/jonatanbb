@@ -1,0 +1,7 @@
+# List of tweaks to address in the next session.
+
+- The icon of the logo, which you can find in the bottom of the CV's, used to appear in the respective tab when the page is opened in the site. Now the icon that is shown is the www one, just like right before 'jonatanbb.xyz' in the second line after the first paragraph of the CV's. The icon there is correct, but not in the browser tab. In the browser tab the icon that should appear is the icon version of the logo.
+
+- Spanish version of the website says 'el Prof. E. Gavosto'. Estela is a she.
+
+- Current use of 'Prof.' in Spanish version is misleading. In English it is a merits title, but in Spanish a profession. Watch usages of Prof. and Dr.
