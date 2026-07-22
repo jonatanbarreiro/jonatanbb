@@ -1,5 +1,5 @@
 # List of tweaks to address in the next session.
 
 - Spanish version of the website says 'el Prof. E. Gavosto'. Estela is a she.
-
 - Current use of 'Prof.' in Spanish version is misleading. In English it is a merits title, but in Spanish a profession. Watch usages of Prof. and Dr.
+- Site doesn't actually convey that this is my first time ever building a website. It only says that it was "raised from a bare hello-world file". That's one way to put the result into perspective, but it misses the point.
