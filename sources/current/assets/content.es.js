@@ -17,20 +17,20 @@ window.CONTENT_ES = {
   // Sobre mí
   k_about: "Sobre mí",
   ab1: "Soy matemático de formación. Primero un grado y máster de investigación por la Universidad Autónoma de Madrid, donde terminé centrándome en el área de análisis complejo y funcional. Y después un máster en Matemáticas (Master of Arts) por la Universidad de Kansas, donde me centré en análisis armónico, y también donde di clase por primera vez durante mi segundo año.",
-  ab2: "Desde 2021 soy investigador predoctoral en el <strong>grupo de investigación LiDAR del CiTIUS</strong> (Universidade de Santiago de Compostela), bajo la dirección del Dr. Francisco F. Rivera. Mi día a día ha sido modelar e implementar técnicas de detección e integración para nubes de puntos captadas por sensores LiDAR y de imagen —sobre todo en C++, sobre una base de código compartida de tamaño considerable. Fue también donde terminó de asentarse mi caja de herramientas: Python, aprendido como extensión natural del Sage de mis años en el grado, y git y vim como compañía diaria.",
+  ab2: "Desde 2021 soy investigador predoctoral en el <strong>grupo de investigación LiDAR del CiTIUS</strong> (Universidade de Santiago de Compostela), bajo la dirección del Dr.&nbsp;Francisco F.&nbsp;Rivera. Mi día a día ha sido modelar e implementar técnicas de detección e integración para nubes de puntos captadas por sensores LiDAR y de imagen —sobre todo en C++, sobre una base de código compartida de tamaño considerable. Fue también donde terminó de asentarse mi caja de herramientas: Python, aprendido como extensión natural del Sage de mis años en el grado, y git y vim como compañía diaria.",
   ab3: "El hilo que lo une todo es el modelado: siempre he tenido facilidad para expresar problemas, matemáticos o no, de manera que su formulación —el modelo subyacente— ofrezca una estructura con sentido sobre la que trabajar. Y me importan los métodos que no solo son útiles y correctos, sino sensatos: donde puedes entender <em>por qué</em> el modelo obliga a la respuesta. Ahora mismo, todo eso apunta a terminar el doctorado.",
 
   // Experiencia
   k_exp: "Experiencia",
   e1t: "Técnico Superior de Investigación",
   e1o: '<a href="https://citius.gal/es/team/jonatan-barreiro-bastos/">CiTIUS</a> —Centro de Investigación en Tecnoloxías Intelixentes, USC',
-  e1d: "Investigador predoctoral en el grupo LiDAR bajo la dirección del Dr. Francisco F. Rivera. Modelé e implementé técnicas de detección e integración para nubes de puntos LiDAR y de imagen, principalmente en C++. Desde agosto de 2025, continúo de forma independiente la investigación doctoral subyacente.",
+  e1d: "Investigador predoctoral en el grupo LiDAR bajo la dirección del Dr.&nbsp;Francisco F.&nbsp;Rivera. Modelé e implementé técnicas de detección e integración para nubes de puntos LiDAR y de imagen, principalmente en C++. Desde agosto de 2025, continúo de forma independiente la investigación doctoral subyacente.",
   gta: "Profesor asistente de posgrado",
   uok: "Universidad de Kansas",
-  e2d: "Semestre de invierno —profesor responsable de un grupo de 33 estudiantes de Math 115, Cálculo I, coordinado por el Dr. W. Huang y la Dra. A. Kolasinski. Di clases, diseñé y corregí los exámenes y atendí el aula de ayuda.",
-  e3d: "Semestre de primavera —profesor asistente de Math 147, Cálculo III (Honors), con la Dra. E. Gavosto: el curso de cálculo más alto que se confiaba a los estudiantes de posgrado. Impartí clases, corregí, atendí el aula de ayuda y me encargué de la impresión 3D de los proyectos del alumnado.",
+  e2d: "Semestre de invierno —profesor responsable de un grupo de 33 estudiantes de Math 115, Cálculo I, coordinado por el Dr.&nbsp;W.&nbsp;Huang y A.&nbsp;Kolasinski. Di clases, diseñé y corregí los exámenes y atendí el aula de ayuda.",
+  e3d: "Semestre de primavera —profesor asistente de Math 147, Cálculo III (Honors), con la Dra.&nbsp;E.&nbsp;Gavosto: el curso de cálculo más alto que se confiaba a los estudiantes de posgrado. Impartí clases, corregí, atendí el aula de ayuda y me encargué de la impresión 3D de los proyectos del alumnado.",
   e4t: "Asistente de investigación de posgrado",
-  e4d: "Asistente de investigación con el Dr. Rodolfo Torres, iniciándome en la investigación en análisis armónico.",
+  e4d: "Asistente de investigación con el Dr.&nbsp;Rodolfo Torres, iniciándome en la investigación en análisis armónico.",
 
   // Educación
   k_edu: "Educación",
@@ -39,17 +39,17 @@ window.CONTENT_ES = {
   ed1d: "Beneficiario de la Dean's Doctoral Fellowship.",
   ed2t: "Máster en Matemáticas y Aplicaciones",
   ed2o: "Universidad Autónoma de Madrid · 8,0 / 10,0",
-  ed2d: "Itinerario de iniciación a la investigación. Trabajo Fin de Máster: <em>El Teorema de la Corona</em>, dirigido por J. L. Fernández.",
+  ed2d: "Itinerario de iniciación a la investigación. Trabajo Fin de Máster: <em>El Teorema de la Corona</em>, dirigido por el Dr.&nbsp;J.&nbsp;L.&nbsp;Fernández.",
   ed3t: "Grado en Matemáticas",
   ed3o: "Universidad Autónoma de Madrid · 7,6 / 10,0",
-  ed3d: "Trabajo Fin de Grado: <em>La Transformada Rápida de Fourier y Aplicaciones</em>, dirigido por E. Hernández.",
+  ed3d: "Trabajo Fin de Grado: <em>La Transformada Rápida de Fourier y Aplicaciones</em>, dirigido por el Dr.&nbsp;E.&nbsp;Hernández.",
 
   // Investigación y proyectos
   k_pub: "Investigación y proyectos",
   pubintro: "Ahora mismo tengo dos temas encima de la mesa. Uno es mi segundo artículo —un enfoque Hough de muestreo aleatorio desacoplado para detectar rectas, y ya también circunferencias, en nubes de puntos 2D; la investigación está hecha y la redacción en marcha. El otro es esta misma página, mi primera página web, levantada desde un hello-world sin experiencia previa en el terreno, en un par de semanas dedicadas —asistida por IA, pero hecha a mano, sin ningún framework de por medio. No me ha hecho desarrollador web, pero sí supuso un recorrido no trivial —partiendo de cero— por el diseño y el desarrollo web, y por definir flujos deliberados y sostenibles de colaboración con IA.",
   p2t: "LitS: A novel Neighbourhood Descriptor for Point Clouds",
   p2m: "arXiv:2602.04838 · feb 2026",
-  p2n: "Un descriptor de vecindad para nubes de puntos 2D y 3D: funciones constantes a trozos sobre la circunferencia unidad que permiten a cada punto registrar cómo se distribuyen sus vecinos por dirección. Con F. F. Rivera, O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís y T. F. Pena.",
+  p2n: "Un descriptor de vecindad para nubes de puntos 2D y 3D: funciones constantes a trozos sobre la circunferencia unidad que permiten a cada punto registrar cómo se distribuyen sus vecinos por dirección. Con F.&nbsp;F.&nbsp;Rivera, O.&nbsp;G.&nbsp;Lorenzo, D.&nbsp;L.&nbsp;Vilariño, J.&nbsp;C.&nbsp;Cabaleiro, A.&nbsp;M.&nbsp;Esmorís y T.&nbsp;F.&nbsp;Pena.",
   p2l: '<a href="https://arxiv.org/abs/2602.04838">Leer en arXiv →</a>',
   orcid: 'ORCID: <a href="https://orcid.org/0000-0003-0922-8055" rel="me">0000-0003-0922-8055</a>.',
 

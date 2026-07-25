@@ -18,20 +18,20 @@ window.CONTENT_EN = {
   // About
   k_about: "About",
   ab1: "I'm a mathematician by training —a degree and a research master's from the Universidad Autónoma de Madrid, where my focus settled on complex and functional analysis, then a Master of Arts in Mathematics from the University of Kansas, where I did some research in harmonic analysis and spent a year teaching calculus.",
-  ab2: "Since 2021 I've been a predoctoral researcher in the <strong>LiDAR research group at CiTIUS</strong> (Universidade de Santiago de Compostela), under the supervision of Dr. Francisco F. Rivera. My day-to-day has been modelling and implementing detection and integration techniques for point clouds captured by LiDAR and imaging sensors —mostly in C++, inside a sizeable shared codebase. It's also where my working toolkit settled in: Python, picked up as a natural extension of the Sage of my graduate years, and git and vim as everyday company.",
+  ab2: "Since 2021 I've been a predoctoral researcher in the <strong>LiDAR research group at CiTIUS</strong> (Universidade de Santiago de Compostela), under the supervision of Prof.&nbsp;Francisco F.&nbsp;Rivera. My day-to-day has been modelling and implementing detection and integration techniques for point clouds captured by LiDAR and imaging sensors —mostly in C++, inside a sizeable shared codebase. It's also where my working toolkit settled in: Python, picked up as a natural extension of the Sage of my graduate years, and git and vim as everyday company.",
   ab3: "The thread through all of it is modelling —I've always had a way of turning a loose problem, mathematical or not, into something with workable structure. And I care about methods that are not only useful and correct, but sensible, where you can understand <em>why</em> the model forces the answer. Right now, all of that is pointed at finishing my PhD.",
 
   // Experience
   k_exp: "Experience",
   e1t: "Senior Research Technician",
   e1o: '<a href="https://citius.gal/es/team/jonatan-barreiro-bastos/">CiTIUS</a> —Centro de Investigación en Tecnoloxías Intelixentes, USC',
-  e1d: "Predoctoral researcher in the LiDAR group under Dr. Francisco F. Rivera. Modelled and implemented detection and integration techniques for LiDAR and image point clouds, primarily in C++. Since August 2025, continuing the underlying doctoral research independently.",
+  e1d: "Predoctoral researcher in the LiDAR group under Prof.&nbsp;Francisco F.&nbsp;Rivera. Modelled and implemented detection and integration techniques for LiDAR and image point clouds, primarily in C++. Since August 2025, continuing the underlying doctoral research independently.",
   gta: "Graduate Teaching Assistant",
   uok: "University of Kansas",
-  e2d: "Winter semester —instructor of record for a 33-student section of Math 115 Calculus I, coordinated by Dr. W. Huang and Dr. A. Kolasinski. Lectured, designed and graded the tests, ran the Help Room.",
-  e3d: "Spring semester —teaching assistant for Math 147 Calculus III (Honors), with Prof. E. Gavosto: the highest calculus course graduate students were allowed to assist in. Taught classes, graded, ran the Help Room, and handled the 3D printing of student projects.",
+  e2d: "Winter semester —instructor of record for a 33-student section of Math 115 Calculus I, coordinated by Prof.&nbsp;W.&nbsp;Huang and A.&nbsp;Kolasinski. Lectured, designed and graded the tests, ran the Help Room.",
+  e3d: "Spring semester —teaching assistant for Math 147 Calculus III (Honors), with Prof.&nbsp;E.&nbsp;Gavosto: the highest calculus course graduate students were allowed to assist in. Taught classes, graded, ran the Help Room, and handled the 3D printing of student projects.",
   e4t: "Graduate Research Assistant",
-  e4d: "Research assistant under Prof. Rodolfo Torres, beginning research in harmonic analysis.",
+  e4d: "Research assistant under Prof.&nbsp;Rodolfo Torres, beginning research in harmonic analysis.",
 
   // Education
   k_edu: "Education",
@@ -40,17 +40,17 @@ window.CONTENT_EN = {
   ed1d: "Recipient of the Dean's Doctoral Fellowship.",
   ed2t: "Máster en Matemáticas y Aplicaciones",
   ed2o: "Universidad Autónoma de Madrid · 8.0 / 10.0",
-  ed2d: "Research initiation specialization. Thesis: <em>El Teorema de la Corona</em> (The Corona Theorem), advised by J. L. Fernández.",
+  ed2d: "Research initiation specialization. Thesis: <em>El Teorema de la Corona</em> (The Corona Theorem), advised by Prof.&nbsp;J.&nbsp;L.&nbsp;Fernández.",
   ed3t: "Grado en Matemáticas",
   ed3o: "Universidad Autónoma de Madrid · 7.6 / 10.0",
-  ed3d: "Thesis: <em>La Transformada Rápida de Fourier y Aplicaciones</em> (The Fast Fourier Transform and Applications), advised by E. Hernández.",
+  ed3d: "Thesis: <em>La Transformada Rápida de Fourier y Aplicaciones</em> (The Fast Fourier Transform and Applications), advised by Dr.&nbsp;E.&nbsp;Hernández.",
 
   // Research & projects
   k_pub: "Research &amp; projects",
   pubintro: "Two pieces of work are on my desk right now. One is my second article —a decoupled random-sampling Hough approach to detecting lines, and now also circles, in 2D point clouds; the research is done and the write-up is under way. The other is this very site, my first website ever, raised from a bare hello-world file with no prior web background, in a couple of dedicated weeks —AI-assisted, hand-driven, no framework in between. It didn't make me a web developer, but it did mean a non-trivial run through web design and development, taken on cold, and through designing AI workflows that stay deliberate and accountable.",
   p2t: "LitS: A novel Neighbourhood Descriptor for Point Clouds",
   p2m: "arXiv:2602.04838 · Feb 2026",
-  p2n: "A neighbourhood descriptor for 2D and 3D point clouds: piecewise constant functions on the unit circle that let each point record how its neighbours are distributed by direction. With F. F. Rivera, O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís, and T. F. Pena.",
+  p2n: "A neighbourhood descriptor for 2D and 3D point clouds: piecewise constant functions on the unit circle that let each point record how its neighbours are distributed by direction. With F.&nbsp;F.&nbsp;Rivera, O.&nbsp;G.&nbsp;Lorenzo, D.&nbsp;L.&nbsp;Vilariño, J.&nbsp;C.&nbsp;Cabaleiro, A.&nbsp;M.&nbsp;Esmorís, and T.&nbsp;F.&nbsp;Pena.",
   p2l: '<a href="https://arxiv.org/abs/2602.04838">Read on arXiv →</a>',
   orcid: 'ORCID: <a href="https://orcid.org/0000-0003-0922-8055" rel="me">0000-0003-0922-8055</a>.',
 
