@@ -28,7 +28,7 @@ window.CONTENT_EN = {
   e1d: "Predoctoral researcher in the LiDAR group under Dr. Francisco F. Rivera. Modelled and implemented detection and integration techniques for LiDAR and image point clouds, primarily in C++. Since August 2025, continuing the underlying doctoral research independently.",
   gta: "Graduate Teaching Assistant",
   uok: "University of Kansas",
-  e2d: "Winter semester —instructor of record for a 33-student section of Math 115 Calculus I, coordinated by Dr. W. Huang and A. Kolasinski. Lectured, designed and graded the tests, ran the Help Room.",
+  e2d: "Winter semester —instructor of record for a 33-student section of Math 115 Calculus I, coordinated by Dr. W. Huang and Dr. A. Kolasinski. Lectured, designed and graded the tests, ran the Help Room.",
   e3d: "Spring semester —teaching assistant for Math 147 Calculus III (Honors), with Prof. E. Gavosto: the highest calculus course graduate students were allowed to assist in. Taught classes, graded, ran the Help Room, and handled the 3D printing of student projects.",
   e4t: "Graduate Research Assistant",
   e4d: "Research assistant under Prof. Rodolfo Torres, beginning research in harmonic analysis.",
@@ -47,7 +47,7 @@ window.CONTENT_EN = {
 
   // Research & projects
   k_pub: "Research &amp; projects",
-  pubintro: "Two pieces of work are on my desk right now. One is my second article —a decoupled random-sampling Hough approach to detecting lines, and now also circles, in 2D point clouds; the research is done and the write-up is under way. The other is this very site, raised from a bare hello-world file in a couple of dedicated weeks —AI-assisted, hand-driven, no framework in between. It didn't make me a web developer, but it did mean a non-trivial run through web design and development, and through designing AI workflows that stay deliberate and accountable.",
+  pubintro: "Two pieces of work are on my desk right now. One is my second article —a decoupled random-sampling Hough approach to detecting lines, and now also circles, in 2D point clouds; the research is done and the write-up is under way. The other is this very site, my first website ever, raised from a bare hello-world file with no prior web background, in a couple of dedicated weeks —AI-assisted, hand-driven, no framework in between. It didn't make me a web developer, but it did mean a non-trivial run through web design and development, taken on cold, and through designing AI workflows that stay deliberate and accountable.",
   p2t: "LitS: A novel Neighbourhood Descriptor for Point Clouds",
   p2m: "arXiv:2602.04838 · Feb 2026",
   p2n: "A neighbourhood descriptor for 2D and 3D point clouds: piecewise constant functions on the unit circle that let each point record how its neighbours are distributed by direction. With F. F. Rivera, O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís, and T. F. Pena.",

@@ -27,10 +27,10 @@ window.CONTENT_ES = {
   e1d: "Investigador predoctoral en el grupo LiDAR bajo la dirección del Dr. Francisco F. Rivera. Modelé e implementé técnicas de detección e integración para nubes de puntos LiDAR y de imagen, principalmente en C++. Desde agosto de 2025, continúo de forma independiente la investigación doctoral subyacente.",
   gta: "Profesor asistente de posgrado",
   uok: "Universidad de Kansas",
-  e2d: "Semestre de invierno —profesor responsable de un grupo de 33 estudiantes de Math 115, Cálculo I, coordinado por el Dr. W. Huang y A. Kolasinski. Di clases, diseñé y corregí los exámenes y atendí el aula de ayuda.",
-  e3d: "Semestre de primavera —profesor asistente de Math 147, Cálculo III (Honors), con el Prof. E. Gavosto: el curso de cálculo más alto que se confiaba a los estudiantes de posgrado. Impartí clases, corregí, atendí el aula de ayuda y me encargué de la impresión 3D de los proyectos del alumnado.",
+  e2d: "Semestre de invierno —profesor responsable de un grupo de 33 estudiantes de Math 115, Cálculo I, coordinado por el Dr. W. Huang y la Dra. A. Kolasinski. Di clases, diseñé y corregí los exámenes y atendí el aula de ayuda.",
+  e3d: "Semestre de primavera —profesor asistente de Math 147, Cálculo III (Honors), con la Dra. E. Gavosto: el curso de cálculo más alto que se confiaba a los estudiantes de posgrado. Impartí clases, corregí, atendí el aula de ayuda y me encargué de la impresión 3D de los proyectos del alumnado.",
   e4t: "Asistente de investigación de posgrado",
-  e4d: "Asistente de investigación con el Prof. Rodolfo Torres, iniciándome en la investigación en análisis armónico.",
+  e4d: "Asistente de investigación con el Dr. Rodolfo Torres, iniciándome en la investigación en análisis armónico.",
 
   // Educación
   k_edu: "Educación",
@@ -46,7 +46,7 @@ window.CONTENT_ES = {
 
   // Investigación y proyectos
   k_pub: "Investigación y proyectos",
-  pubintro: "Ahora mismo tengo dos temas encima de la mesa. Uno es mi segundo artículo —un enfoque Hough de muestreo aleatorio desacoplado para detectar rectas, y ya también circunferencias, en nubes de puntos 2D; la investigación está hecha y la redacción en marcha. El otro es esta misma página, levantada desde un hello-world en un par de semanas dedicadas —asistida por IA, pero hecha a mano, sin ningún framework de por medio. No me ha hecho desarrollador web, pero sí supuso un recorrido no trivial por el diseño y el desarrollo web, y por definir flujos deliberados y sostenibles de colaboración con IA.",
+  pubintro: "Ahora mismo tengo dos temas encima de la mesa. Uno es mi segundo artículo —un enfoque Hough de muestreo aleatorio desacoplado para detectar rectas, y ya también circunferencias, en nubes de puntos 2D; la investigación está hecha y la redacción en marcha. El otro es esta misma página, mi primera página web, levantada desde un hello-world sin experiencia previa en el terreno, en un par de semanas dedicadas —asistida por IA, pero hecha a mano, sin ningún framework de por medio. No me ha hecho desarrollador web, pero sí supuso un recorrido no trivial —partiendo de cero— por el diseño y el desarrollo web, y por definir flujos deliberados y sostenibles de colaboración con IA.",
   p2t: "LitS: A novel Neighbourhood Descriptor for Point Clouds",
   p2m: "arXiv:2602.04838 · feb 2026",
   p2n: "Un descriptor de vecindad para nubes de puntos 2D y 3D: funciones constantes a trozos sobre la circunferencia unidad que permiten a cada punto registrar cómo se distribuyen sus vecinos por dirección. Con F. F. Rivera, O. G. Lorenzo, D. L. Vilariño, J. C. Cabaleiro, A. M. Esmorís y T. F. Pena.",
