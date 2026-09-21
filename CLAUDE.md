@@ -223,8 +223,7 @@ branch, revert, or otherwise alter history.
 - No defensive coding when it hurts readability —prefer loud failure to silent
   guards, unless the guard genuinely reduces the site's security exposure.
 - **Em dashes, Jonatan's convention** —it governs everything written for the repo
-  (site copy, CV, docs, code comments), not chat answers. An em dash introducing an
-  intruding thought carries no space on the intrusion's side: `word —intrusion— word`.
-  When a stop cuts the intrusion short instead of a closing dash, the same rule
-  holds: `word —intrusion. Next sentence`. Spaced em dashes stay only where the
-  dash is no intrusion (a date range: `2021 — 2025`).
+  (site copy, CV, docs, code comments), not chat answers. No space on the inside of
+  what the dashes enclose: `word —enclosed— word`, and `word —enclosed. Next
+  sentence` where a stop closes the aside instead of a second dash. A spaced em
+  dash stays only where nothing is enclosed, as in a range: `2021 — 2025`.
