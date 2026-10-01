@@ -34,7 +34,7 @@ A new session begins whenever Jonatan starts a fresh conversation here.
 
 - **First prompt of a session:** after reading this `CLAUDE.md`, read the
   `README.md`. Then open a new `prompts/sessionNNNN.log` with the next unused
-  4-digit counter.
+  4-digit counter, counting from 0000.
 - **Logging a turn** (same shape as the iteration interaction docs):
   1. `Jonatan on YYYY-MM-DD at ~HH:MM:` + the **full prompt, verbatim**.
   2. One blank line.
