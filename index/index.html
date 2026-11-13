@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jonatanbb.xyz</title>
+  <link rel="canonical" href="https://jonatanbb.xyz/">
+  <link rel="icon" type="image/svg+xml" href="assets/bb-mark.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <main>
+    <!-- the signet at the centre, wired to six nodes on a flat-sided hexagon (R 330) -->
+    <svg class="hub" viewBox="-420 -380 840 760" role="navigation">
+      <g class="wires">
+        <line x1="-56"  y1="-97"  x2="-130" y2="-225.2"/>
+        <line x1="56"   y1="-97"  x2="130"  y2="-225.2"/>
+        <line x1="112"  y1="0"    x2="260"  y2="0"/>
+        <line x1="56"   y1="97"   x2="130"  y2="225.2"/>
+        <line x1="-56"  y1="97"   x2="-130" y2="225.2"/>
+        <line x1="-112" y1="0"    x2="-260" y2="0"/>
+      </g>
+
+      <image href="assets/bb-mark.svg" x="-120" y="-120" width="240" height="240"/>
+
+      <a class="node" href="cv/" data-local="../cvsite/sources/current/index.html">
+        <circle cx="-165" cy="-285.8" r="70"/>
+        <text x="-165" y="-285.8">jonatanbb.xyz</text>
+      </a>
+      <a class="node" href="https://firecoat.me" data-local="../../firecoat/index.html">
+        <circle cx="165" cy="-285.8" r="70"/>
+        <text x="165" y="-285.8">firecoat.me</text>
+      </a>
+      <a class="node">
+        <circle cx="330" cy="0" r="70"/>
+        <text x="330" y="0">project1</text>
+      </a>
+      <a class="node">
+        <circle cx="165" cy="285.8" r="70"/>
+        <text x="165" y="285.8">project2</text>
+      </a>
+      <g class="node"><circle cx="-165" cy="285.8" r="70"/></g>
+      <g class="node"><circle cx="-330" cy="0" r="70"/></g>
+    </svg>
+  </main>
+</body>
+</html>

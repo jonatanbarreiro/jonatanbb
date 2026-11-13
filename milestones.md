@@ -3,6 +3,11 @@
 A running checklist of milestones, each paired with the iteration that first introduced it. Indirectly, also a global tracker of jonatanbb.xyz as it evolves into the professional-looking profile site that it aims to be. 
 
 
+## v0.2 —an appealing and functional index portfolio page to showcase my work, projects and interests
+
+- [x] The site grows from a CV site into a portfolio sketch: an index page wiring the bb signet to its nodes, the CV site among them —[iteration 30](gallery/iteration030.png)
+
+
 ## v0.1 —a polished and functioning CV site
 
 - [x] The site holds up on smartphones —responsive, legible and correctly composed on a phone's screen —[iteration 29](cvsite/sources/iteration29)

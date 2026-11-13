@@ -1,0 +1,50 @@
+:root {
+  --ink:   #1c1a16;   /* the signet's warm near-black */
+  --paper: #ffffff;
+  --serif: "P052", "URW Palladio L", "Palatino Linotype", Palatino, Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+}
+
+main {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+/* fit the hub whole on any screen, keeping its aspect */
+.hub {
+  width: min(92vw, calc(92svh * 840 / 760));
+  height: auto;
+}
+
+.wires line { stroke: var(--ink); stroke-width: 3; }
+
+.node circle {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 6;
+  transition: fill .2s;
+}
+
+.node text {
+  fill: var(--ink);
+  font-size: 19px;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transition: fill .2s;
+}
+
+a.node[href]:hover circle,
+a.node[href]:focus-visible circle { fill: var(--ink); }
+a.node[href]:hover text,
+a.node[href]:focus-visible text   { fill: var(--paper); }
+a.node[href]:focus-visible        { outline: none; }
