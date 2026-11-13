@@ -67,5 +67,6 @@ window.CONTENT_EN = {
   // Contact + footer
   chead: "Get in touch",
   // the credit phrase links the repo —the site built in the open
-  foot:  '<a href="https://github.com/jonatanbarreiro/jonatanbb">AI-assisted, hand-driven</a>.',
+  foot:  '<a href="https://github.com/jonatanbarreiro/jonatanbb">AI-assisted, hand-driven</a>',
+  updated: "Updated July 25, 2026.",
 };

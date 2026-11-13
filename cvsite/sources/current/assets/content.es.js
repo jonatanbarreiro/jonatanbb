@@ -66,5 +66,6 @@ window.CONTENT_ES = {
   // Contacto + pie
   chead: "Hablemos",
   // the credit phrase links the repo —the site built in the open
-  foot:  '<a href="https://github.com/jonatanbarreiro/jonatanbb">Asistido por IA, hecho a mano</a>.',
+  foot:  '<a href="https://github.com/jonatanbarreiro/jonatanbb">Asistido por IA, hecho a mano</a>',
+  updated: "Actualizado el 25 de julio de 2026.",
 };
