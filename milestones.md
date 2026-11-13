@@ -3,6 +3,8 @@
 A running checklist of milestones, each paired with the iteration that first introduced it. Indirectly, also a global tracker of jonatanbb.xyz as it evolves into the professional-looking profile site that it aims to be. 
 
 
+## v0.1 —a polished and functioning CV site
+
 - [x] The site holds up on smartphones —responsive, legible and correctly composed on a phone's screen —[iteration 29](sources/iteration29)
 - [x] Implement a day/night mode —[iteration 27](sources/iteration27)
 - [x] CV pdf generation handled from this repo, and in the style of the page —[iteration 26](sources/iteration26)
