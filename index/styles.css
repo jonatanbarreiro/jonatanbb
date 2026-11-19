@@ -1,50 +1,61 @@
 :root {
-  --ink:   #1c1a16;   /* the signet's warm near-black */
-  --paper: #ffffff;
-  --serif: "P052", "URW Palladio L", "Palatino Linotype", Palatino, Georgia, serif;
+  --ink:     #1c1a16;   /* the signet's warm near-black */
+  --paper:   #f8f6f1;
+  --gold:    #fad02a;
+  --head:    #d6940e;   /* the gold of a head, as it steps */
+  --signet:  #e8a317;
+  --carmesi: #7f3445;
+  --wine:    #b0475c;
+  --mono: "DejaVu Sans Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --serif: "P052", "URW Palladio L", "Palatino Linotype", Palatino, "TeX Gyre Pagella", "Book Antiqua", Georgia, serif;
+  --g: 22px;            /* the lattice's spacing, which main.js sets to fit the screen */
 }
 
 * { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { overflow: hidden; background: var(--paper); color: var(--ink); font-family: var(--serif); }
 
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--serif);
+#lattice { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+#signet  { position: fixed; pointer-events: none; }
+
+/* the name, set in the code's own type, its two b's in a head's gold */
+h1 {
+  position: fixed; left: 6vw; top: 8vh; margin: 0;
+  font-family: var(--mono); font-weight: 400; font-size: clamp(1.6rem, 2.7vw, 2.7rem); line-height: 1.12; letter-spacing: -.02em;
+}
+h1 span { display: block; color: rgba(28, 26, 22, .5); }
+h1 b { font-weight: inherit; color: var(--head); }
+
+/* a node: the lattice canvas draws its hexagon; here, sized by its level, are what it holds and its name */
+.node { position: fixed; left: 0; top: 0; color: var(--ink); text-decoration: none; --level: 1; --heat: 0; }
+.node:focus-visible { outline: none; }
+.node .hit {
+  position: absolute; translate: -50% -50%;
+  width: calc(var(--level) * var(--g) * 2); height: calc(var(--level) * var(--g) * 1.732);
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+a.node:not([href]) .hit { cursor: default; }
+.node img { position: absolute; translate: -50% -50%; object-fit: contain; pointer-events: none; }
+.node .small { width: calc(var(--g) * 1.2); height: calc(var(--g) * 1.2); opacity: clamp(0, calc((2.5 - var(--level)) * 2), 1); }
+.node .big {
+  width: calc(var(--g) * 3.6); height: calc(var(--g) * 3.6);
+  opacity: clamp(0, calc((var(--level) - 2.5) * 2), 1); scale: clamp(.8, calc(var(--level) / 3), 1);
+}
+.node span {
+  position: absolute; left: -6em; width: 12em; text-align: center; white-space: nowrap;
+  top: calc(var(--level) * var(--g) * .866 + .6em); font-size: .95rem; line-height: 1;
+  text-shadow: 0 0 2px var(--paper), 0 0 4px var(--paper), 0 0 6px var(--paper);   /* clear of the links behind it */
 }
 
-main {
-  min-height: 100svh;
-  display: grid;
-  place-items: center;
-  padding: 1rem;
+/* firecoat's node keeps its own colours, and a pulse heats it up */
+.node.warm span { color: var(--carmesi); }
+.node.warm img {
+  filter: drop-shadow(0 0 calc(var(--heat) * 2px) rgba(255, 170, 90, var(--heat)))
+          drop-shadow(0 0 calc(var(--heat) * 9px) rgba(214, 52, 60, var(--heat)))
+          saturate(calc(1 + var(--heat) * .5)) brightness(calc(1 + var(--heat) * .4));
 }
 
-/* fit the hub whole on any screen, keeping its aspect */
-.hub {
-  width: min(92vw, calc(92svh * 840 / 760));
-  height: auto;
+@media (max-aspect-ratio: 9/10) {
+  h1 { top: 5vh; font-size: 1.6rem; }
+  .node span { font-size: .8rem; }
 }
-
-.wires line { stroke: var(--ink); stroke-width: 3; }
-
-.node circle {
-  fill: var(--paper);
-  stroke: var(--ink);
-  stroke-width: 6;
-  transition: fill .2s;
-}
-
-.node text {
-  fill: var(--ink);
-  font-size: 19px;
-  text-anchor: middle;
-  dominant-baseline: central;
-  transition: fill .2s;
-}
-
-a.node[href]:hover circle,
-a.node[href]:focus-visible circle { fill: var(--ink); }
-a.node[href]:hover text,
-a.node[href]:focus-visible text   { fill: var(--paper); }
-a.node[href]:focus-visible        { outline: none; }

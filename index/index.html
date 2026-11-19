@@ -7,42 +7,65 @@
   <link rel="canonical" href="https://jonatanbb.xyz/">
   <link rel="icon" type="image/svg+xml" href="assets/bb-mark.svg">
   <link rel="stylesheet" href="styles.css">
+  <script src="assets/three.bundle.min.js" defer></script>
+  <script src="bb.js" defer></script>
+  <script src="signet.js" defer></script>
   <script src="main.js" defer></script>
 </head>
 <body>
-  <main>
-    <!-- the signet at the centre, wired to six nodes on a flat-sided hexagon (R 330) -->
-    <svg class="hub" viewBox="-420 -380 840 760" role="navigation">
-      <g class="wires">
-        <line x1="-56"  y1="-97"  x2="-130" y2="-225.2"/>
-        <line x1="56"   y1="-97"  x2="130"  y2="-225.2"/>
-        <line x1="112"  y1="0"    x2="260"  y2="0"/>
-        <line x1="56"   y1="97"   x2="130"  y2="225.2"/>
-        <line x1="-56"  y1="97"   x2="-130" y2="225.2"/>
-        <line x1="-112" y1="0"    x2="-260" y2="0"/>
-      </g>
+  <canvas id="lattice"></canvas>
+  <canvas id="signet"></canvas>
 
-      <image href="assets/bb-mark.svg" x="-120" y="-120" width="240" height="240"/>
+  <h1>Jonatan <span><b>B</b>arreiro <b>B</b>astos</span></h1>
 
-      <a class="node" href="cv/" data-local="../cvsite/sources/current/index.html">
-        <circle cx="-165" cy="-285.8" r="70"/>
-        <text x="-165" y="-285.8">jonatanbb.xyz</text>
-      </a>
-      <a class="node" href="https://firecoat.me" data-local="../../firecoat/index.html">
-        <circle cx="165" cy="-285.8" r="70"/>
-        <text x="165" y="-285.8">firecoat.me</text>
-      </a>
-      <a class="node">
-        <circle cx="330" cy="0" r="70"/>
-        <text x="330" y="0">project1</text>
-      </a>
-      <a class="node">
-        <circle cx="165" cy="285.8" r="70"/>
-        <text x="165" y="285.8">project2</text>
-      </a>
-      <g class="node"><circle cx="-165" cy="285.8" r="70"/></g>
-      <g class="node"><circle cx="-330" cy="0" r="70"/></g>
-    </svg>
-  </main>
+  <!-- the signet's six nodes, by the lattice direction each sits in: opposite nodes share an axis,
+       and each axis one of the signet's rings -->
+  <nav>
+    <a class="node" data-direction="4" href="cv/" data-local="../cvsite/sources/current/index.html">
+      <img class="small" src="assets/icons/cv-certificate.svg" alt="">
+      <img class="big" src="assets/bb-mark.svg" alt="">
+      <span>cv</span>
+    </a>
+    <a class="node" data-direction="5">
+      <img class="small" src="assets/icons/1g49-nineball.svg" alt="">
+      <img class="big" src="assets/icons/1g49-table.svg" alt="">
+      <span>1g49</span>
+    </a>
+    <a class="node warm" data-direction="0" href="https://firecoat.me" data-local="../../firecoat/index.html">
+      <img class="small" src="assets/icons/firecoat-clef.svg" alt="">
+      <img class="big" src="assets/icons/firecoat-db.svg" alt="">
+      <span>firecoat.me</span>
+    </a>
+    <a class="node" data-direction="1">
+      <img class="small" src="assets/icons/penquire-zero.png" alt="">
+      <img class="big" src="assets/icons/penquire-euler.png" alt="">
+      <span>penquire</span>
+    </a>
+    <a class="node" data-direction="2" href="https://arxiv.org/abs/2602.04838">
+      <img class="small" src="assets/icons/lits-point.svg" alt="">
+      <img class="big" src="assets/icons/lits-figure.svg" alt="">
+      <span>LitS</span>
+    </a>
+    <a class="node" data-direction="3">
+      <img class="small" src="assets/icons/cbteo-eightball.svg" alt="">
+      <img class="big" src="assets/icons/cbteo-logo.svg" alt="">
+      <span>CB Teo</span>
+    </a>
+  </nav>
+
+  <!-- what the lattice hides: headlines it lets surface one at a time, and the words a few rare heads write -->
+  <template id="headlines">
+    <p>mathematics</p>
+    <p>point cloud research</p>
+    <p>scientific programming</p>
+    <p>American pool</p>
+    <p>digital design</p>
+    <p>self-help</p>
+  </template>
+  <template id="eggs">
+    <p><q>Mathematics, rightly viewed, possesses not only truth, but supreme beauty —a beauty cold and austere, like that of sculpture.</q> <cite>Bertrand Russell</cite></p>
+    <p><q>If I have seen further it is by standing on the shoulders of Giants.</q> <cite>Isaac Newton</cite></p>
+    <p class="warm">∃·1△@𝄞 —there exist something truly mesmerizing about fire</p>
+  </template>
 </body>
 </html>
