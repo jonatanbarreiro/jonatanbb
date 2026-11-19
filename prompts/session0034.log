@@ -1,0 +1,154 @@
+Jonatan on 2026-11-18 at ~01:00:
+I had Fable go over my design notes for jonatanbb.xyz and firecoat.me, synthesize them into two twin documents (design-brief.md in the root of the repo here), and come up with 3 drafts to get us started. This is to merge them as the next iteration of our index page. Note that, while the session didn't run from here (because a broader context view on my projects was needed) the three websites together should count as one iteration, just one without a jonatanbb session. So, by the end of this session, we should have two more iterations on our gallery. Take care to take the screenshots at a sensible time, so that the dynamic elements of the website show. As for milestones, the current iteration should declare one. I had a lot of notes saved from almost a year, and putting them together cohesively into these three websites was not a trivial step.
+I instructed Fable to skip enything that didn't play a real part in the aesthetics, so the websites are really just for me to see and pick elements from here and there. Ie, the valuable stuff about these three is just the looks, and by the end of this session all three sketch folders should be removed. On this session we'll "import" those elements I'm interested in from the three folders. Once I am happy with the updated index page, I'll give you the go to to remove the three source directories. I think by then nothing in design-brief.md will be worth its weight, but we'll see. For now, let me give you insights from the drafts, so that you may start build our index page based on them:
+- I definitely like the dislodged bb logo from armillary, and the hexagon light connections to the nodes.
+- The equations from penquire will definitely be a feature, but the handwriting effect is does not do the trick.
+- The metalic sculpture, fountain, and its digital rain from armillary are too much to convey for a clean page. I also don't like the white horizon effect.
+- I like the lattice effect. I think it could work great integrated with the network structure of the site. First of all, the nodes should be hexagons rather than circles, and be aligned with the lattice of course! I think the pulses that travel through the lattice digital-rain style look great. We will definitely be tweaking them to integrate the website better. For now, just lower the density and visibility because it is a bit too distracting from the main thing.
+- I'd like to change the CB Teo icon. I think it looks really good, but we do have the CB Teo logo in 1g49's assets/.
+- The LitS logo looks too much like Wikipedia. You can find the figures from the article in either one of the zip files from litSdetection/resources/LitS/. You should import it and make it minimal.
+- The icons of the 6 nodes should have two forms: Right now the nodes in lattice simply grow a little, but I'd like them to be the minimal hexagon that a point in the lattice with its surrounding points make, and grow two levels when highlighted. The former should hold the small icon, and the latter the big one. For firecoat.me the small icon should be a treble clef. The big one is spot-on. For penquire the small symbol should be '0' (crossed to tell it from an 'o'), and the big one should be the left-hand side of Euler's identity. Can you draw both according to my handwritting? (it's not in the usual places one would look like the complex analysis notes; they start directly with the general one that relates to the cis function). The small icon for LitS should be just one point, and the large the minimal version of Figure 1. For 1g49 the small icon should be a minimal 9-ball (circle with a yellow horizontal band). For cv I think the small icon could be a "certificate", small and in minimal like the rest of them. Not sure actually about this one, so if you have a better fit I'm all ears. I guess the icon that's often used for education also fits, particularly considering that my cv is mostly education, but I think that could be misleading, and I'm trying to pivot from academia.
+- I think the information on the top right of the lattice website is working against it. And the 'fixed points' bit is confusing; get rid of it.
+- Please get rid of my description (both texts, above and below the name). I want to be very deliberate about that, and to integrate the resulting text better into the lattice effect. Let's start with just cryptic headlines. Maybe 'mathematics', 'point cloud research', 'scientific programming', 'American pool', 'digital design', 'self-help'. The current lattice behavior is just gibberish, but it doesn't have to. Please try your best to make those words emerge from that gibberish, as if by chance. Unless you have a better approach, I think a good start would be to have the words in the phrase lay hidden until a head crashes with it, and then make the word visible from the impact point outwards as if the head just split because of the impact. Instead of the disappearing trail after a head, the word should become visible for a couple of seconds, and then fade. Once it is completely face the next phrase should be put in place, hidden again, until a head finds it. The phrases should rotate in a cycle.
+- The Russell's quote I didn't mean as such a central element of the page, but a subtle souvenir. Can you hide it usign a similar mechanism? The quote is too big to fit in the website with the spacing the lattice gives, but I think having it show like a news ticker in a portion of the page could do the trick!
+- I asked you to keep the threads of light connecting the bb logo to the nodes. Rather than just a mostly static light thread like in the armillary site, and rather than having those circles of light in the lattice site, let's make the links activate when a head impacts on them. They should absorb the stream (just to make sure; I'm using 'head' to refer to the initial element of the moving 'streams' within the lattice) and light up the connection through a pulse in both directions.
+- The signed should be modified to contain only three rings. Each ring should be connected to one of the three axis inherent to the hexagonal structure (in the current lattice website 1g49 and LitS form one, CB Teo and firecoat.me another, and cv and penquire the third one). A ring has to degrees of freedom for movement, and each one should be connected to one link. When a head crashes into a link, it is absorbed by it, and generates a pulse of light towards the correspondent node, and another towards the signet. When the pulse of light reaches the signet, the corresponding ring should be given a bump, in the direction of movement that that link is connected to. So, for short, the three rings have a total of 6 degrees of freedom for movement, each connected to a link, in such a way that opposing links activate the same ring, only in different directions of movement. Rings should loose speed over time, calibrated to compensate the expected number of pulses received.
+- The link connecting to firecoat.me should be a regular link, but the red contour and black background are nice touches so keep them. When a pulse reaches this node, the db logo or the treble clef should should glow a bit, as if heated up by the pulse. You can take the glowing from the orrery website (only contribution from that one).
+
+Claude Opus 5.5 on 2026-11-18 at ~01:38:
+The index is rebuilt from the three sketches, as you described, and it runs from disk (`index/index.html`). I tested it in headless Chrome at 1024×768, 1440×900 and 390×844.
+
+**What I decided where your notes left room:**
+- **Lattice:** 26 heads (14 on phones), slower and fainter than in the sketch. I also fixed a bug inherited from the sketch: heads could only enter near the screen corners. Now they come from anywhere along the edges. In the landscape layouts each link now gets about one strike every two seconds.
+- **Nodes:** each node is a hexagon on the lattice, 12 steps from the centre. Hover or keyboard focus grows it in two steps to the larger hexagon with the big icon. On touch screens, the first tap opens a node and the second follows the link.
+- **penquire:** both icons are built from your own strokes in Variable Compleja I:
+  - The `e` and the `i` come from `e^{iθ} = cos θ + i sin θ` (p. 9), and the `+` from the same line.
+  - The `π` comes from `e^{2πi}` (p. 11), with its bar cut short so it fits where θ stood.
+  - The `1` comes from `e⁰ = 1` (p. 11).
+  - The crossed 0 is the 0 from `z ≠ 0` (p. 9) with the slash from `|w|/|z|` laid over it.
+  - They stay as images of the ink, like the formulas, because vectorising broke the pencil-like strokes.
+- **CB Teo:** the big icon is the club's logo with its white turned to ink (the logo is white on a clear background). You didn't name a small icon, so I used the rack of its ten coloured ball-heads.
+- **cv:** I drew a certificate with a gold seal, as you asked. If you want something less academic, a plain sheet of paper fits a CV better than a diploma or a mortarboard, and doesn't point at academia.
+- **The other icons:** the treble clef is from the Noto Music font, whose licence allows this. The LitS figure is reduced to the circle, the gold arc, the dashed tangents, and the points p and q.
+- **Headlines:** they sit under your name, one letter per lattice cell, and wrap onto a second line when they don't fit. When a head strikes one, the word opens out from that cell: a gold flash, a flicker of code, then the letter. It stays about 2 s, fades, and the next headline is placed hidden.
+- **Ticker:** the quote and "BERTRAND RUSSELL" scroll hidden through a strip of up to 26 cells at the bottom left. A strike lights the strip for about 4.5 s; after it fades, it can't be struck again for 4–10 s. You only ever catch fragments.
+- **Formulas:** they are hidden in two slots (top right, and to the left of the hexagon) and are revealed the same way as the words. Their placement and the mechanism are my choice, so say if you want them handled differently.
+- **Links:** a head that hits a link is absorbed and sends a pulse both ways. When it reaches the node, firecoat glows (the drop-shadow glow from the orrery) and the other nodes' borders flash gold briefly. When it reaches the signet, it bumps that link's ring.
+- **Signet:** the armillary's metal rings and faceted bb, cut to three bands, one per axis. A pulse from one link of a pair tips its band across the axis; one from the opposite link spins it about the axis. Bump size adjusts itself to how often pulses arrive, so the bands keep a gentle average speed on any screen. The signet starts whole and comes apart with the first pulses. Nothing pulls it back together.
+- **Removed:** the top-right readout, the fixed points, both description texts, the quote block, and everything from the armillary scene you listed.
+- **Node labels:** I kept only the names. The sketches' data lines and short descriptions were stand-ins written by Fable, so I dropped them; say if you want any back.
+
+**Repo changes:**
+- Iteration 31's milestone is in `milestones.md`, linking to its three gallery shots: `gallery/iteration031S1.png` (armillary), `S2.png` (lattice) and `S3.png` (orrery). Each was taken after its animations had played out.
+- I added one sentence to CLAUDE.md's Gallery section, since that section asked for the capture rule to be recorded: shots are taken when the dynamic elements show.
+- I'll take iteration 32's shot when you wrap up. The sketch folders and `design-brief.md` are untouched.
+- The three.js library file (742 KB) is copied into `index/assets/` as it was in the sketches; it could be slimmed later.
+
+**Decisions for you:**
+- Certificate or plain sheet for the cv node.
+- Whether the formulas stay where they are and appear this way.
+- Whether the rings should slowly settle back into the signet when no pulses arrive.
+
+
+Jonatan on 2026-11-18 at ~01:55:
+This is looking great already. Please count this current form as an iteration. Some follow-ups for the next one:
+- Node growth should not be done in two steps, but smoothly. I get why the decision, but it feels clunky.
+- When a node opens, keeping the cursor right at the edge of the hexagon keeps the node open, which is correct. But the node does not open until the cursor gets into the closed node (or touches the title), which is a relatively small area. Instead, please make it so when the cursor gets within two levels of the closed node, it starts to open. If the cursor slowly approaches the first level, the node should slowly open towards the first level, so that both meet there. If the cursor gets to the first level then the cursor should open entirely. To keep smoothness, cap the velocity at which the node opens or closes.
+- Please remove the sketch folders, we'll take it from here.
+- Export what you deem appropriate from the design brief into the README, and remove the brief afterwards. Do not add bloat to the README. It should serve a human looking to get a hold of the repo and the website. We humans walk away the moment we feel our time is being wasted with minor detail when we are trying to understand something.
+- Please start a terminology document in the root of the repo. Look into 1g49's policy for the same document and import it into this project. 'node', 'head', 'stream', 'signet', 'bb form', 'db form'.
+- We are going to be updating the cv site in one of the next sessions. When we do, the iteration that happens, the gallery shot should be from the cv site. Assuming this index page has not has substantial modifications. In general, the gallery shot/s shuold account for the non-trivial changes that took place in that iteration. For instance, if one iteration modifies the pdf cv, cv site, and index page, then a shot should be taken from all those three.
+- Please get rid of the writing effect that makes the equations appear. When two heads collide, an outwards wave effect in the region the equation image occupies, and the equation should emerge as in a pulse, like the pulse on the links to the nodes. Color should be that same gold. The wave should only clear the streams on that area momentarily for the equation to emerge but, right after that, the streams that happen to cross the image should be visible underneath it (so equation images should be transparent where there's no ink; this will look a bit rough until we work on penquire a bit more, but that's alright).
+- There are too few equations, so they start repeating after just a little while. Please go gather more equations, from various areas. Unless you're saving the equations in equations.js like you are due to speed concerns, please start a folder in assets to host them.
+- Equations should not emerge even if two heads collide if there's not room to show them in allowed areas; anything outside the signet and opened nodes, my name, the cryptic phrases (gotta find a better name for that!), and other equations. And let's require that no more than two equations are active at the same time (heads colliding when a new equation doesn't have room should not trigger a wave).
+- Make the first letter of my surnames the same color as the heads, and the cryptic phrases too.
+- I think I have a much better way to share Russell's quote: put it into a head! I'll let you decide on the details and polish this if I deem it necessary.
+- I've done a bit of research on the shoulders-of-giants quote. I have a very personal understanding of it that fits firecoat.me rather than this website, but I now know that the usual meaning people give it is one tightly tied to scientific advance. That also makes sense, and I have no problem overloading the definition in my head. So let's make Newton's quote (even though the quote predates him) another easter egg by giving him a head too.
+- And a final easter egg would be one that winks at firecoat.me. Won't enter into the details, but it should read '∃·1△@𝄞 —there exist something truly mesmerizing about fire'.
+- The Teo small logo should be the crossed 8 ball from 1g49's assets/teo_wordmark.svg. Notice that it is a very simple logo: 'TE' followed by an annular section with an '8' and a oblique rectangle, without a white circle about the 8, and then 'CLUB BILLAR' on the right. This svg needs redoing because the countours are rough wherever they don't align with the x or y directions. You got potrace installed so you should be able to get a clean replacement. Once you're done with it, remove the current one with the new, and import the crossed 8 ball representation (the logo without 'TE' and 'CLUB BILLAR') as the small icon. Commit the replacement in 1g49 with a minimal message.
+- The lattice should be just a bit less subtle. I can see the slightly bigger dots in a triangulation of it. It's a nice touch, so make those also less subtle. Also, put an even bigger one where the links from the nodes converge. That should land exactly between the two b's. That small region could become too hard too crowded, so maybe enlarge the whole signet around 10% in radius.
+- The links that join the nodes to the signet should go all the way to the center/origin dot (the one the previous point introduces). And they should be black. Make the black hexagons that enclose the nodes just a tad thicker, and the links towards the center dot the same thickness and color. Also, extend the links past the nodes 3 levels, without being visible on the inside of the nodes of course. These 3-level extensions should end with an arrow shape. Not a regular arrow: take the db logo and shift the 'd' to the right until it touches the 'b'; the resulting arrow made by the tips would be it.
+- Please replace my name's fonts with the same that are used for the streams.
+- Please make the center dot act as a dynamo for the movement of the rings: when a head collides with a link or node enclosing, a pulse should propagate through it until the center dot, which should be illuminated and move the ring in the direction of its connection accordingly.
+- Notice that the links and node contours should be "the same material than the signet", meaning the lighting should be a similar effect.
+- When a pulse gets to an arrow, it should have a 50% chance of emmiting a head.
+- Yes, please make the rings slowly settle back into the signet's initial state when no pulses arrive. That's a nice touch!
+We are going to end the session next turn, because this is getting too thick, so please propose commits at the end of your response. We'll address your follow-ups and continue in the next session. Try your best please!
+
+Claude Opus 5.5 on 2026-11-18 at ~13:52:
+I've made all the changes. I tested the index in headless Chrome at 1024×768, 1440×900 and 390×844: it runs at 60 fps with no errors.
+
+**Iteration 32 and the repo**
+- **Gallery:** the shot of iteration 32 (the index as it was before this round) is in `gallery/iteration032.png`. I proposed a milestone for it in `milestones.md`'s slopshield.
+- **Gallery rule:** `CLAUDE.md` now says to shoot every part an iteration changes:
+  - the index as `iterationNNN.png`;
+  - the CV site as a day & night pair, `NNNW`/`NNNB`;
+  - the CV pdf's first page, 1024 px wide, as `NNNCV`.
+- **Sketches and brief:** removed. The README took what was worth keeping: the duality with firecoat.me and the palette. `../firecoat/design-brief.md` still points to our brief, so that link is now broken.
+- **Terminology:** `terminology.md` has your six terms. I brought over 1g49's policy into `CLAUDE.md`: the document is shielded, missing terms get proposed without being asked, and a term is never used in another sense. In its slopshield I proposed *link*, *pulse*, and *glimpses* as the name for the cryptic phrases.
+- **CB Teo in 1g49:** committed as `59919df`.
+  - I rebuilt the ring and the cue from circles and straight lines fitted to the old trace, and retraced the lettering with potrace.
+  - 1g49's sticker script parsed only the old polygon format, so the same commit teaches it to read curves. I didn't regenerate the stickers.
+  - The crossed 8 ball is the new small icon.
+
+**Equations:** there are now 33, as ink-only PNGs in `index/assets/equations/`; `equations.js` is gone. That's the 10 we had plus 23 new ones from 12 subjects:
+
+| Area | Equations |
+|---|---|
+| Topology | sequence limit, lifting, intersection of tubes |
+| ODEs | integrating factor (two), Lyapunov |
+| Probability | expectation, variance |
+| Stochastic processes | martingale |
+| Measure theory | Fatou |
+| Curves | arc length |
+| Linear algebra | rank–nullity |
+| Commutative algebra | Nullstellensatz, inclusion reversal |
+| Logic | substitution, an unprovable formula |
+| Complex variable | e^z and e^{1/z} series |
+| Group theory | conjugation, cosets, normaliser |
+| Affine geometry | affine map |
+| Statistics | second moment |
+
+They come in an order shuffled once, so none repeats until all 33 have shown.
+
+**The index**
+- **Nodes:**
+  - They grow smoothly, with the proximity behaviour you described, at most 5 levels/s.
+  - The small icon holds until level 2, then the two icons crossfade between 2.5 and 3.
+  - Labels have a paper-coloured halo, because the links run behind them.
+- **Links, rims and arrows:** these are now drawn on the canvas:
+  - **Style:** black, 2.6 px wide. Each side is shaded by the signet's key light, and they turn gold near the dynamo and where pulses heat them.
+  - **Arrow:** the two db tips, with the d slid over onto the b. At this size it reads almost as a plain arrow.
+- **Pulses:**
+  - A head hitting a link or a rim sends a pulse both ways: inwards to the dynamo, outwards through the node to the arrow.
+  - At the arrow there's a 50% chance it leaves as a new head.
+  - Rims and the longer links doubled the number of pulses, so I cut the heads from 26 to 22 (12 on phones). That's about 6 pulses per second.
+- **Signet:**
+  - It's 10% larger.
+  - Its bright core is now the dynamo: a dark metal dot between the b's that each pulse lights up, along with the b's.
+  - Bands that have nearly stopped settle back into the ring.
+- **Equations:**
+  - **When one rises:** when two heads collide, if fewer than two equations are showing and the next one has room around the collision point.
+  - **How it shows:** a gold ring spreads out across its area, clearing the streams there. The ink follows behind a gold front, as on the links, and streams later run beneath it.
+  - **Where it can't go:** besides your list, I also kept equations off the links and the arrows.
+- **Name and headlines:** the name is in the streams' monospace. The two B's and the headlines are in the heads' gold. No lattice dots show behind the name.
+- **Quotes:**
+  - The ticker is gone.
+  - Every 45–90 s (the first after 10–18 s) a head walks in from the left along the two lowest clear rows. It writes one line per pass at reading pace, alternating rows; letters stay 6 s, then fade.
+  - Order: Russell, then Newton, then firecoat. Authors are in a muted gold. The firecoat line is carmesí with an ember glow, and its 𝄞 is the node's clef.
+- **Lattice:** stronger dots, and a dot where the links meet.
+
+**For you to check:**
+- **Newton's wording:** I used "If I have seen further it is by standing on the shoulders of Giants.", the modern-spelling form of his 1675 letter to Hooke.
+- **Firecoat line:** I kept it exactly as you wrote it, including "there exist".
+
+**Proposed commits**, in order:
+1. *Declared iteration 31: Fable's three sketches of the index, with their gallery shots and milestone.*
+   Paths: `gallery/iteration031S1.png`, `gallery/iteration031S2.png`, `gallery/iteration031S3.png`, `milestones.md`
+2. *Had Claude build the index from the sketches, iteration 32: hexagon nodes on the lattice, headlines struck out of the code, links pulsing into the signet's three rings. Then had it carry on with nodes that open as the pointer nears, links through to a dynamo and out to db arrows, equations from my notes raised where heads collide, and quotes written by heads of their own.*
+   `Co-Authored-By: Claude Opus 5.5`
+   Paths: `index/`, `gallery/iteration032.png`
+3. *Had Claude fold what the design brief still held into the README and a new terminology document, then removed the brief and the sketches.*
+   Paths: `README.md`, `terminology.md`, `design-brief.md`, `sketch1_armillary/`, `sketch2_lattice/`, `sketch3_orrery/`
+4. *Set the gallery to shoot every part of the site an iteration changes, and took in 1g49's terminology policy.*
+   Paths: `CLAUDE.md`, `prompts/session0034.log`

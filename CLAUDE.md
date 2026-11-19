@@ -13,11 +13,12 @@ deliberate prompt, you carry it out.
 - `README.md` —the repo's public face; short.
 - `milestones.md` —the milestone checklist of jonatanbb.xyz, whatever its current
   form, one section per version; Jonatan's to maintain (see *The slopshield*).
+- `terminology.md` —the words coined for the site's parts; Jonatan's to maintain too.
 - `index/` —the index site's source, deployable as it stands (`index.html`,
   `styles.css`, `main.js`, `assets/`, `robots.txt`, `sitemap.xml`). Built
   incrementally; git holds its history.
-- `gallery/` —one full-page shot per iteration, `iterationNNN.png` (see *Gallery*),
-  continuing the CV site's: through iteration 26 a single shot, then a day & night
+- `gallery/` —the shots of every iteration (see *Gallery*), continuing the CV
+  site's: through iteration 26 a single shot, then a day & night
   pair per iteration, `iterationNNNW.png` / `iterationNNNB.png`, plus `unsourced/`
   for captures that predate its kept source. It stays out of `index/` so that nothing
   but the site gets deployed.
@@ -67,7 +68,7 @@ included— and `main.js` swaps the latter in when the page is opened as a file.
 Development moves in **iterations**, numbered on from the CV site's last (29). An
 iteration is a significant session —not one opened just to get oriented or to find
 something in a hurry— and whether a session counts is Jonatan's call. When he wraps
-one up, take its gallery shot.
+one up, take its gallery shots.
 
 Versions are declared on top: each is a git tag, `v0.N`, made on Jonatan's say, and a
 section of `milestones.md` with the goal it works toward. Milestone items point to
@@ -76,13 +77,16 @@ the gallery shot of the iteration that brought them.
 
 ## Gallery
 
-At an iteration's wrap-up, render `gallery/iterationNNN.png`, numbered after it. Drive
-Playwright with system Chrome (`channel: 'chrome'`); Node, Chrome and the driver
-`playwright-core` are installed system-wide, so reach it with
-`NODE_PATH=/usr/local/lib/node_modules`. The frame is fixed: viewport 1024×768,
-deviceScaleFactor 1, a `fullPage` screenshot from scrollY 0. The viewport height is
-part of the frame, since the index fits itself to the screen. Should the site gain
-modes or animations, settle with Jonatan how they are captured and record it here.
+At an iteration's wrap-up, shoot every part of the site it changed in earnest,
+numbered after it: the index as `gallery/iterationNNN.png`, the CV site as a day &
+night pair, `iterationNNNW.png` / `iterationNNNB.png`, and the CV pdf's first page,
+1024 px wide, as `iterationNNNCV.png`. Drive Playwright with system Chrome (`channel:
+'chrome'`); Node, Chrome and the driver `playwright-core` are installed system-wide,
+so reach it with `NODE_PATH=/usr/local/lib/node_modules`. The frame is fixed: viewport
+1024×768, deviceScaleFactor 1, a `fullPage` screenshot from scrollY 0. The viewport
+height is part of the frame, since the index fits itself to the screen. The index is
+animated: take the shot at a moment when its dynamic elements show. Should the site
+gain modes, settle with Jonatan how they are captured and record it here.
 
 
 ## The CV site
@@ -147,8 +151,12 @@ document, and take it off the list. Unchecked items are not yours to touch.
 
 The shield guards the door, not the room. Once something is in the body, it is yours
 to manage —reword, restructure, cut it down— as long as you do not change what it
-says. Be thoughtful about what you propose; a list he dreads opening is worse than no
-system at all.
+says.
+
+Feed the shields without being asked. When a prompt or the work brings up something
+a shielded document is missing —a coined word `terminology.md` lacks— propose it
+there in the same round. Be thoughtful about what you propose; a list he dreads
+opening is worse than no system at all.
 
 
 ## README
@@ -190,6 +198,7 @@ work ends with `Co-Authored-By: <model>`, naming the model that did it —`Claud
   the code, not so much that their line becomes unclear.
 - No defensive coding when it hurts readability —prefer loud failure to silent
   guards, unless the guard genuinely reduces the site's security exposure.
+- Never use a term of `terminology.md` in another sense, in code or in docs.
 - Identifiers and file names say what they hold or do, never abbreviated into
   riddles.
 - In docs, prose over bullets; bullets only when the content is genuinely a list.
@@ -210,3 +219,9 @@ work ends with `Co-Authored-By: <model>`, naming the model that did it —`Claud
   genuinely needs it —system-wide, on `PATH`, under a standard prefix, never a
   private per-tool location. If it needs sudo, stop and give him the exact command
   to run.
+
+
+<!-- Slopshield
+- [ ] Map: list `bb.js` and `signet.js` among `index/`'s files, and
+  `assets/equations/`, the equations cut from penquire's scans.
+-->
