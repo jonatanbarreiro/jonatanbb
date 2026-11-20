@@ -5,6 +5,7 @@
   --head:    #d6940e;   /* the gold of a head, as it steps */
   --signet:  #e8a317;
   --carmesi: #7f3445;
+  --metal:   #2e2a25;   /* the satin black of the signet's bands, which the links, rims and name share */
   --wine:    #b0475c;
   --mono: "DejaVu Sans Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   --serif: "P052", "URW Palladio L", "Palatino Linotype", Palatino, "TeX Gyre Pagella", "Book Antiqua", Georgia, serif;
@@ -18,16 +19,17 @@ body { overflow: hidden; background: var(--paper); color: var(--ink); font-famil
 #lattice { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
 #signet  { position: fixed; pointer-events: none; }
 
-/* the name, set in the code's own type, its two b's in a head's gold */
+/* the name, set in the code's own type and the signet's metal, its two b's in a head's gold */
 h1 {
-  position: fixed; left: 6vw; top: 8vh; margin: 0;
+  position: fixed; right: 6vw; top: 8vh; margin: 0; color: var(--metal);
   font-family: var(--mono); font-weight: 400; font-size: clamp(1.6rem, 2.7vw, 2.7rem); line-height: 1.12; letter-spacing: -.02em;
 }
-h1 span { display: block; color: rgba(28, 26, 22, .5); }
+h1 span { display: block; color: color-mix(in srgb, var(--metal) 50%, transparent); }
 h1 b { font-weight: inherit; color: var(--head); }
 
-/* a node: the lattice canvas draws its hexagon; here, sized by its level, are what it holds and its name */
-.node { position: fixed; left: 0; top: 0; color: var(--ink); text-decoration: none; --level: 1; --heat: 0; }
+/* a node: the lattice canvas draws its hexagon; here, sized by its level, is what it holds, and its name for
+   screen readers only */
+.node { position: fixed; left: 0; top: 0; color: var(--ink); text-decoration: none; --level: 2; --heat: 0; }
 .node:focus-visible { outline: none; }
 .node .hit {
   position: absolute; translate: -50% -50%;
@@ -36,19 +38,14 @@ h1 b { font-weight: inherit; color: var(--head); }
 }
 a.node:not([href]) .hit { cursor: default; }
 .node img { position: absolute; translate: -50% -50%; object-fit: contain; pointer-events: none; }
-.node .small { width: calc(var(--g) * 1.2); height: calc(var(--g) * 1.2); opacity: clamp(0, calc((2.5 - var(--level)) * 2), 1); }
+.node .small { width: calc(var(--g) * 2.4); height: calc(var(--g) * 2.4); opacity: clamp(0, calc((3.5 - var(--level)) * 1.5), 1); }
 .node .big {
-  width: calc(var(--g) * 3.6); height: calc(var(--g) * 3.6);
-  opacity: clamp(0, calc((var(--level) - 2.5) * 2), 1); scale: clamp(.8, calc(var(--level) / 3), 1);
+  width: calc(var(--g) * 7.2); height: calc(var(--g) * 7.2);
+  opacity: clamp(0, calc((var(--level) - 3.5) * 1.2), 1); scale: clamp(.8, calc(var(--level) / 6), 1);
 }
-.node span {
-  position: absolute; left: -6em; width: 12em; text-align: center; white-space: nowrap;
-  top: calc(var(--level) * var(--g) * .866 + .6em); font-size: .95rem; line-height: 1;
-  text-shadow: 0 0 2px var(--paper), 0 0 4px var(--paper), 0 0 6px var(--paper);   /* clear of the links behind it */
-}
+.node span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* firecoat's node keeps its own colours, and a pulse heats it up */
-.node.warm span { color: var(--carmesi); }
 .node.warm img {
   filter: drop-shadow(0 0 calc(var(--heat) * 2px) rgba(255, 170, 90, var(--heat)))
           drop-shadow(0 0 calc(var(--heat) * 9px) rgba(214, 52, 60, var(--heat)))
@@ -57,5 +54,4 @@ a.node:not([href]) .hit { cursor: default; }
 
 @media (max-aspect-ratio: 9/10) {
   h1 { top: 5vh; font-size: 1.6rem; }
-  .node span { font-size: .8rem; }
 }

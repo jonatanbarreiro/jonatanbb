@@ -9,10 +9,12 @@ jonatanbb.xyz/cv/.
 ## The index
 
 The signet sits on a triangular lattice, wired to six nodes on a hexagon. Code walks
-the lattice in its six directions, and what its heads run into lights up: a link or a
-node carries the hit out to its arrow and in to the signet, whose rings it sets
-turning, and the words the lattice hides surface where they are struck. Where two
-heads collide an equation rises, my own, cut from the scans of my handwritten notes.
+the lattice in its six directions, and what half its heads run into lights up: a link
+or a node carries the hit out to its arrow and in to the capacitor at the signet's
+heart, whose charge is the signet's only light and whose kick sets its rings turning,
+and the words the lattice hides surface where they are struck. Where two heads collide
+a pop-up is decoded out of the code: a quote, or an equation of my own, cut from the
+scans of my handwritten notes.
 
 The site is half of a duality, designed as one with [firecoat.me](https://firecoat.me):
 here form and numbers, cold metal and light; there meaning and words, stone and fire.

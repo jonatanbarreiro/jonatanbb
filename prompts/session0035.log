@@ -1,0 +1,149 @@
+Jonatan on 2026-11-19 at ~18:22:
+Let's go for the next iteration. I have quite a few tweaks to implement:
+- Let's switch the side-wise orientation of the site, and move the signet to the left. My name is important to show, yes, but I reckon that visitors will know it already, and the interesting bit about the site is the small network about the signet.
+- The arrows in each link's end are off. If you start at the tip and move towards the signet, you find the hooks of the arro next. Then the hooks end in a way thicker section than the links. This change in thickness should not be there. I imagine you put it like this because otherwise the hooks are very subtle, but that is fine, cause we are going to zoom things in a bit: 1. Points come in three sizes in the lattice; the subtle regular ones, then the triangulation ones, and then the center dot. I want you to make the regular ones the size of the triangulation ones, and the triangulation ones the size of the center. And the center dot should also increase in size. Notice that the current center dot size is big enough that we could actually make it not round but hexagonal. I think that will look great. Probably not worth it with the regular ones as the current triangular size is a bit too small to tell the difference between a point and a hexagon. The current center-dot size is indeed big enough so that this change will be subtly noticeable. I also want you to enlarge the signet, so that its outer rim is inscribed in the inner hexagon of the network. And I also want you to enlarge the nodes. Let's make them one level bigger in their closed form, and then expand 4 more leves when they open, so that they correspond with the hexagon that the triangulation points in the lattice define around them. Lasty, let's thicken the links (and boundary contours) so that they are twice as thick as they are now. Notice that that will still be less than the thickness right after the hooks, so you will need to scale down the arrow so that the two thicknesses match.
+- The boundary of the nodes is a different color than the links that join them to the center dot. They need to feel like a continuous material, so seamless joins and same color. I think the links color is still too bright in comparison with the signet's rims. Again, they need to feel the same material. Check that my name is also that same color.
+- Too little spacing between my surnames until the competencies (removed the 'glimpses' wording recomendation and the corresponding slopshield item).
+- Around the signet area, the lighting of the links and center dot is off. The only thing that should illuminate the axis are the pulses thraveling through them, and the center dot itself. The current site has the center dot gray except for the short intervals when pulses come in, while the axis themselves stay illuminated even when there's no pulse and the center dot is off (gray). Think of the center dot as the light source that illuminates the surrounding links, and the signet. The only other source of light should be the head crashes, into the network structure or another head.
+- The equations should be written in light color, and be of the same size. And they should not appear through an opening window, but as if popping up from the vacuum that the wave leaves inside. By the way, I saw an equation the leads with '='. With the vast options available of equations in my notes, the relatively few that are selected shuold be meaningful.
+- Where there is text (my name, the competencies, the head and streams, and the equations) the lattice should not show underneath, because it hinders readability. Notice that the space that contains my name already shows no lattice behind. There's a careless detail though: the box of the name is square and hence the space after 'Jonatan' does not show lattice, even though there's no text on top.
+- The easter eggs should move exactly like the other streams. Now they are only displayed intermittently in the bottom of the page. By the way do not count spaces in the easter eggs. Also, the red is too eye-catching for the firecoat.me one, so make red only the treble clef.
+- The links beyond the nodes should extend exactly 2 more levels, so that when a node opens the top of the arrow just reads like a sharpening of the hexagon vertex that is furthest from the center dot.
+- Think I already touched on this, but just to be clear: the center dot should have a hexagonal shape. And it should act as a dynamo. Wait, I think I have been using the wrong word: When a pulse gets to it, it should illuminate and light up the signet (b's and rim) and make the rims move (along the direction the node the pulse comes from dictates), and then it should lose energy steadily until completely black (no energy), or another pulse comes by of course. This would be capacitor behavior rather than dynamo right?
+
+Claude Opus 5.5 on 2026-11-19 at ~19:40:
+All ten tweaks are in `index/`. I checked them in headless Chrome screenshots at 1024×768 and at phone size, and the page threw no errors.
+
+**Layout and sizes**
+- The signet now sits left, at 42% of the width. The name is on the right and right-aligned, and the competencies sit flush right under it with about twice the gap they had.
+- The lattice is built from the coarse points, every 6 steps:
+  - Nodes sit 12 steps out.
+  - The signet's rim is inscribed in the inner hexagon.
+  - Nodes are level 2 when closed and open to level 6, which fills the hexagon of coarse points around them. Their icons are scaled to match.
+- Fine dots are now the old coarse size and coarse dots the old centre size.
+- Links and rims are twice as thick as before, and the arrow is scaled so its neck is exactly as wide as the link. The arrow's tip sits past the open node's far vertex, just far enough that its hooks rest on the rim's outer edge, so an open node's vertex reads as sharpened. As a node opens, the arrow takes on the rim's colour.
+- Line widths and dot sizes now scale with the lattice spacing instead of being fixed in pixels.
+
+**One material, one light**
+- Links, rims, arrows and the name share a single `--metal` colour: the bands' satin black, `#2e2a25`. Rims are drawn as one mitred path, so the joins are seamless.
+- The capacitor is a hexagon with its vertices on the links. It is the signet's only light: the gold glow, the lamp on the b's and the gold on the links all scale with its charge, and with no charge everything is black. Pulses and crash flashes are the only other light.
+- Yes, "capacitor" is the right word: it stores charge and releases it, while a dynamo turns motion into current. I renamed it in the code. Each pulse fills 15% of its headroom and the charge drains linearly in 1.5 s. Pulses arrive about 7 times a second, so if each one charged it fully it would never go dark (I measured it sitting around 0.8). With these settings it breathes and goes black when pulses pause. The light follows √charge so it doesn't look dim.
+
+**Text**
+- Equations are drawn in the heads' gold. A wave clears a disc of lattice and code, and the equation pops out of that empty disc with a small overshoot. As the equation fades, the lattice comes back.
+- I upscaled the ten equation scans whose handwriting was about 0.6× the size of the others, so all 32 share one handwriting scale. I dropped `lifting`, the one that opened with `=`. When an equation has no room, the next ones on the shelf get a try instead of blocking the queue.
+- No lattice shows under any text that is visible. The name's dot-free area now follows each line's own width, so the space beside "Jonatan" has its dots back.
+- Quote heads now walk exactly like streams, writing one letter per step and skipping spaces. On firecoat's quote only the 𝄞 stays red.
+
+**Docs**
+- `terminology.md`: I applied the checked *link* and *pulse* items, in their new form: the link ends where the open node's far vertex lies, and an open node is "four levels larger". I also proposed *capacitor* in its Slopshield.
+- The README now describes the capacitor and the vacuum.
+
+**For you to decide**
+- **Name colour:** "Jonatan" is now the metal colour, and the surnames are that same metal at half strength. Should the surnames be full metal too?
+- **firecoat's rim:** I kept it carmesí, as the one warm exception. Say if it should be metal too.
+- **Quotes read backwards** when their head walks left or up, since the trail runs behind the head.
+- **Wide equations** (Lyapunov, the sequence limit, Lagrange) clear a large disc and rarely find room.
+- **Phones get a much smaller lattice**, since nodes 12 steps out that open 6 levels have to fit the width.
+
+The gallery shot is for when you wrap the iteration up.
+
+
+Jonatan on 2026-11-19 at ~23:50:
+You got quite the number of them wrong. Let's keep on it:
+- The hooks are a bit too subtle. And the links and boundaries are a bit too thick. I believe I asked you to enlarge the dots too much too, because now they get in the way of appreciating the streams. Please make the regular dots a bit smaller, and the triangulation dots too. The triangulation dots are visibly circular; they should be hexagonal, even though I am referring to them as 'dots'.
+- The center dot needs to be colored differently, and to behave differently. It still looks like gray to me most of the time. See the pulses coming from the axis? They are a more vivid yellow/gold in the pulse head, while the center dot (hexagon) is gray. And the capacitor behavior needs to be dumped much slower in time.
+- We are going to get rid of the links whete they meet, in a very precise way. Look at one of the 6 triangulation dots that define the inner hexagon the signet is inscribed in. That triangulation dot is the convergence point of two lines from the outline of the inner hexagon. Consider those two lines. Now look at the first regular dot through each of those from the triangulation point. Consider also the line that joins these two regular dots. This line marks exactly where the link that passes through the triangulation dot we are considering needs to be cut at. Now look at the three lines we considered. The area bound by these three lines needs to be metal. Now we are done with one of the axis, and we should repeat this for all 6. Once we are done, we will have cut the 6 links. We want to conserve the outer structure, but get rid of the cut pieces. I have left a drawing of the area bound by those three lines for the cut of the cv link, which you can find on ~/Descargas. Get rid of the file once you're done with it.
+- Right now there are too many pulses coming into the structure and it gets kinda dizzy. Let's modify behavior so that heads have a chance of 50% to collide with the structure and another 50% to passh through.
+- The easter eggs are not behaving like regular streams, and they should. They stay static longer and their letters are solid and do not fade away like regular streams. I will say it again: the easter eggs need to display like the other streams. Same everything, except they are prescribed and not random like the streams. I also feel like I'm not seeing them enough. Let's decreet that there must be always exactly one easter egg on screen. Once the stream leaves the screen, either because if collided into the structure or because it wandered off, the next one should be chosen at random (repetitions allowed) and get into the screen.
+- My name I told you to put in the right side, which is correct, but the name should be aligned to the left.
+- The dots are showing before the letters from the streams completely fade; they should wait to star refreshing until the letter that the stream left there has completely faded off.
+- My name, the node names, and the equations are not properly integrated into the lattice. My name seems to be a solid overlay. It needs to be just text typed onto the website, so that there's not a visible black box that can be read through the absence of points from the lattice. Remove the current text below the nodes. The equations are all wrong, and white circles that are draw are just nonsensical. By the way, those circles make the regular streams disappear, but not the easter eggs. Another unintended way in which the easter egg streams are different than regular ones. Let me explain what I'd like equation spawn to behave like: When two heads collide, a new equation is to spawn around there. That equation should just be an image cut tight about it, with transparent bits where there is no ink. Consider, for a given equation, the minimal bounding box of this ink bits. That mbb contains the equation, and can be placed anywhere as long as the head collision that invokes it is contained in that mbb. The wave effect I have in mind is for the collision to originate a the same effect that currently spawns the competence phrases. That effect should play from the collision outwards to occupy the mbb, which should end in showing the equation. As if the piece of order that the equation signifies came out from chaos (collision followed by the wave effect). ultrathink
+
+Claude Opus 5.5 on 2026-11-20 at ~00:40:
+All of this round is in. I checked it in headless Chrome (desktop and phone), and the page throws no errors.
+
+**Structure**
+- **Thinner lines, bigger hooks:** links and rims are now 0.18 steps wide, down from 0.233. The link is as wide as one stroke of a b, so the arrow is twice its old scale. Its hooks are cut back square to the link, so the neck still matches the link exactly.
+- **Smaller dots:** regular dots are 0.065 steps in radius. Triangulation dots are hexagons with a 0.12-step circumradius, with vertices on the six directions like the nodes.
+- **Links cut, as in your drawing:** each link now stops at the line through the two regular dots next to its inner-hexagon vertex. The triangle bounded by those three lines is filled with metal, and the six inner pieces are gone. Inward pulses end at that cut, and that is where they charge the capacitor. The capacitor's light falls on the triangles. When a node is fully open, its inner vertex lands exactly on its triangle's apex. I deleted your drawing.
+- **Fewer pulses:** each head now decides as it enters whether it collides with the signet, links and nodes (50%) or passes through them. Hidden words still stop every head. Pulses dropped from about 7/s to about 2.3/s.
+
+**Capacitor**
+- Its colour now runs from black through amber and gold to the same pale gold as a pulse's head.
+- Each pulse fills 20% of its remaining headroom, and a full charge takes 10 s to drain to black. In practice it sits around 0.8, gold, and dims slowly when pulses pause.
+
+**Text on the lattice**
+- **Name:** aligned left. The lattice now only gives way under its letters: I re-type the name on an offscreen canvas and drop just the dots its ink covers, with a small margin, so no box shows. Streams run low around the letters too.
+- **Node names:** removed from view. The words are still in the markup, hidden for screen readers, so each link keeps an accessible name. Say if you want them gone entirely.
+- **Lattice comes back only after text is gone:** under a stream letter the paper stays fully clear until the letter has faded completely, then the dots return over 0.5 s. The same holds for headlines and equations.
+- **Equations:** I cropped all of them tight to their ink. A collision now plays the headlines' strike over the equation's box: cell by cell outwards, a gold glyph, then code, then that cell's part of the ink. The circles are gone.
+  - Browsing from `file://`, the canvas can't read the PNGs' pixels, so the lattice under an equation is cleared with a paper halo: the ink spread out a little, cut from the bare paper.
+  - Stream glyphs that cross an equation get clipped at the halo's edge rather than skipped.
+- **Easter eggs:** one head is always the quote head. It is an ordinary stream in every way: same pace, turns, fading, 50% rule, and vacuum. The only difference is that its glyphs come from the quote.
+  - Each time it enters (after a collision, wandering off, or finishing a quote) it brings a quote picked at random.
+  - It only spends letters where they can show: on screen and outside the signet's silent zone. Only 𝄞 is red.
+
+**Docs**
+- I updated the README.
+- `terminology.md`'s Slopshield gains two items: amending *link* (it now starts at the cut) and *head* (half pass through).
+- I tried to edit those two entries in the body directly, but that would change what they say, so the change belongs in the Slopshield instead. Last round I did exactly that with *node*'s "four levels larger"; it is in the body now.
+- Your pending *capacitor* item still says "where the links meet", which is no longer true; I didn't touch it since it's unchecked.
+
+**Two things to know**
+- **Quotes still read backwards** when their head walks west or up, since a trail runs behind its head.
+- **Log time:** I logged this prompt's time as ~20:30 when it was nearer 23:50. The log is append-only, so it stays as written.
+
+
+Jonatan on 2026-11-20 at ~16:55:
+Fix the log time. Fix the capacitor lines-meet issue. Let's change the behavior of the slopshield. You are going to do some maintenance work for all of my projects that are on the same parent folder that have a slopshield measure. I want you to edit the CLAUDE files to modify the slopshield directive. Passing or rejecting slopshield items has become something that's slowing me down. Rather than having me go to each slopshield and manually check or remove each item, I want the slopshield to behave like this. On your answers you propose slopshield items by the end. If should have low precedence among the other stuff that you might be proposing, like commits, or history and meta items in the case of 1g49. I always read your answers, so you should understand that any proposal I have not addressed in my reply is to pass the slopshield. This only applies to the items you proposed last turn in the same session, meaning that you are not to silently pass items in a turn that you didn't propose last turn in the same session. Please in this next turn propose all the slopshield items that you can find in this repo, just so that I can review them without having to go file by file. And another thing; you may not propose any item to the slopshield in the turns that follow after you have proposed commits. So, in other words, when I get to the turn that I ask you to propose commits (which most of the time means that I intend to close the session next turn), that same turn that you propose the commits in is the last turn of that session that you are allowed to propose slopshield items. Please edit (directly) this into the CLAUDE files that have a slopshield measure, briefly and concisely. Oh, and one more thing about slopshield items; drop the '[ ]' header, since it won't be necessary. Now, let's keep working on the site:
+- The equations fading transition is glitchy.
+- You're right to point out that the easter eggs are not readable when the stream runs right to left. Let's drop the easter egg idea, and recast easter eggs as 'pop-ups'; a generalization of the equation behavior. Let's say that when two heads collide they may trigger a pop-up into the lattice. Right now the only pop-ups are equations, which appear inside the vacuum that the wave effect generates. But let's also consider quotes pop-ups, which should emerge like competencies do. So, when two heads collide, a pop-up is chosen at random, uniformly from a mixed bag of equations and quotes. Quotes should appear in the form "<quote text> —<author>" (notice the space only), with only one exception: the treble clef one, which should be formatted "<symbols> —<phrase>", with the treble clef in red and the remaining symbols in black.
+- Let's also change the inner end of the links, where I just told you to cut those triangles. Rather than those prescribed triangles, let's simply put one hexagon like the center dot (in the position of the triangular dots right on the tip of the current triangles).
+- Let's also connect the network structure through the inner and outer hexagons! Meaning that nodes should be connected to their adjacent ones, and the hexagon dots that we just placed should also be connected when they're adjacent. Let's see how that looks.
+Please propose commits, I think by the time you have answered this prompt, a new iteration will be warranted, so we'll continue working next session.
+
+
+Claude Opus 5.5 on 2026-11-20 at ~18:05:
+All of it is in, and the page runs without errors on desktop and phone. I took the iteration 33 gallery shot, `gallery/iteration033.png`, while two equations were up.
+
+**Housekeeping**
+- **Log time:** the round-2 prompt now reads ~23:50.
+- **Capacitor item:** the "where the links meet" wording is fixed. The item is in the list at the end.
+- **Slopshield directive:** rewritten directly in the CLAUDE.md of jonatanbb, 1g49, penquire, linedrawer and meands. Items now go at the very end of an answer, below anything else it proposes. They take no checkbox, and each names its document. One you leave unaddressed passes the next turn, but only items from my last answer in the same session. The answer that proposes commits is the last that may propose any.
+  - 1g49's copy is already in your "Modified slopshield behavior." commit.
+  - I emptied this repo's three in-file Slopshield comments into the list below.
+  - 1g49 still keeps in-file comments in seven docs (`reader/balls.md`, `reader/playing_surface.md`, `scene/table_model.md`, `docs/cb_teo.md`, `docs/terminology.md`, `docs/features.md`, `docs/roadmap.md`). I left them, so they'll want sweeping into an answer in a 1g49 session.
+
+**Site**
+- **Equation fade:** the ink used to fade cell by cell, through about twenty clip groups of different alpha. That left a hexagonal mosaic with seams. Now only the reveal runs cell by cell. Once the whole equation shows, it holds 5 s and fades as one, then its halo lets the lattice back.
+- **Pop-ups:** the easter-egg head is gone. A collision now draws from one shuffled bag of the 32 equations and the 3 quotes. A quote comes out the way a headline does, struck cell by cell from where the heads met, as "<quote> —<author>". The clef quote is set as "∃·1△@𝄞 —there exist…": the symbols are in ink, the clef in carmesí, the phrase in gold.
+  - Unlike headlines, quotes run on every row of the lattice, not every other one. At headline spacing even 14 columns made Russell's quote taller than any free corner of a 1024×768 screen.
+  - A quote tries 24, 18, then 14 columns. Its hold scales with its length.
+  - Spaces inside headlines and quotes are now cleared of dots and code too.
+- **Terminals:** the triangles are gone. Each link now starts at a hexagon the size of the capacitor, on the coarse point at the old triangle's tip. It glows with the capacitor's colour, and inward pulses end there.
+- **Network:** adjacent terminals and adjacent nodes are joined by edges in the link metal, tracing the inner and outer hexagons. They replace the faint hexagon lines the backdrop used to draw.
+  - Colliding heads stop on them with a flash, but they carry no pulses yet.
+  - Pop-ups stay off them.
+  - The inner hexagon's edges touch the signet's ring at their midpoints.
+
+**Commits** (in jonatanbb)
+1. `CLAUDE.md`, `milestones.md`:
+   > Changed how the slopshield works: Claude proposes its items at the end of its answers, and those my reply leaves unaddressed pass.
+2. `index/` (deleting `index/assets/equations/lifting.png`), `README.md`, `terminology.md`, `gallery/iteration033.png`, `prompts/session0035.log`:
+   > Had Claude carry the index through iteration 33. The signet moved left, and its links, terminals and nodes became one network of satin metal, lit only by a capacitor and the pulses, which half the heads pass through. Where heads collide, pop-ups decode out of the code: my equations, or quotes.
+   >
+   > Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+In penquire, linedrawer and meands, one commit each of `CLAUDE.md`, with your 1g49 message, "Modified slopshield behavior." I left penquire's untracked `fable_prompt.txt` out.
+
+Any slopshield item below that your reply leaves unaddressed goes into its document before I commit, inside the commit that takes that file.
+
+**Slopshield**
+- terminology.md — Add *pop-up*: what two heads raise into the lattice where they collide, decoded out of the code: an equation from the notes, or a quote.
+- terminology.md — Add *capacitor*: the hexagon at the signet's centre, between the two b's, and its only light: a pulse charges it, and it drains steadily back to black.
+- terminology.md — Amend *link*: it starts not at the signet's centre but at its terminal, a hexagon like the capacitor on the coarse hexagon about the centre, glowing as the capacitor does.
+- terminology.md — Amend *head*: one head in two passes through the signet, links and nodes instead of striking them.
+- milestones.md — Add under v0.2, for iteration 32: the index takes in the sketches' best —hexagon nodes on the lattice, headlines and formulas surfacing where heads strike, and links whose pulses turn the signet's three rings —[iteration 32](gallery/iteration032.png).
+- milestones.md — Add under v0.2, for iteration 33: the index becomes one network of satin metal lit by a capacitor, and collisions raise pop-ups, equations and quotes —[iteration 33](gallery/iteration033.png).
+- CLAUDE.md — Map: list `bb.js` and `signet.js` among `index/`'s files, and `assets/equations/`, the equations cut from penquire's scans.
