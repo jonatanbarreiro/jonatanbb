@@ -5,6 +5,8 @@ A running checklist of milestones, each paired with the iteration that first int
 
 ## v0.2 —an appealing and functional index portfolio page to showcase my work, projects and interests
 
+- [x] A polished behavior design: the index as one network of satin metal, lit only by a capacitor at the signet's centre and the pulses, with pop-ups —equations and quotes— raised where heads collide —[iteration 33](gallery/iteration033.png)
+- [x] A settled design sketch: the index takes in the sketches' best —hexagon nodes on the lattice, headlines and formulas surfacing where heads strike, and links whose pulses turn the signet's three rings —[iteration 32](gallery/iteration032.png)
 - [x] Almost a year of design notes distilled into a design brief, and into three sketches of the index: the armillary sphere, the lattice and the orrery —iteration 31: [armillary](gallery/iteration031S1.png), [lattice](gallery/iteration031S2.png) & [orrery](gallery/iteration031S3.png)
 - [x] The site grows from a CV site into a portfolio sketch: an index page wiring the bb signet to its nodes, the CV site among them —[iteration 30](gallery/iteration030.png)
 
@@ -41,10 +43,3 @@ A running checklist of milestones, each paired with the iteration that first int
 - [x] ~~Connect points via a Shortest-Path Tree rooted at the 'I', and based on a pruned Delaunay triangulation~~ —[iteration 21](cvsite/sources/iteration21)
 - [x] ~~Gold/lit words as light sources, glowing and illuminating nearby page contents~~ —[iteration 22](cvsite/sources/iteration22) & [iteration 23](cvsite/sources/iteration23)
 - [ ] ~~Lightning connections cast their own light onto nearby page contents (as the points and gold words now do)~~ —[iteration 24](cvsite/sources/iteration24)
-
-
-<!-- Slopshield
-- [ ] Add, for iteration 32: the index takes in the sketches' best —hexagon nodes on the
-  lattice, headlines and formulas surfacing where heads strike, and links whose pulses
-  turn the signet's three rings —[iteration 32](gallery/iteration032.png)
--->

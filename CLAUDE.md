@@ -15,8 +15,9 @@ deliberate prompt, you carry it out.
   form, one section per version; Jonatan's to maintain (see *The slopshield*).
 - `terminology.md` —the words coined for the site's parts; Jonatan's to maintain too.
 - `index/` —the index site's source, deployable as it stands (`index.html`,
-  `styles.css`, `main.js`, `assets/`, `robots.txt`, `sitemap.xml`). Built
-  incrementally; git holds its history.
+  `styles.css`, `main.js`, `bb.js`, `signet.js`, `assets/` —its `equations/` cut
+  from penquire's scans—, `robots.txt`, `sitemap.xml`). Built incrementally; git
+  holds its history.
 - `gallery/` —the shots of every iteration (see *Gallery*), continuing the CV
   site's: through iteration 26 a single shot, then a day & night
   pair per iteration, `iterationNNNW.png` / `iterationNNNB.png`, plus `unsourced/`
@@ -141,22 +142,21 @@ The README is yours to write. Every other documentation file —`CLAUDE.md` and
 `milestones.md` among them— is Jonatan's, and shielded: no statement of your own
 goes into one on your own initiative.
 
-What you judge worth adding or cutting goes instead to the very end of the document
-it belongs to, inside a `<!-- Slopshield -->` comment that keeps it off the rendered
-page, as an unchecked checklist item, `- [ ]`, most important first. Create the
-comment where a document has none, and delete it once it is empty. He reviews it when
-he gets to it, and either removes an item or checks it. A checked item is one to
-apply: look for them at the start of every turn, carry each out in the body of the
-document, and take it off the list. Unchecked items are not yours to touch.
+What you judge worth adding or cutting you propose instead, at the very end of your
+answer, below anything else it proposes: a plain list, one item per change, each
+naming its document, most important first. He reads every answer, so an item his reply
+leaves unaddressed passes the shield: carry it into the body of its document in that
+turn. Only the items of your last answer in the same session pass this way, and the
+answer that proposes a session's commits is the last that may propose any.
 
 The shield guards the door, not the room. Once something is in the body, it is yours
 to manage —reword, restructure, cut it down— as long as you do not change what it
 says.
 
-Feed the shields without being asked. When a prompt or the work brings up something
-a shielded document is missing —a coined word `terminology.md` lacks— propose it
-there in the same round. Be thoughtful about what you propose; a list he dreads
-opening is worse than no system at all.
+Feed the shields without being asked. When a prompt or the work brings up something a
+shielded document is missing —a coined word `terminology.md` lacks— propose it in the
+same round. Be thoughtful about what you propose; a list he dreads opening is worse
+than no system at all.
 
 
 ## README
@@ -187,7 +187,7 @@ a summary: one to three short sentences, with no subject line, prefixes or bulle
 past tense, no subject, from his side —"Designed and implemented…", "Had Claude
 implement…". A commit carrying a substantial share of implementation or web-dev
 work ends with `Co-Authored-By: <model>`, naming the model that did it —`Claude Opus
-5.5`, say.
+5.5`, say— and nothing more: never an email.
 
 
 ## Code and writing style
@@ -219,9 +219,3 @@ work ends with `Co-Authored-By: <model>`, naming the model that did it —`Claud
   genuinely needs it —system-wide, on `PATH`, under a standard prefix, never a
   private per-tool location. If it needs sudo, stop and give him the exact command
   to run.
-
-
-<!-- Slopshield
-- [ ] Map: list `bb.js` and `signet.js` among `index/`'s files, and
-  `assets/equations/`, the equations cut from penquire's scans.
--->
